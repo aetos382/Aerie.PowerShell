@@ -52,9 +52,6 @@ steps:
     command: push
     nuGetFeedType: external
     publishFeedCredentials: MyGet
-    packagesToPush: |-
-      **/*.nupkg
-      !**/*.symbols.nupkg
 
 - task: NuGetCommand@2
   displayName: 'nuget push (symbols)'
@@ -62,5 +59,4 @@ steps:
     command: push
     nuGetFeedType: external
     publishFeedCredentials: 'MyGet Symbols'
-    packagesToPush: |-
-      **/*.symbols.nupkg
+    packagesToPush: '**/*.symbols.nupkg'
