@@ -44,7 +44,6 @@ steps:
     nobuild: true
     versioningScheme: byPrereleaseNumber
     configurationToPack: Release
-    buildProperties: 'IncludeSymbols=true'
 
 - task: NuGetCommand@2
   displayName: 'nuget push'
@@ -52,11 +51,3 @@ steps:
     command: push
     nuGetFeedType: external
     publishFeedCredentials: MyGet
-
-- task: NuGetCommand@2
-  displayName: 'nuget push (symbols)'
-  inputs:
-    command: push
-    nuGetFeedType: external
-    publishFeedCredentials: 'MyGet Symbols'
-    packagesToPush: '**/*.symbols.nupkg'
