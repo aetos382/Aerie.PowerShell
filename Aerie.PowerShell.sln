@@ -1,0 +1,78 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BDC49605-8C87-4E33-9ECE-D6735C785562}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		azure-pipelines.yml = azure-pipelines.yml
+		FxCop.ruleset = FxCop.ruleset
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell", "Aerie.PowerShell\Aerie.PowerShell.csproj", "{FD42990A-C71A-444F-80ED-3F5CB5777DFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.Async", "Aerie.PowerShell.Async\Aerie.PowerShell.Async.csproj", "{59E9317F-1C59-4EB4-AF16-E0C1B010FC6E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.DynamicParameter", "Aerie.PowerShell.DynamicParameter\Aerie.PowerShell.DynamicParameter.csproj", "{0DA01D7A-B5BE-4C9D-8773-282E16D1DBA5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.UnitTests", "Aerie.PowerShell.UnitTests\Aerie.PowerShell.UnitTests.csproj", "{27361A3D-3708-42D4-8CC5-ED113E09F470}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.DynamicParameter.UnitTests", "Aerie.PowerShell.DynamicParameter.UnitTests\Aerie.PowerShell.DynamicParameter.UnitTests.csproj", "{25B857FC-CB99-4367-A030-44ECF326F2CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug-PowerShell-6.1|Any CPU = Debug-PowerShell-6.1|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Release-PowerShell-6.1|Any CPU = Release-PowerShell-6.1|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD42990A-C71A-444F-80ED-3F5CB5777DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD42990A-C71A-444F-80ED-3F5CB5777DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD42990A-C71A-444F-80ED-3F5CB5777DFD}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD42990A-C71A-444F-80ED-3F5CB5777DFD}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug|Any CPU
+		{FD42990A-C71A-444F-80ED-3F5CB5777DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD42990A-C71A-444F-80ED-3F5CB5777DFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD42990A-C71A-444F-80ED-3F5CB5777DFD}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
+		{FD42990A-C71A-444F-80ED-3F5CB5777DFD}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
+		{59E9317F-1C59-4EB4-AF16-E0C1B010FC6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59E9317F-1C59-4EB4-AF16-E0C1B010FC6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59E9317F-1C59-4EB4-AF16-E0C1B010FC6E}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
+		{59E9317F-1C59-4EB4-AF16-E0C1B010FC6E}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug|Any CPU
+		{59E9317F-1C59-4EB4-AF16-E0C1B010FC6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59E9317F-1C59-4EB4-AF16-E0C1B010FC6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59E9317F-1C59-4EB4-AF16-E0C1B010FC6E}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
+		{59E9317F-1C59-4EB4-AF16-E0C1B010FC6E}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
+		{0DA01D7A-B5BE-4C9D-8773-282E16D1DBA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DA01D7A-B5BE-4C9D-8773-282E16D1DBA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DA01D7A-B5BE-4C9D-8773-282E16D1DBA5}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug-PowerShell-6.1|Any CPU
+		{0DA01D7A-B5BE-4C9D-8773-282E16D1DBA5}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug-PowerShell-6.1|Any CPU
+		{0DA01D7A-B5BE-4C9D-8773-282E16D1DBA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DA01D7A-B5BE-4C9D-8773-282E16D1DBA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DA01D7A-B5BE-4C9D-8773-282E16D1DBA5}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release-PowerShell-6.1|Any CPU
+		{0DA01D7A-B5BE-4C9D-8773-282E16D1DBA5}.Release-PowerShell-6.1|Any CPU.Build.0 = Release-PowerShell-6.1|Any CPU
+		{27361A3D-3708-42D4-8CC5-ED113E09F470}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27361A3D-3708-42D4-8CC5-ED113E09F470}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27361A3D-3708-42D4-8CC5-ED113E09F470}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
+		{27361A3D-3708-42D4-8CC5-ED113E09F470}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug|Any CPU
+		{27361A3D-3708-42D4-8CC5-ED113E09F470}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27361A3D-3708-42D4-8CC5-ED113E09F470}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27361A3D-3708-42D4-8CC5-ED113E09F470}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
+		{27361A3D-3708-42D4-8CC5-ED113E09F470}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
+		{25B857FC-CB99-4367-A030-44ECF326F2CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25B857FC-CB99-4367-A030-44ECF326F2CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25B857FC-CB99-4367-A030-44ECF326F2CA}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
+		{25B857FC-CB99-4367-A030-44ECF326F2CA}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug|Any CPU
+		{25B857FC-CB99-4367-A030-44ECF326F2CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25B857FC-CB99-4367-A030-44ECF326F2CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25B857FC-CB99-4367-A030-44ECF326F2CA}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
+		{25B857FC-CB99-4367-A030-44ECF326F2CA}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2174DAFB-7196-4BDE-9778-66E2CFDA2A2F}
+	EndGlobalSection
+EndGlobal
