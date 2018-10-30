@@ -45,8 +45,8 @@ steps:
     versioningScheme: byPrereleaseNumber
     configurationToPack: Release
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet push'
+- task: NuGetCommand@2
+  displayName: 'nuget push'
   inputs:
     command: push
     nuGetFeedType: external
