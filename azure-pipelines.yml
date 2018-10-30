@@ -1,0 +1,72 @@
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/dotnet-core
+
+queue:
+  name: Hosted VS2017
+
+variables:
+  buildPlatform: 'Any CPU'
+
+steps:
+- task: DotNetCoreInstaller@0
+  displayName: 'Install .NET Core SDK 2.1.403'
+  inputs:
+    version: 2.1.403
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: restore
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    command: build
+    projects: '**/*.csproj'
+    arguments: '--configuration Release /p:ContinuousIntegrationBuild=true'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration Release --no-build --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=".\Coverage\Summary\coverlet.cobertura.xml"'
+
+- task: PublishTestResults@2
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '$(Agent.TempDirectory)/**/*.trx'
+
+- script: dotnet reportgenerator -reports:"./Coverage/Summary/coverlet.cobertura.xml" -reporttypes:"HtmlInline" -targetdir:"./Coverage/Html" -sourcedirs:"../Aerie.PowerShell"
+  displayName: 'generate coverage report'
+  workingDirectory: './Aerie.PowerShell.UnitTests'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage'
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '**/*.cobertura.xml'
+    reportDirectory: '**/Coverage/Html'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  inputs:
+    command: pack
+    nobuild: true
+    versioningScheme: byPrereleaseNumber
+    configurationToPack: Release
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet push'
+  inputs:
+    command: push
+    publishVstsFeed: '3193c8b5-82bf-412c-aec2-b0c09d14c0ff'
+
+- task: PublishSymbols@2
+  displayName: 'Publish symbols'
+  inputs:
+    SymbolServerType: TeamServices
+    SearchPattern: |-
+      **/*.pdb
+      !**/*Tests.pdb
+    TreatNotIndexedAsWarning: true
