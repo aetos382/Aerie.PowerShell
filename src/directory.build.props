@@ -3,8 +3,8 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('directory.build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
-    <DebugType>embedded</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
     <CodeAnalysisRuleSet>$([MSBuild]::GetPathOfFileAbove('FxCop.ruleset', $(MSBuildThisFileDirectory)))</CodeAnalysisRuleSet>
   </PropertyGroup>
 

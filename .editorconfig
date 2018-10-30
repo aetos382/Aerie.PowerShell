@@ -20,7 +20,7 @@ charset = utf-8-bom
 indent_size = 2
 charset = utf-8
 
-[*.{xml,csproj}]
+[*.{xml,csproj,props,config}]
 indent_size = 2
 charset = utf-8
 

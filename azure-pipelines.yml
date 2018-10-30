@@ -49,4 +49,5 @@ steps:
   displayName: 'dotnet push'
   inputs:
     command: push
-    publishVstsFeed: '3193c8b5-82bf-412c-aec2-b0c09d14c0ff'
+    nuGetFeedType: external
+    publishFeedCredentials: MyGet
