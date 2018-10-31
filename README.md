@@ -1,5 +1,6 @@
 # Aerie.PowerShell
 
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/aetos382/Aerie.PowerShell/blob/master/LICENSE)
 [![Build Status](https://dev.azure.com/aerie2/Aerie.PowerShell/_apis/build/status/Aerie.PowerShell)](https://dev.azure.com/aerie2/Aerie.PowerShell/_build/latest?definitionId=5)
 
 |Package Name||
