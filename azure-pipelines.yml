@@ -42,8 +42,8 @@ steps:
   inputs:
     command: pack
     nobuild: true
-    versioningScheme: byPrereleaseNumber
     configurationToPack: Release
+    buildProperties: 'VersionSuffix=CI-$(Date:yyyyMMdd).$(Rev)'
 
 - task: NuGetCommand@2
   displayName: 'nuget push'
