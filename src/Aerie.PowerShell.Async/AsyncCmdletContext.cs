@@ -9,51 +9,54 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell
 {
-    internal class AsyncCmdletContext :
+    internal sealed class AsyncCmdletContext :
         IDisposable
     {
         [NotNull]
-        private static readonly ConditionalWeakTable<Cmdlet, AsyncCmdletContext> _contexts = new ConditionalWeakTable<Cmdlet, AsyncCmdletContext>();
+        private static readonly ConditionalWeakTable<IAsyncCmdlet, AsyncCmdletContext> _contexts
+            = new ConditionalWeakTable<IAsyncCmdlet, AsyncCmdletContext>();
 
         [NotNull]
-        private readonly Cmdlet _cmdlet;
+        private readonly IAsyncCmdlet _cmdlet;
 
         [NotNull]
-        private readonly Func<Cmdlet, Task> _beginProcessingAsyncDelegate;
+        private static readonly Func<IAsyncCmdlet, Task> _beginProcessingAsyncDelegate;
 
         [NotNull]
-        private readonly Func<Cmdlet, Task> _processRecordAsyncDelegate;
+        private static readonly Func<IAsyncCmdlet, Task> _processRecordAsyncDelegate;
 
         [NotNull]
-        private readonly Func<Cmdlet, Task> _endProcessingAsyncDelegate;
+        private static readonly Func<IAsyncCmdlet, Task> _endProcessingAsyncDelegate;
+
+        static AsyncCmdletContext()
+        {
+            _beginProcessingAsyncDelegate = CreateDelegate(nameof(IAsyncCmdlet.BeginProcessingAsync));
+            _processRecordAsyncDelegate = CreateDelegate(nameof(IAsyncCmdlet.ProcessRecordAsync));
+            _endProcessingAsyncDelegate = CreateDelegate(nameof(IAsyncCmdlet.EndProcessingAsync));
+        }
 
         private AsyncCmdletContext(
-            [NotNull] Type cmdletType,
-            [NotNull] Cmdlet cmdlet)
+            [NotNull] IAsyncCmdlet cmdlet)
         {
             this._cmdlet = cmdlet;
-
-            this._beginProcessingAsyncDelegate = CreateDelegate(cmdletType, nameof(IAsyncCmdlet.BeginProcessingAsync));
-            this._processRecordAsyncDelegate = CreateDelegate(cmdletType, nameof(IAsyncCmdlet.ProcessRecordAsync));
-            this._endProcessingAsyncDelegate = CreateDelegate(cmdletType, nameof(IAsyncCmdlet.EndProcessingAsync));
         }
 
         [NotNull]
         public Task DoBeginProcessingAsync()
         {
-            return this._beginProcessingAsyncDelegate(this._cmdlet);
+            return _beginProcessingAsyncDelegate(this._cmdlet);
         }
 
         [NotNull]
         public Task DoProcessRecordAsync()
         {
-            return this._processRecordAsyncDelegate(this._cmdlet);
+            return _processRecordAsyncDelegate(this._cmdlet);
         }
 
         [NotNull]
         public Task DoEndProcessingAsync()
         {
-            return this._endProcessingAsyncDelegate(this._cmdlet);
+            return _endProcessingAsyncDelegate(this._cmdlet);
         }
 
         [NotNull]
@@ -84,23 +87,65 @@ namespace Aerie.PowerShell
             [NotNull] TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            return _contexts.GetValue(cmdlet, c => new AsyncCmdletContext(typeof(TCmdlet), c));
+            return _contexts.GetValue(cmdlet, c => new AsyncCmdletContext(c));
+        }
+
+        public Task QueueAsyncOperation(
+            Action action,
+            CancellationToken cancellationToken)
+        {
+            lock (this._scopeLock)
+            {
+                var scope = this._scope;
+
+                if (scope == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                return this._scope.QueueAsyncOperation(action, cancellationToken);
+            }
         }
 
         [NotNull]
-        private static Func<Cmdlet, Task> CreateDelegate(
-            [NotNull] Type cmdletType,
+        private readonly object _scopeLock = new object();
+
+        [CanBeNull]
+        private AsyncCmdletScope _scope;
+
+        public void EndScope()
+        {
+            lock (this._scopeLock)
+            {
+                this._scope = null;
+            }
+        }
+
+        public AsyncCmdletScope BeginAsyncScope()
+        {
+            lock (this._scopeLock)
+            {
+                if (this._scope != null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                this._scope = new AsyncCmdletScope(this);
+                return this._scope;
+            }
+        }
+
+        [NotNull]
+        private static Func<IAsyncCmdlet, Task> CreateDelegate(
             [NotNull] string methodName)
         {
-            var method = cmdletType.GetMethod(methodName);
+            var method = typeof(IAsyncCmdlet).GetMethod(methodName);
 
-            var cmdletParameter = Expression.Parameter(typeof(Cmdlet));
+            var cmdletParameter = Expression.Parameter(typeof(IAsyncCmdlet));
 
-            var lambdaExpression = Expression.Lambda<Func<Cmdlet, Task>>(
+            var lambdaExpression = Expression.Lambda<Func<IAsyncCmdlet, Task>>(
                 Expression.Call(
-                    Expression.Convert(
-                        cmdletParameter,
-                        cmdletType),
+                    cmdletParameter,
                     method),
                 cmdletParameter);
 

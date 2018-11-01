@@ -21,11 +21,10 @@ namespace Aerie.PowerSHell.Samples
         [Parameter]
         public double Wait { get; set; } = 0.5;
 
-        public override Task ProcessRecordAsync(
-            CancellationToken cancellationToken)
+        public override Task ProcessRecordAsync()
         {
             // var tasks = Enumerable.Range(1, this.Threads).Select(i => Task.Run(async () => await this.CountAsync(i)));
-            var tasks = Enumerable.Range(1, this.Threads).Select(i => this.CountAsync(i, cancellationToken));
+            var tasks = Enumerable.Range(1, this.Threads).Select(i => this.CountAsync(i, this.CancellationToken));
 
             var allTasks = Task.WhenAll(tasks.ToArray());
             return allTasks;

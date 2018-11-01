@@ -392,35 +392,24 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(func));
             }
 
-            var cancellationToken = GetCancellationToken(cmdlet);
+            var context = AsyncCmdletContext.GetContext(cmdlet);
 
-            using (var syncCtx = new QueueingSynchronizationContext(cancellationToken))
+            using (var scope = context.BeginAsyncScope())
             {
-                var oldSyncCtx = SynchronizationContext.Current;
+                var task = func();
 
-                try
+                task = task.ContinueWith(t =>
                 {
-                    SynchronizationContext.SetSynchronizationContext(syncCtx);
+                    scope.CloseQueue();
+                    t.Wait(); // 例外を外へ飛ばす
+                }, TaskContinuationOptions.ExecuteSynchronously);
 
-                    var task = func();
-
-                    task = task.ContinueWith(t =>
-                    {
-                        syncCtx.CloseQueue();
-                        t.Wait(); // 例外を外へ飛ばす
-                    }, TaskContinuationOptions.ExecuteSynchronously);
-
-                    foreach (var action in syncCtx.GetQueuedTasks())
-                    {
-                        action.RunSynchronously();
-                    }
-
-                    task.Wait();
-                }
-                finally
+                foreach (var action in scope.GetQueuedTasks())
                 {
-                    SynchronizationContext.SetSynchronizationContext(oldSyncCtx);
+                    action.RunSynchronously();
                 }
+
+                task.Wait();
             }
         }
 
@@ -433,12 +422,7 @@ namespace Aerie.PowerShell
         {
             var myToken = GetCancellationToken(cmdlet);
 
-            if (!cancellationToken.CanBeCanceled || cancellationToken == myToken)
-            {
-                return PostAsyncOperationWithoutLinkedToken(action, myToken);
-            }
-
-            var syncCtx = GetSynchronizationContext();
+            var context = AsyncCmdletContext.GetContext(cmdlet);
 
             CancellationTokenSource linkedSource = null;
 
@@ -446,8 +430,8 @@ namespace Aerie.PowerShell
             {
                 linkedSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, myToken);
 
-                var task = syncCtx
-                    .PostAsyncOperation(action, linkedSource.Token)
+                var task = context
+                    .QueueAsyncOperation(action, cancellationToken)
                     .ContinueWith(t =>
                     {
                         linkedSource.Dispose();
@@ -465,30 +449,6 @@ namespace Aerie.PowerShell
 
                 throw;
             }
-        }
-
-        private static Task PostAsyncOperationWithoutLinkedToken(
-            [NotNull] Action action,
-            CancellationToken cancellationToken)
-        {
-            var syncCtx = GetSynchronizationContext();
-
-            var task = syncCtx.PostAsyncOperation(action, cancellationToken);
-
-            return task;
-        }
-
-        [NotNull]
-        private static QueueingSynchronizationContext GetSynchronizationContext()
-        {
-            var syncCtx = SynchronizationContext.Current as QueueingSynchronizationContext;
-
-            if (syncCtx == null)
-            {
-                throw new InvalidOperationException();
-            }
-
-            return syncCtx;
         }
 
         private static void DisposeContext<TCmdlet>(
