@@ -1,16 +1,18 @@
-﻿namespace Aerie.PowerShell
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+using JetBrains.Annotations;
+
+namespace Aerie.PowerShell
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Threading;
-
-    using JetBrains.Annotations;
-
     internal class QueueingSynchronizationContext :
         SynchronizationContext,
         IDisposable
     {
+        [NotNull]
         private readonly BlockingCollection<Action> _queue;
 
         private readonly int _mainThreadId;
@@ -37,7 +39,19 @@
             this.QueueOperation(callback, state, true);
         }
 
-        public IEnumerable<Action> GetQueue()
+        public Task PostAsyncOperation(
+            [NotNull] Action action,
+            CancellationToken cancellationToken)
+        {
+            var operation = new AwaitableOperation(action, cancellationToken);
+            this._queue.Add(operation.Run);
+
+            return operation.Task;
+        }
+
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<Action> GetQueuedActions()
         {
             return this._queue.GetConsumingEnumerable();
         }
@@ -49,7 +63,7 @@
 
         private void QueueOperation(
             [NotNull] SendOrPostCallback callback,
-            object state,
+            [CanBeNull] object state,
             bool synchronously)
         {
             if (callback == null)
@@ -63,7 +77,7 @@
             }
             else
             {
-                var operation = new AwaitableOperation(() => callback(state));
+                var operation = new AwaitableOperation(() => callback(state), CancellationToken.None);
                 this._queue.Add(operation.Run);
 
                 if (synchronously)
