@@ -8,7 +8,7 @@
   <Include Path="securityrules.ruleset" Action="Error" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1000" Action="Error" />
-    <Rule Id="CA1001" Action="Error" />
+    <Rule Id="CA1001" Action="Warning" />
     <Rule Id="CA1002" Action="Error" />
     <Rule Id="CA1003" Action="Error" />
     <Rule Id="CA1004" Action="Info" />
@@ -137,7 +137,7 @@
     <Rule Id="CA1813" Action="Warning" />
     <Rule Id="CA1814" Action="Error" />
     <Rule Id="CA1815" Action="Warning" />
-    <Rule Id="CA1816" Action="Error" />
+    <Rule Id="CA1816" Action="Warning" />
     <Rule Id="CA1819" Action="Warning" />
     <Rule Id="CA1820" Action="Error" />
     <Rule Id="CA1821" Action="Error" />
