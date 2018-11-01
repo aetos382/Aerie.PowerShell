@@ -39,24 +39,21 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public Task DoBeginProcessingAsync(
-            [NotNull] Cmdlet cmdlet)
+        public Task DoBeginProcessingAsync()
         {
-            return this._beginProcessingAsyncDelegate(cmdlet);
+            return this._beginProcessingAsyncDelegate(this._cmdlet);
         }
 
         [NotNull]
-        public Task DoProcessRecordAsync(
-            [NotNull] Cmdlet cmdlet)
+        public Task DoProcessRecordAsync()
         {
-            return this._processRecordAsyncDelegate(cmdlet);
+            return this._processRecordAsyncDelegate(this._cmdlet);
         }
 
         [NotNull]
-        public Task DoEndProcessingAsync(
-            [NotNull] Cmdlet cmdlet)
+        public Task DoEndProcessingAsync()
         {
-            return this._endProcessingAsyncDelegate(cmdlet);
+            return this._endProcessingAsyncDelegate(this._cmdlet);
         }
 
         [NotNull]
@@ -97,15 +94,15 @@ namespace Aerie.PowerShell
         {
             var method = cmdletType.GetMethod(methodName);
 
-            var parameter = Expression.Parameter(typeof(Cmdlet));
+            var cmdletParameter = Expression.Parameter(typeof(Cmdlet));
 
             var lambdaExpression = Expression.Lambda<Func<Cmdlet, Task>>(
                 Expression.Call(
                     Expression.Convert(
-                        parameter,
+                        cmdletParameter,
                         cmdletType),
                     method),
-                parameter);
+                cmdletParameter);
 
             var @delegate = lambdaExpression.Compile();
             return @delegate;

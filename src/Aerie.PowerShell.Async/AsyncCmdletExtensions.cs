@@ -327,7 +327,7 @@ namespace Aerie.PowerShell
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            DoWithSynchronizationContext(() => context.DoBeginProcessingAsync(cmdlet));
+            DoWithSynchronizationContext(cmdlet, context.DoBeginProcessingAsync);
         }
 
         public static void DoProcessRecordAsync<TCmdlet>(
@@ -340,7 +340,7 @@ namespace Aerie.PowerShell
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            DoWithSynchronizationContext(() => context.DoProcessRecordAsync(cmdlet));
+            DoWithSynchronizationContext(cmdlet, context.DoProcessRecordAsync);
         }
         
         public static void DoEndProcessingAsync<TCmdlet>(
@@ -353,7 +353,7 @@ namespace Aerie.PowerShell
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            DoWithSynchronizationContext(() => context.DoEndProcessingAsync(cmdlet));
+            DoWithSynchronizationContext(cmdlet, context.DoEndProcessingAsync);
         }
 
         public static void DoStopProcessing<TCmdlet>(
@@ -382,15 +382,19 @@ namespace Aerie.PowerShell
             DisposeContext(cmdlet);
         }
 
-        private static void DoWithSynchronizationContext(
+        private static void DoWithSynchronizationContext<TCmdlet>(
+            [NotNull] this TCmdlet cmdlet,
             [NotNull] Func<Task> func)
+            where TCmdlet : Cmdlet, IAsyncCmdlet
         {
             if (func == null)
             {
                 throw new ArgumentNullException(nameof(func));
             }
 
-            using (var syncCtx = new QueueingSynchronizationContext())
+            var cancellationToken = GetCancellationToken(cmdlet);
+
+            using (var syncCtx = new QueueingSynchronizationContext(cancellationToken))
             {
                 var oldSyncCtx = SynchronizationContext.Current;
 
@@ -400,11 +404,15 @@ namespace Aerie.PowerShell
 
                     var task = func();
 
-                    task = task.ContinueWith(_ => syncCtx.CloseQueue());
-
-                    foreach (var action in syncCtx.GetQueuedActions())
+                    task = task.ContinueWith(t =>
                     {
-                        action();
+                        syncCtx.CloseQueue();
+                        t.Wait(); // 例外を外へ飛ばす
+                    }, TaskContinuationOptions.ExecuteSynchronously);
+
+                    foreach (var action in syncCtx.GetQueuedTasks())
+                    {
+                        action.RunSynchronously();
                     }
 
                     task.Wait();
@@ -423,31 +431,51 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
+            var myToken = GetCancellationToken(cmdlet);
+
+            if (!cancellationToken.CanBeCanceled || cancellationToken == myToken)
+            {
+                return PostAsyncOperationWithoutLinkedToken(action, myToken);
+            }
+
             var syncCtx = GetSynchronizationContext();
 
             CancellationTokenSource linkedSource = null;
 
             try
             {
-                linkedSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, GetCancellationToken(cmdlet));
-
-                var source = linkedSource;
+                linkedSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, myToken);
 
                 var task = syncCtx
                     .PostAsyncOperation(action, linkedSource.Token)
-                    .ContinueWith(_ => source.Dispose());
-
-                linkedSource = null;
+                    .ContinueWith(t =>
+                    {
+                        linkedSource.Dispose();
+                        t.Wait();
+                    });
 
                 return task;
             }
-            finally
+            catch
             {
                 if (linkedSource != null)
                 {
                     linkedSource.Dispose();
                 }
+
+                throw;
             }
+        }
+
+        private static Task PostAsyncOperationWithoutLinkedToken(
+            [NotNull] Action action,
+            CancellationToken cancellationToken)
+        {
+            var syncCtx = GetSynchronizationContext();
+
+            var task = syncCtx.PostAsyncOperation(action, cancellationToken);
+
+            return task;
         }
 
         [NotNull]

@@ -13,15 +13,18 @@ namespace Aerie.PowerShell
         IDisposable
     {
         [NotNull]
-        private readonly BlockingCollection<Action> _queue;
+        private readonly BlockingCollection<Task> _queue = new BlockingCollection<Task>();
+
+        private readonly CancellationToken _cancellationToken;
 
         private readonly int _mainThreadId;
 
         private bool _disposed = false;
 
-        public QueueingSynchronizationContext()
+        public QueueingSynchronizationContext(
+            CancellationToken cancellationToken)
         {
-            this._queue = new BlockingCollection<Action>();
+            this._cancellationToken = cancellationToken;
             this._mainThreadId = Thread.CurrentThread.ManagedThreadId;
         }
 
@@ -29,6 +32,11 @@ namespace Aerie.PowerShell
             SendOrPostCallback callback,
             object state)
         {
+            if (this._cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             this.QueueOperation(callback, state, this.IsMainThread);
         }
 
@@ -36,6 +44,8 @@ namespace Aerie.PowerShell
             SendOrPostCallback callback,
             object state)
         {
+            this.CheckDisposed();
+
             this.QueueOperation(callback, state, true);
         }
 
@@ -43,21 +53,27 @@ namespace Aerie.PowerShell
             [NotNull] Action action,
             CancellationToken cancellationToken)
         {
-            var operation = new AwaitableOperation(action, cancellationToken);
-            this._queue.Add(operation.Run);
+            this.CheckDisposed();
 
-            return operation.Task;
+            var task = new Task(action, cancellationToken);
+            this._queue.Add(task);
+
+            return task;
         }
 
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<Action> GetQueuedActions()
+        public IEnumerable<Task> GetQueuedTasks()
         {
-            return this._queue.GetConsumingEnumerable();
+            this.CheckDisposed();
+
+            return this._queue.GetConsumingEnumerable(this._cancellationToken);
         }
 
         public void CloseQueue()
         {
+            this.CheckDisposed();
+
             this._queue.CompleteAdding();
         }
 
@@ -77,12 +93,12 @@ namespace Aerie.PowerShell
             }
             else
             {
-                var operation = new AwaitableOperation(() => callback(state), CancellationToken.None);
-                this._queue.Add(operation.Run);
+                var task = new Task(() => callback(state), this._cancellationToken);
+                this._queue.Add(task);
 
                 if (synchronously)
                 {
-                    operation.Task.Wait();
+                    task.Wait();
                 }
             }
         }
@@ -97,7 +113,9 @@ namespace Aerie.PowerShell
 
         public override SynchronizationContext CreateCopy()
         {
-            return new QueueingSynchronizationContext();
+            this.CheckDisposed();
+
+            return new QueueingSynchronizationContext(this._cancellationToken);
         }
 
         public void Dispose()
@@ -118,6 +136,14 @@ namespace Aerie.PowerShell
             if (disposing)
             {
                 this._queue.Dispose();
+            }
+        }
+
+        private void CheckDisposed()
+        {
+            if (this._disposed)
+            {
+                throw new ObjectDisposedException(nameof(QueueingSynchronizationContext));
             }
         }
     }
