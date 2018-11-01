@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
@@ -431,9 +431,11 @@ namespace Aerie.PowerShell
             {
                 linkedSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, GetCancellationToken(cmdlet));
 
+                var source = linkedSource;
+
                 var task = syncCtx
                     .PostAsyncOperation(action, linkedSource.Token)
-                    .ContinueWith(_ => linkedSource.Dispose());
+                    .ContinueWith(_ => source.Dispose());
 
                 linkedSource = null;
 
