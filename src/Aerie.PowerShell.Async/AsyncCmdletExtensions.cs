@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
@@ -317,7 +317,7 @@ namespace Aerie.PowerShell
             return context.CancellationToken;
         }
 
-        public static void DoBeginProcessing<TCmdlet>(
+        public static void DoBeginProcessingAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -330,7 +330,7 @@ namespace Aerie.PowerShell
             DoWithSynchronizationContext(() => context.DoBeginProcessingAsync(cmdlet));
         }
 
-        public static void DoProcessRecord<TCmdlet>(
+        public static void DoProcessRecordAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -343,7 +343,7 @@ namespace Aerie.PowerShell
             DoWithSynchronizationContext(() => context.DoProcessRecordAsync(cmdlet));
         }
         
-        public static void DoEndProcessing<TCmdlet>(
+        public static void DoEndProcessingAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
