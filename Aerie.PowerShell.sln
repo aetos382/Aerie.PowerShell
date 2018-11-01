@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.UnitTests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.DynamicParameter.UnitTests", "test\Aerie.PowerShell.DynamicParameter.UnitTests\Aerie.PowerShell.DynamicParameter.UnitTests.csproj", "{876C719B-D7E9-4F99-A7E9-43550E3284D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aerie.PowerShell.Async.UnitTests", "test\Aerie.PowerShell.Async.UnitTests\Aerie.PowerShell.Async.UnitTests.csproj", "{A06C373D-6FF1-43DA-8613-7D6A6039A139}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,14 @@ Global
 		{876C719B-D7E9-4F99-A7E9-43550E3284D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{876C719B-D7E9-4F99-A7E9-43550E3284D5}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
 		{876C719B-D7E9-4F99-A7E9-43550E3284D5}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
+		{A06C373D-6FF1-43DA-8613-7D6A6039A139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A06C373D-6FF1-43DA-8613-7D6A6039A139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A06C373D-6FF1-43DA-8613-7D6A6039A139}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
+		{A06C373D-6FF1-43DA-8613-7D6A6039A139}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug|Any CPU
+		{A06C373D-6FF1-43DA-8613-7D6A6039A139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A06C373D-6FF1-43DA-8613-7D6A6039A139}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A06C373D-6FF1-43DA-8613-7D6A6039A139}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
+		{A06C373D-6FF1-43DA-8613-7D6A6039A139}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +100,7 @@ Global
 		{BC26DC83-5485-4620-98B9-63ACD6B34985} = {A93C7AE2-9D6C-437A-9472-1061DB423A9D}
 		{98CC0F49-3C0E-4A48-9181-9B32DE7206D7} = {414762AB-DADC-4FB5-9462-EC48B47A97C5}
 		{876C719B-D7E9-4F99-A7E9-43550E3284D5} = {414762AB-DADC-4FB5-9462-EC48B47A97C5}
+		{A06C373D-6FF1-43DA-8613-7D6A6039A139} = {414762AB-DADC-4FB5-9462-EC48B47A97C5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2174DAFB-7196-4BDE-9778-66E2CFDA2A2F}
