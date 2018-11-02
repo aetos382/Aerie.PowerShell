@@ -379,7 +379,8 @@ namespace Aerie.PowerShell
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            DisposeContext(cmdlet);
+            var context = AsyncCmdletContext.GetContext(cmdlet);
+            context.Dispose();
         }
 
         private static void DoWithSynchronizationContext<TCmdlet>(
@@ -398,11 +399,13 @@ namespace Aerie.PowerShell
             {
                 var task = func();
 
-                task = task.ContinueWith(t =>
-                {
-                    scope.CloseQueue();
-                    t.Wait(); // 例外を外へ飛ばす
-                }, TaskContinuationOptions.ExecuteSynchronously);
+                task = task.ContinueWith(t => {
+                        scope.CloseQueue();
+                        t.Wait(); // 例外を外へ飛ばす
+                    },
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Current);
 
                 foreach (var action in scope.GetQueuedTasks())
                 {
@@ -412,7 +415,7 @@ namespace Aerie.PowerShell
                 task.Wait();
             }
         }
-
+        
         [NotNull]
         private static Task PostAsyncOperation<TCmdlet>(
             [NotNull] TCmdlet cmdlet,
@@ -420,44 +423,10 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            var myToken = GetCancellationToken(cmdlet);
-
             var context = AsyncCmdletContext.GetContext(cmdlet);
+            var task = context.QueueAsyncOperation(action, cancellationToken);
 
-            CancellationTokenSource linkedSource = null;
-
-            try
-            {
-                linkedSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, myToken);
-
-                var task = context
-                    .QueueAsyncOperation(action, cancellationToken)
-                    .ContinueWith(t =>
-                    {
-                        linkedSource.Dispose();
-                        t.Wait();
-                    });
-
-                return task;
-            }
-            catch
-            {
-                if (linkedSource != null)
-                {
-                    linkedSource.Dispose();
-                }
-
-                throw;
-            }
-        }
-
-        private static void DisposeContext<TCmdlet>(
-            [NotNull] TCmdlet cmdlet)
-            where TCmdlet : Cmdlet, IAsyncCmdlet
-        {
-            var context = AsyncCmdletContext.GetContext(cmdlet);
-
-            context.Dispose();
+            return task;
         }
     }
 }

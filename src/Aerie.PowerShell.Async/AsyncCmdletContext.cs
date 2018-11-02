@@ -59,26 +59,32 @@ namespace Aerie.PowerShell
             return _endProcessingAsyncDelegate(this._cmdlet);
         }
 
-        [NotNull]
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-
         public void Dispose()
         {
-            this._cancellationTokenSource.Dispose();
+            lock (this._scopeLock)
+            {
+                this._scope?.Dispose();
+            }
 
             _contexts.Remove(this._cmdlet);
         }
 
         public void Cancel()
         {
-            this._cancellationTokenSource.Cancel();
+            lock (this._scopeLock)
+            {
+                this._scope.Cancel();
+            }
         }
 
         public CancellationToken CancellationToken
         {
             get
             {
-                return this._cancellationTokenSource.Token;
+                lock (this._scopeLock)
+                {
+                    return this._scope.CancellationToken;
+                }
             }
         }
 
@@ -103,7 +109,7 @@ namespace Aerie.PowerShell
                     throw new InvalidOperationException();
                 }
 
-                return this._scope.QueueAsyncOperation(action, cancellationToken);
+                return scope.QueueAsyncOperation(action, cancellationToken);
             }
         }
 
@@ -121,6 +127,7 @@ namespace Aerie.PowerShell
             }
         }
 
+        [NotNull]
         public AsyncCmdletScope BeginAsyncScope()
         {
             lock (this._scopeLock)

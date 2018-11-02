@@ -44,6 +44,11 @@ namespace Aerie.PowerShell
             SendOrPostCallback callback,
             object state)
         {
+            if (this._cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             this.QueueOperation(callback, state, true);
         }
 

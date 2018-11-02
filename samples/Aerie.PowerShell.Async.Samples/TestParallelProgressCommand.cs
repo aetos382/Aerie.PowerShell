@@ -23,26 +23,26 @@ namespace Aerie.PowerSHell.Samples
 
         public override Task ProcessRecordAsync()
         {
-            // var tasks = Enumerable.Range(1, this.Threads).Select(i => Task.Run(async () => await this.CountAsync(i)));
-            var tasks = Enumerable.Range(1, this.Threads).Select(i => this.CountAsync(i, this.CancellationToken));
+            var tasks = Enumerable.Range(1, this.Threads).Select(i => Task.Run(async () => await this.CountAsync(i)));
 
             var allTasks = Task.WhenAll(tasks.ToArray());
             return allTasks;
         }
 
         private async Task CountAsync(
-            int activityId,
-            CancellationToken cancellationToken)
+            int activityId)
         {
             var progressRecord = new ProgressRecord(activityId, "Couting", $"Thread {activityId}");
 
-            for (int i = 0; i < this.Steps; ++i)
+            int steps = this.Steps;
+
+            for (int i = 0; i < steps; ++i)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                this.CancellationToken.ThrowIfCancellationRequested();
 
                 await Task.Delay(TimeSpan.FromSeconds(this.Wait));
 
-                progressRecord.PercentComplete = (int)((double)i * 100 / this.Steps);
+                progressRecord.PercentComplete = (int)((double)i * 100 / steps);
 
                 await this.WriteProgressAsync(progressRecord);
             }
