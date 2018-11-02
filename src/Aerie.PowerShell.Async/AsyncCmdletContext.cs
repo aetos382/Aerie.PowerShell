@@ -29,7 +29,7 @@ namespace Aerie.PowerShell
         private static readonly Func<IAsyncCmdlet, Task> _endProcessingAsyncDelegate;
 
         [NotNull]
-        private readonly ScopedReaderWriterLock _scopeLock = new ScopedReaderWriterLock(LockRecursionPolicy.SupportsRecursion);
+        private readonly ScopedReaderWriterLock _scopeLock = new ScopedReaderWriterLock();
 
         static AsyncCmdletContext()
         {
