@@ -28,6 +28,9 @@ namespace Aerie.PowerShell
         [NotNull]
         private static readonly Func<IAsyncCmdlet, Task> _endProcessingAsyncDelegate;
 
+        [NotNull]
+        private readonly ScopedReaderWriterLock _scopeLock = new ScopedReaderWriterLock(LockRecursionPolicy.SupportsRecursion);
+
         static AsyncCmdletContext()
         {
             _beginProcessingAsyncDelegate = CreateDelegate(nameof(IAsyncCmdlet.BeginProcessingAsync));
@@ -61,17 +64,13 @@ namespace Aerie.PowerShell
 
         public void Dispose()
         {
-            lock (this._scopeLock)
-            {
-                this._scope?.Dispose();
-            }
-
+            this._scopeLock.Dispose();
             _contexts.Remove(this._cmdlet);
         }
 
         public void Cancel()
         {
-            lock (this._scopeLock)
+            using (this._scopeLock.BeginReadLockScope())
             {
                 this._scope.Cancel();
             }
@@ -81,7 +80,7 @@ namespace Aerie.PowerShell
         {
             get
             {
-                lock (this._scopeLock)
+                using (this._scopeLock.BeginReadLockScope())
                 {
                     return this._scope.CancellationToken;
                 }
@@ -129,7 +128,7 @@ namespace Aerie.PowerShell
             Action action,
             CancellationToken cancellationToken)
         {
-            lock (this._scopeLock)
+            using (this._scopeLock.BeginReadLockScope())
             {
                 var scope = this._scope;
 
@@ -142,15 +141,12 @@ namespace Aerie.PowerShell
             }
         }
 
-        [NotNull]
-        private readonly object _scopeLock = new object();
-
         [CanBeNull]
         private AsyncCmdletScope _scope;
 
         public void EndScope()
         {
-            lock (this._scopeLock)
+            using (this._scopeLock.BeginWriteLockScope())
             {
                 this._scope = null;
             }
@@ -159,7 +155,7 @@ namespace Aerie.PowerShell
         [NotNull]
         public AsyncCmdletScope BeginAsyncScope()
         {
-            lock (this._scopeLock)
+            using (this._scopeLock.BeginWriteLockScope())
             {
                 if (this._scope != null)
                 {
