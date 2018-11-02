@@ -43,6 +43,7 @@ namespace Aerie.PowerShell
         private sealed class LockScope :
             IDisposable
         {
+            [NotNull]
             private readonly Action _unlockAction;
 
             private bool _disposed;
