@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Management.Automation;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Aerie.PowerShell;
 
 namespace Aerie.PowerSHell.Samples
 {
-    [Cmdlet("Count", "Async")]
-    public sealed class CountAsyncCommand :
-        Cmdlet,
-        IAsyncCmdlet
+    [Cmdlet("Test", "ParallelProgress")]
+    public sealed class TestParallelProgressCommand :
+        AsyncCmdlet
     {
         [Parameter]
         public int Threads { get; set; } = 3;
@@ -21,39 +21,28 @@ namespace Aerie.PowerSHell.Samples
         [Parameter]
         public double Wait { get; set; } = 0.5;
 
-        protected override void ProcessRecord()
+        public override Task ProcessRecordAsync()
         {
-            this.DoProcessRecordAsync();
-        }
-
-        public Task BeginProcessingAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task ProcessRecordAsync()
-        {
-            var tasks = Enumerable.Range(1, this.Threads).Select(i => this.CountAsync(i));
+            var tasks = Enumerable.Range(1, this.Threads).Select(i => Task.Run(async () => await this.CountAsync(i)));
 
             var allTasks = Task.WhenAll(tasks.ToArray());
-
             return allTasks;
         }
 
-        public Task EndProcessingAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        private async Task CountAsync(int activityId)
+        private async Task CountAsync(
+            int activityId)
         {
             var progressRecord = new ProgressRecord(activityId, "Couting", $"Thread {activityId}");
 
-            for (int i = 0; i < this.Steps; ++i)
+            int steps = this.Steps;
+
+            for (int i = 0; i < steps; ++i)
             {
+                this.CancellationToken.ThrowIfCancellationRequested();
+
                 await Task.Delay(TimeSpan.FromSeconds(this.Wait));
 
-                progressRecord.PercentComplete = (int)((double)i * 100 / this.Steps);
+                progressRecord.PercentComplete = (int)((double)i * 100 / steps);
 
                 await this.WriteProgressAsync(progressRecord);
             }
@@ -61,11 +50,6 @@ namespace Aerie.PowerSHell.Samples
             progressRecord.RecordType = ProgressRecordType.Completed;
 
             await this.WriteProgressAsync(progressRecord);
-        }
-
-        public void Dispose()
-        {
-            this.DoDispose();
         }
     }
 }

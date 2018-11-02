@@ -249,7 +249,7 @@
     <Rule Id="CS0114" Action="Error" />
     <Rule Id="CS0162" Action="Warning" />
     <Rule Id="CS0164" Action="Error" />
-    <Rule Id="CS0168" Action="Error" />
+    <Rule Id="CS0168" Action="Warning" />
     <Rule Id="CS0183" Action="Error" />
     <Rule Id="CS0184" Action="Error" />
     <Rule Id="CS0197" Action="Error" />
