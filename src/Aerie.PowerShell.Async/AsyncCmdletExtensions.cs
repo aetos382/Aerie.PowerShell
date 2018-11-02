@@ -304,19 +304,6 @@ namespace Aerie.PowerShell
             return PostAsyncOperation(cmdlet, () => cmdlet.WriteInformation(messageData, tags), cancellationToken);
         }
 
-        public static CancellationToken GetCancellationToken<TCmdlet>(
-            [NotNull] this TCmdlet cmdlet)
-            where TCmdlet : Cmdlet, IAsyncCmdlet
-        {
-            if (cmdlet == null)
-            {
-                throw new ArgumentNullException(nameof(cmdlet));
-            }
-
-            var context = AsyncCmdletContext.GetContext(cmdlet);
-            return context.CancellationToken;
-        }
-
         public static void DoBeginProcessingAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
@@ -327,7 +314,7 @@ namespace Aerie.PowerShell
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            ProcessOperationQueue(cmdlet, context.DoBeginProcessingAsync);
+            context.DoBeginProcessingAsync();
         }
 
         public static void DoProcessRecordAsync<TCmdlet>(
@@ -340,7 +327,7 @@ namespace Aerie.PowerShell
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            ProcessOperationQueue(cmdlet, context.DoProcessRecordAsync);
+            context.DoProcessRecordAsync();
         }
         
         public static void DoEndProcessingAsync<TCmdlet>(
@@ -353,7 +340,7 @@ namespace Aerie.PowerShell
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            ProcessOperationQueue(cmdlet, context.DoEndProcessingAsync);
+            context.DoEndProcessingAsync();
         }
 
         public static void DoStopProcessing<TCmdlet>(
@@ -381,25 +368,6 @@ namespace Aerie.PowerShell
         {
             var context = AsyncCmdletContext.GetContext(cmdlet);
             context.Dispose();
-        }
-
-        private static void ProcessOperationQueue<TCmdlet>(
-            [NotNull] this TCmdlet cmdlet,
-            [NotNull] Func<Task> func)
-            where TCmdlet : Cmdlet, IAsyncCmdlet
-        {
-            if (cmdlet == null)
-            {
-                throw new ArgumentNullException(nameof(cmdlet));
-            }
-
-            if (func == null)
-            {
-                throw new ArgumentNullException(nameof(func));
-            }
-
-            var context = AsyncCmdletContext.GetContext(cmdlet);
-            context.ProcessOperationQueue(func);
         }
         
         [NotNull]

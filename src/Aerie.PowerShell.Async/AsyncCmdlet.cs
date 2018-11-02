@@ -13,17 +13,20 @@ namespace Aerie.PowerShell
         {
         }
 
-        public virtual Task BeginProcessingAsync()
+        public virtual Task BeginProcessingAsync(
+            CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task ProcessRecordAsync()
+        public virtual Task ProcessRecordAsync(
+            CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task EndProcessingAsync()
+        public virtual Task EndProcessingAsync(
+            CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -51,14 +54,6 @@ namespace Aerie.PowerShell
         public virtual void Dispose()
         {
             this.DoDispose();
-        }
-
-        protected CancellationToken CancellationToken
-        {
-            get
-            {
-                return this.GetCancellationToken();
-            }
         }
     }
 }

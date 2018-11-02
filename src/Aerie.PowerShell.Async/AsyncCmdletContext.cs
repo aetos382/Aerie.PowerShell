@@ -19,14 +19,16 @@ namespace Aerie.PowerShell
         [NotNull]
         private readonly IAsyncCmdlet _cmdlet;
 
-        [NotNull]
-        private static readonly Func<IAsyncCmdlet, Task> _beginProcessingAsyncDelegate;
+        private delegate Task AsyncPipelineDelegate(IAsyncCmdlet cmdlet, CancellationToken cancellationToken);
 
         [NotNull]
-        private static readonly Func<IAsyncCmdlet, Task> _processRecordAsyncDelegate;
+        private static readonly AsyncPipelineDelegate _beginProcessingAsyncDelegate;
 
         [NotNull]
-        private static readonly Func<IAsyncCmdlet, Task> _endProcessingAsyncDelegate;
+        private static readonly AsyncPipelineDelegate _processRecordAsyncDelegate;
+
+        [NotNull]
+        private static readonly AsyncPipelineDelegate _endProcessingAsyncDelegate;
 
         [NotNull]
         private readonly ScopedReaderWriterLock _scopeLock = new ScopedReaderWriterLock();
@@ -44,22 +46,19 @@ namespace Aerie.PowerShell
             this._cmdlet = cmdlet;
         }
 
-        [NotNull]
-        public Task DoBeginProcessingAsync()
+        public void DoBeginProcessingAsync()
         {
-            return _beginProcessingAsyncDelegate(this._cmdlet);
+            this.ProcessOperationQueue(cancellationToken => _beginProcessingAsyncDelegate(this._cmdlet, cancellationToken));
         }
 
-        [NotNull]
-        public Task DoProcessRecordAsync()
+        public void DoProcessRecordAsync()
         {
-            return _processRecordAsyncDelegate(this._cmdlet);
+            this.ProcessOperationQueue(cancellationToken => _processRecordAsyncDelegate(this._cmdlet, cancellationToken));
         }
 
-        [NotNull]
-        public Task DoEndProcessingAsync()
+        public void DoEndProcessingAsync()
         {
-            return _endProcessingAsyncDelegate(this._cmdlet);
+            this.ProcessOperationQueue(cancellationToken => _endProcessingAsyncDelegate(this._cmdlet, cancellationToken));
         }
 
         public void Dispose()
@@ -76,17 +75,6 @@ namespace Aerie.PowerShell
             }
         }
 
-        public CancellationToken CancellationToken
-        {
-            get
-            {
-                using (this._scopeLock.BeginReadLockScope())
-                {
-                    return this._scope.CancellationToken;
-                }
-            }
-        }
-
         [NotNull]
         public static AsyncCmdletContext GetContext<TCmdlet>(
             [NotNull] TCmdlet cmdlet)
@@ -96,7 +84,7 @@ namespace Aerie.PowerShell
         }
 
         public void ProcessOperationQueue(
-            [NotNull] Func<Task> func)
+            [NotNull] Func<CancellationToken, Task> func)
         {
             if (func == null)
             {
@@ -105,7 +93,7 @@ namespace Aerie.PowerShell
 
             using (var scope = this.BeginAsyncScope())
             {
-                var task = func();
+                var task = func(scope.CancellationToken);
 
                 task = task.ContinueWith(t => {
                         scope.CloseQueue();
@@ -117,10 +105,36 @@ namespace Aerie.PowerShell
 
                 foreach (var action in scope.GetQueuedTasks())
                 {
-                    action.RunSynchronously();
+                    try
+                    {
+                        action.RunSynchronously();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        if (action.IsCanceled)
+                        {
+                            continue;
+                        }
+
+                        throw;
+                    }
                 }
 
-                task.Wait();
+                try
+                {
+                    task.Wait();
+                }
+                catch (AggregateException ex)
+                {
+                    var exceptions = ex.Flatten();
+
+                    if (exceptions.InnerExceptions.Count == 1)
+                    {
+                        throw exceptions.InnerExceptions[0];
+                    }
+
+                    throw;
+                }
             }
         }
 
@@ -168,18 +182,21 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        private static Func<IAsyncCmdlet, Task> CreateDelegate(
+        private static AsyncPipelineDelegate CreateDelegate(
             [NotNull] string methodName)
         {
             var method = typeof(IAsyncCmdlet).GetMethod(methodName);
 
             var cmdletParameter = Expression.Parameter(typeof(IAsyncCmdlet));
+            var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
 
-            var lambdaExpression = Expression.Lambda<Func<IAsyncCmdlet, Task>>(
+            var lambdaExpression = Expression.Lambda<AsyncPipelineDelegate>(
                 Expression.Call(
                     cmdletParameter,
-                    method),
-                cmdletParameter);
+                    method,
+                    cancellationTokenParameter),
+                cmdletParameter,
+                cancellationTokenParameter);
 
             var @delegate = lambdaExpression.Compile();
             return @delegate;
