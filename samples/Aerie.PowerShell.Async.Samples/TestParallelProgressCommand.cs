@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Management.Automation;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Aerie.PowerShell;
@@ -16,10 +15,10 @@ namespace Aerie.PowerSHell.Samples
         public int Threads { get; set; } = 3;
 
         [Parameter]
-        public int Steps { get; set; } = 100;
+        public int Steps { get; set; } = 10;
         
         [Parameter]
-        public double Wait { get; set; } = 0.5;
+        public double Wait { get; set; } = 1;
 
         public override Task ProcessRecordAsync()
         {
