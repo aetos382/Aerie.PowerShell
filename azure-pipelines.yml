@@ -41,6 +41,7 @@ steps:
   displayName: 'dotnet pack'
   inputs:
     command: pack
+    packagesToPack: 'src/**/*.csproj'
     nobuild: true
     configurationToPack: Release
 
