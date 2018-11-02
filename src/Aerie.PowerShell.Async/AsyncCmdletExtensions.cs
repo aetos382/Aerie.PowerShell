@@ -327,7 +327,7 @@ namespace Aerie.PowerShell
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            DoWithSynchronizationContext(cmdlet, context.DoBeginProcessingAsync);
+            ProcessOperationQueue(cmdlet, context.DoBeginProcessingAsync);
         }
 
         public static void DoProcessRecordAsync<TCmdlet>(
@@ -340,7 +340,7 @@ namespace Aerie.PowerShell
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            DoWithSynchronizationContext(cmdlet, context.DoProcessRecordAsync);
+            ProcessOperationQueue(cmdlet, context.DoProcessRecordAsync);
         }
         
         public static void DoEndProcessingAsync<TCmdlet>(
@@ -353,7 +353,7 @@ namespace Aerie.PowerShell
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            DoWithSynchronizationContext(cmdlet, context.DoEndProcessingAsync);
+            ProcessOperationQueue(cmdlet, context.DoEndProcessingAsync);
         }
 
         public static void DoStopProcessing<TCmdlet>(
@@ -383,37 +383,23 @@ namespace Aerie.PowerShell
             context.Dispose();
         }
 
-        private static void DoWithSynchronizationContext<TCmdlet>(
+        private static void ProcessOperationQueue<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] Func<Task> func)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
+            if (cmdlet == null)
+            {
+                throw new ArgumentNullException(nameof(cmdlet));
+            }
+
             if (func == null)
             {
                 throw new ArgumentNullException(nameof(func));
             }
 
             var context = AsyncCmdletContext.GetContext(cmdlet);
-
-            using (var scope = context.BeginAsyncScope())
-            {
-                var task = func();
-
-                task = task.ContinueWith(t => {
-                        scope.CloseQueue();
-                        t.Wait(); // 例外を外へ飛ばす
-                    },
-                    CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously,
-                    TaskScheduler.Current);
-
-                foreach (var action in scope.GetQueuedTasks())
-                {
-                    action.RunSynchronously();
-                }
-
-                task.Wait();
-            }
+            context.ProcessOperationQueue(func);
         }
         
         [NotNull]

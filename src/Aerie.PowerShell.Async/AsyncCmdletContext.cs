@@ -96,6 +96,35 @@ namespace Aerie.PowerShell
             return _contexts.GetValue(cmdlet, c => new AsyncCmdletContext(c));
         }
 
+        public void ProcessOperationQueue(
+            [NotNull] Func<Task> func)
+        {
+            if (func == null)
+            {
+                throw new ArgumentNullException(nameof(func));
+            }
+
+            using (var scope = this.BeginAsyncScope())
+            {
+                var task = func();
+
+                task = task.ContinueWith(t => {
+                        scope.CloseQueue();
+                        t.Wait(); // 例外を外へ飛ばす
+                    },
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Current);
+
+                foreach (var action in scope.GetQueuedTasks())
+                {
+                    action.RunSynchronously();
+                }
+
+                task.Wait();
+            }
+        }
+
         public Task QueueAsyncOperation(
             Action action,
             CancellationToken cancellationToken)
