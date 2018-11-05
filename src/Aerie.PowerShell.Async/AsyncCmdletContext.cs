@@ -164,7 +164,7 @@ namespace Aerie.PowerShell
 
         public Task QueueAsyncOperation(
             Action action,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
         {
             this.CheckDisposed();
@@ -178,7 +178,7 @@ namespace Aerie.PowerShell
                     throw new InvalidOperationException();
                 }
 
-                return scope.RequestAsyncOperation(action, option, cancellationToken);
+                return scope.RequestAsyncOperation(action, executeSynchronously, cancellationToken);
             }
         }
 

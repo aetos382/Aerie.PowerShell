@@ -31,7 +31,7 @@ namespace Aerie.PowerShell
                 return;
             }
 
-            this.QueueOperation(callback, state, AsyncOperationOption.None);
+            this.QueueOperation(callback, state, false);
         }
 
         public override void Send(
@@ -43,20 +43,20 @@ namespace Aerie.PowerShell
                 return;
             }
 
-            this.QueueOperation(callback, state, AsyncOperationOption.ForceExecuteSynchronously);
+            this.QueueOperation(callback, state, true);
         }
 
         private void QueueOperation(
             [NotNull] SendOrPostCallback callback,
             [CanBeNull] object state,
-            AsyncOperationOption option)
+            bool executeSynchnously)
         {
             if (callback == null)
             {
                 throw new ArgumentNullException(nameof(callback));
             }
 
-            this._scope.RequestAsyncOperation(() => callback(state), option, CancellationToken.None);
+            this._scope.RequestAsyncOperation(() => callback(state), executeSynchnously, CancellationToken.None);
         }
 
         public override SynchronizationContext CreateCopy()

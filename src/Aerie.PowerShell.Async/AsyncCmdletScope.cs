@@ -40,30 +40,29 @@ namespace Aerie.PowerShell
         [NotNull]
         public Task RequestAsyncOperation(
             [NotNull] Action action,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
         {
             this.CheckDisposed();
 
-            bool executeSynchronously = false;
-
-            if (option == AsyncOperationOption.ForceExecuteSynchronously)
-            {
-                executeSynchronously = true;
-            }
-            else if (option == AsyncOperationOption.ExecuteSynchronouslyIfPossible)
-            {
-                executeSynchronously = IsMainThread;
-            }
+            Task task;
 
             if (executeSynchronously)
             {
-                action();
-                return Task.CompletedTask;
+                if (IsMainThread)
+                {
+                    action();
+                    return Task.CompletedTask;
+                }
             }
 
-            var task = CreateTask(action, cancellationToken);
+            task = CreateTask(action, cancellationToken);
             this._queue.Add(task);
+
+            if (executeSynchronously)
+            {
+                task.Wait();
+            }
 
             return task;
         }
@@ -81,7 +80,7 @@ namespace Aerie.PowerShell
         {
             this.CheckDisposed();
 
-            return this._queue.GetConsumingEnumerable();
+            return this._queue.GetConsumingEnumerable(this.CancellationToken);
         }
 
         public void Dispose()

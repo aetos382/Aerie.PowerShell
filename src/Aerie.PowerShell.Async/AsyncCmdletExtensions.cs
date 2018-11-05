@@ -20,27 +20,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            return WriteObjectAsync(cmdlet, value, AsyncOperationOption.None, CancellationToken.None);
-        }
-
-        [NotNull]
-        public static Task WriteObjectAsync<TCmdlet>(
-            [NotNull] this TCmdlet cmdlet,
-            [CanBeNull] object value,
-            AsyncOperationOption option,
-            CancellationToken cancellationToken)
-            where TCmdlet : Cmdlet, IAsyncCmdlet
-        {
-            if (cmdlet == null)
-            {
-                throw new ArgumentNullException(nameof(cmdlet));
-            }
-
-            return PostAsyncOperation(
-                cmdlet,
-                () => cmdlet.WriteObject(value),
-                option,
-                cancellationToken);
+            return WriteObjectAsync(cmdlet, value, false, false, CancellationToken.None);
         }
 
         [NotNull]
@@ -55,7 +35,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            return WriteObjectAsync(cmdlet, value, enumerateCollection, AsyncOperationOption.None, CancellationToken.None);
+            return WriteObjectAsync(cmdlet, value, enumerateCollection, false, CancellationToken.None);
         }
         
         [NotNull]
@@ -63,7 +43,7 @@ namespace Aerie.PowerShell
             [NotNull] this TCmdlet cmdlet,
             [CanBeNull] object value,
             bool enumerateCollection,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -75,7 +55,7 @@ namespace Aerie.PowerShell
             return PostAsyncOperation(
                 cmdlet,
                 () => cmdlet.WriteObject(value, enumerateCollection),
-                option,
+                executeSynchronously,
                 cancellationToken);
         }
         
@@ -95,14 +75,14 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(errorRecord));
             }
 
-            return WriteErrorAsync(cmdlet, errorRecord, AsyncOperationOption.None, CancellationToken.None);
+            return WriteErrorAsync(cmdlet, errorRecord, false, CancellationToken.None);
         }
 
         [NotNull]
         public static Task WriteErrorAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] ErrorRecord errorRecord,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -119,7 +99,7 @@ namespace Aerie.PowerShell
             return PostAsyncOperation(
                 cmdlet,
                 () => cmdlet.WriteError(errorRecord),
-                option,
+                executeSynchronously,
                 cancellationToken);
         }
         
@@ -134,14 +114,14 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            return WriteWarningAsync(cmdlet, message, AsyncOperationOption.None, CancellationToken.None);
+            return WriteWarningAsync(cmdlet, message, false, CancellationToken.None);
         }
 
         [NotNull]
         public static Task WriteWarningAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             string message,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -153,7 +133,7 @@ namespace Aerie.PowerShell
             return PostAsyncOperation(
                 cmdlet,
                 () => cmdlet.WriteWarning(message),
-                option,
+                executeSynchronously,
                 cancellationToken);
         }
         
@@ -168,14 +148,14 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            return WriteVerboseAsync(cmdlet, message, AsyncOperationOption.None, CancellationToken.None);
+            return WriteVerboseAsync(cmdlet, message, false, CancellationToken.None);
         }
 
         [NotNull]
         public static Task WriteVerboseAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             string message,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -187,7 +167,7 @@ namespace Aerie.PowerShell
             return PostAsyncOperation(
                 cmdlet,
                 () => cmdlet.WriteVerbose(message),
-                option,
+                executeSynchronously,
                 cancellationToken);
         }
        
@@ -202,14 +182,14 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            return WriteDebugAsync(cmdlet, message, AsyncOperationOption.None, CancellationToken.None);
+            return WriteDebugAsync(cmdlet, message, false, CancellationToken.None);
         }
 
         [NotNull]
         public static Task WriteDebugAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             string message,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -221,7 +201,7 @@ namespace Aerie.PowerShell
             return PostAsyncOperation(
                 cmdlet,
                 () => cmdlet.WriteDebug(message),
-                option,
+                executeSynchronously,
                 cancellationToken);
         }
         
@@ -241,14 +221,14 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(progressRecord));
             }
 
-            return WriteProgressAsync(cmdlet, progressRecord, AsyncOperationOption.None, CancellationToken.None);
+            return WriteProgressAsync(cmdlet, progressRecord, false, CancellationToken.None);
         }
 
         [NotNull]
         public static Task WriteProgressAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] ProgressRecord progressRecord,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -265,7 +245,7 @@ namespace Aerie.PowerShell
             return PostAsyncOperation(
                 cmdlet,
                 () => cmdlet.WriteProgress(progressRecord),
-                option,
+                executeSynchronously,
                 cancellationToken);
         }
                             
@@ -285,14 +265,14 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(informationRecord));
             }
 
-            return WriteInformationAsync(cmdlet, informationRecord, AsyncOperationOption.None, CancellationToken.None);
+            return WriteInformationAsync(cmdlet, informationRecord, false, CancellationToken.None);
         }
 
         [NotNull]
         public static Task WriteInformationAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] InformationRecord informationRecord,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -309,7 +289,7 @@ namespace Aerie.PowerShell
             return PostAsyncOperation(
                 cmdlet,
                 () => cmdlet.WriteInformation(informationRecord),
-                option,
+                executeSynchronously,
                 cancellationToken);
         }
                            
@@ -325,7 +305,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            return WriteInformationAsync(cmdlet, messageData, tags, AsyncOperationOption.None, CancellationToken.None);
+            return WriteInformationAsync(cmdlet, messageData, tags, false, CancellationToken.None);
         }
 
         [NotNull]
@@ -333,7 +313,7 @@ namespace Aerie.PowerShell
             [NotNull] this TCmdlet cmdlet,
             [CanBeNull] object messageData,
             [CanBeNull] string[] tags,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
@@ -345,7 +325,7 @@ namespace Aerie.PowerShell
             return PostAsyncOperation(
                 cmdlet,
                 () => cmdlet.WriteInformation(messageData, tags),
-                option,
+                executeSynchronously,
                 cancellationToken);
         }
 
@@ -427,12 +407,12 @@ namespace Aerie.PowerShell
         private static Task PostAsyncOperation<TCmdlet>(
             [NotNull] TCmdlet cmdlet,
             [NotNull] Action action,
-            AsyncOperationOption option,
+            bool executeSynchronously,
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
             var context = AsyncCmdletContext.GetContext(cmdlet);
-            var task = context.QueueAsyncOperation(action, option, cancellationToken);
+            var task = context.QueueAsyncOperation(action, executeSynchronously, cancellationToken);
 
             return task;
         }
