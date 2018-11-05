@@ -115,6 +115,11 @@ namespace Aerie.PowerShell
         private void ProcessOperationQueue(
             [NotNull] Func<Task> func)
         {
+            if (this.CancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             using (var scope = this.BeginAsyncScope())
             {
                 var task = func();
