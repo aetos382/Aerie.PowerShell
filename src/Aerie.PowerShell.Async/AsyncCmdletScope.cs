@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
@@ -17,7 +17,7 @@ namespace Aerie.PowerShell
         [NotNull]
         private readonly BlockingCollection<Task> _queue = new BlockingCollection<Task>();
 
-        private readonly CancellationToken _cancellationToken;
+        internal readonly CancellationToken CancellationToken;
 
         [CanBeNull]
         private readonly SynchronizationContext _oldSynchronizationContext;
@@ -30,10 +30,10 @@ namespace Aerie.PowerShell
             [NotNull] AsyncCmdletContext context)
         {
             this._context = context;
-            this._cancellationToken = context.CancellationToken;
+            this.CancellationToken = context.CancellationToken;
 
             this._oldSynchronizationContext = SynchronizationContext.Current;
-            var syncCtx = new QueueingSynchronizationContext(this._queue, this._cancellationToken);
+            var syncCtx = new QueueingSynchronizationContext(this);
             SynchronizationContext.SetSynchronizationContext(syncCtx);
         }
 
@@ -105,14 +105,14 @@ namespace Aerie.PowerShell
             [NotNull] Action action,
             CancellationToken cancellationToken)
         {
-            if (!cancellationToken.CanBeCanceled || cancellationToken == this._cancellationToken)
+            if (!cancellationToken.CanBeCanceled || cancellationToken == this.CancellationToken)
             {
-                var simpleTask = new Task(action, this._cancellationToken);
+                var simpleTask = new Task(action, this.CancellationToken);
                 return simpleTask;
             }
 
             var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(
-                this._cancellationToken, cancellationToken);
+                this.CancellationToken, cancellationToken);
 
             var task = new Task(action, linkedSource.Token)
                 .ContinueWith(t =>

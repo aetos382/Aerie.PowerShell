@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Threading;
-using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
@@ -11,21 +9,17 @@ namespace Aerie.PowerShell
         SynchronizationContext
     {
         [NotNull]
-        private readonly BlockingCollection<Task> _queue;
+        private readonly AsyncCmdletScope _scope;
 
         private readonly CancellationToken _cancellationToken;
-
-        private readonly int _mainThreadId;
 
         private bool _disposed = false;
 
         public QueueingSynchronizationContext(
-            BlockingCollection<Task> queue,
-            CancellationToken cancellationToken)
+            [NotNull] AsyncCmdletScope scope)
         {
-            this._queue = queue;
-            this._cancellationToken = cancellationToken;
-            this._mainThreadId = Thread.CurrentThread.ManagedThreadId;
+            this._scope = scope;
+            this._cancellationToken = scope.CancellationToken;
         }
 
         public override void Post(
@@ -37,7 +31,7 @@ namespace Aerie.PowerShell
                 return;
             }
 
-            this.QueueOperation(callback, state, this.IsMainThread);
+            this.QueueOperation(callback, state, AsyncOperationOption.None);
         }
 
         public override void Send(
@@ -49,46 +43,25 @@ namespace Aerie.PowerShell
                 return;
             }
 
-            this.QueueOperation(callback, state, true);
+            this.QueueOperation(callback, state, AsyncOperationOption.ForceExecuteSynchronously);
         }
 
         private void QueueOperation(
             [NotNull] SendOrPostCallback callback,
             [CanBeNull] object state,
-            bool synchronously)
+            AsyncOperationOption option)
         {
             if (callback == null)
             {
                 throw new ArgumentNullException(nameof(callback));
             }
 
-            if (synchronously && this.IsMainThread)
-            {
-                callback(state);
-            }
-            else
-            {
-                var task = new Task(() => callback(state), this._cancellationToken);
-                this._queue.Add(task);
-
-                if (synchronously)
-                {
-                    task.Wait();
-                }
-            }
-        }
-
-        private bool IsMainThread
-        {
-            get
-            {
-                return Thread.CurrentThread.ManagedThreadId == this._mainThreadId;
-            }
+            this._scope.RequestAsyncOperation(() => callback(state), option, CancellationToken.None);
         }
 
         public override SynchronizationContext CreateCopy()
         {
-            return new QueueingSynchronizationContext(this._queue, this._cancellationToken);
+            return new QueueingSynchronizationContext(this._scope);
         }
     }
 }
