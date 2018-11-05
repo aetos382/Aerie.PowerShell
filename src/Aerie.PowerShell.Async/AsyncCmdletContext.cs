@@ -119,7 +119,8 @@ namespace Aerie.PowerShell
             {
                 var task = func();
 
-                task = task.ContinueWith(t => {
+                task = task.ContinueWith(t =>
+                    {
                         scope.CloseQueue();
                         t.Wait(); // 例外を外へ飛ばす
                     },
@@ -150,6 +151,8 @@ namespace Aerie.PowerShell
                 }
                 catch (AggregateException ex)
                 {
+                    this.Cancel();
+
                     var exceptions = ex.Flatten();
 
                     if (exceptions.InnerExceptions.Count == 1)
@@ -157,6 +160,11 @@ namespace Aerie.PowerShell
                         throw exceptions.InnerExceptions[0];
                     }
 
+                    throw;
+                }
+                catch
+                {
+                    this.Cancel();
                     throw;
                 }
             }
