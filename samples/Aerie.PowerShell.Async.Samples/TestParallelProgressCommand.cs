@@ -34,7 +34,7 @@ namespace Aerie.PowerShell.Samples
         private async Task CountAsync(
             int activityId)
         {
-            var progressRecord = new ProgressRecord(activityId, $"Thread {activityId}", "Counting");
+            var progressRecord = new ProgressRecord(activityId, $"Thread {activityId} ({Thread.CurrentThread.ManagedThreadId})", "Counting");
 
             int steps = this.Steps;
             double wait = this.Wait;
