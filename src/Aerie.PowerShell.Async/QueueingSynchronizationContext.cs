@@ -13,8 +13,6 @@ namespace Aerie.PowerShell
 
         private readonly CancellationToken _cancellationToken;
 
-        private bool _disposed = false;
-
         public QueueingSynchronizationContext(
             [NotNull] AsyncCmdletScope scope)
         {
