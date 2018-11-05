@@ -1,17 +1,15 @@
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using TestHelper;
-using Aerie.PowerShell.Async.Analyzer;
 
 namespace Aerie.PowerShell.Async.Analyzer.Test
 {
     [TestClass]
-    public class UnitTest : CodeFixVerifier
+    public class UnitTest : DiagnosticVerifier
     {
-
         //No diagnostics expected to show up
         [TestMethod]
         public void TestMethod1()
@@ -27,16 +25,19 @@ namespace Aerie.PowerShell.Async.Analyzer.Test
         {
             var test = @"
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
+    using System.Management.Automation;
 
-    namespace ConsoleApplication1
+    using Aerie.PowerShell;
+
+    namespace Aerie.PowerShell.Async.Analyzer.UnitTests
     {
-        class TypeName
-        {   
+        public class AsyncCmdlet : Cmdlet, IAsyncCmdlet
+        {
+            public virtual void Dispose()
+            {
+                this.DoDispose();
+                GC.SuppressFinalize(this);
+            }
         }
     }";
             var expected = new DiagnosticResult
@@ -51,32 +52,11 @@ namespace Aerie.PowerShell.Async.Analyzer.Test
             };
 
             VerifyCSharpDiagnostic(test, expected);
-
-            var fixtest = @"
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
-
-    namespace ConsoleApplication1
-    {
-        class TYPENAME
-        {   
-        }
-    }";
-            VerifyCSharpFix(test, fixtest);
-        }
-
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
-        {
-            return new AeriePowerShellAsyncAnalyzerCodeFixProvider();
         }
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new AeriePowerShellAsyncAnalyzerAnalyzer();
+            return new DisposeDiagnosticAnalyzer();
         }
     }
 }

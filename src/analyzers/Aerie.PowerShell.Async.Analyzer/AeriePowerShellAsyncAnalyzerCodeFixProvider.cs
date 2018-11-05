@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
@@ -15,6 +15,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Aerie.PowerShell.Async.Analyzer
 {
+    #if false
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AeriePowerShellAsyncAnalyzerCodeFixProvider)), Shared]
     public class AeriePowerShellAsyncAnalyzerCodeFixProvider : CodeFixProvider
     {
@@ -22,7 +23,7 @@ namespace Aerie.PowerShell.Async.Analyzer
 
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(AeriePowerShellAsyncAnalyzerAnalyzer.DiagnosticId); }
+            get { return ImmutableArray.Create(DisposeDiagnosticAnalyzer.DiagnosticId); }
         }
 
         public sealed override FixAllProvider GetFixAllProvider()
@@ -70,4 +71,5 @@ namespace Aerie.PowerShell.Async.Analyzer
             return newSolution;
         }
     }
+    #endif
 }

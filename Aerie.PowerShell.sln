@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BDC49605-8C87-4E33-9ECE-D6735C785562}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitignore = .gitignore
 		azure-pipelines.yml = azure-pipelines.yml
 		directory.build.props = directory.build.props
 		FxCop.ruleset = FxCop.ruleset
@@ -25,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.DynamicPar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "analyzers", "analyzers", "{BE3DD96D-05B4-4CC3-894C-461B6257A5D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aerie.PowerShell.Async.Analyzer", "src\analyzers\Aerie.PowerShell.Async.Analyzer\Aerie.PowerShell.Async.Analyzer.csproj", "{BACB287C-EC10-43C0-94F0-AB4F714C8407}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.Async.Analyzer", "src\analyzers\Aerie.PowerShell.Async.Analyzer\Aerie.PowerShell.Async.Analyzer.csproj", "{BACB287C-EC10-43C0-94F0-AB4F714C8407}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{414762AB-DADC-4FB5-9462-EC48B47A97C5}"
 	ProjectSection(SolutionItems) = preProject
@@ -40,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.DynamicPar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "analyzers", "analyzers", "{21B91080-279A-44F2-BC91-CEFF5AD6964C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aerie.PowerShell.Async.Analyzer.UnitTests", "test\analyzers\Aerie.PowerShell.Async.Analyzer.UnitTests\Aerie.PowerShell.Async.Analyzer.UnitTests.csproj", "{2144D87D-1665-44FA-B864-3A0B928AF4CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.Async.Analyzer.UnitTests", "test\analyzers\Aerie.PowerShell.Async.Analyzer.UnitTests\Aerie.PowerShell.Async.Analyzer.UnitTests.csproj", "{2144D87D-1665-44FA-B864-3A0B928AF4CC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{845A4DD5-8F32-4930-B490-772E4E98DC4E}"
 	ProjectSection(SolutionItems) = preProject
@@ -81,6 +82,14 @@ Global
 		{BC26DC83-5485-4620-98B9-63ACD6B34985}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC26DC83-5485-4620-98B9-63ACD6B34985}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release-PowerShell-6.1|Any CPU
 		{BC26DC83-5485-4620-98B9-63ACD6B34985}.Release-PowerShell-6.1|Any CPU.Build.0 = Release-PowerShell-6.1|Any CPU
+		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
+		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug|Any CPU
+		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
+		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
 		{98CC0F49-3C0E-4A48-9181-9B32DE7206D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{98CC0F49-3C0E-4A48-9181-9B32DE7206D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98CC0F49-3C0E-4A48-9181-9B32DE7206D7}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
@@ -105,22 +114,6 @@ Global
 		{876C719B-D7E9-4F99-A7E9-43550E3284D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{876C719B-D7E9-4F99-A7E9-43550E3284D5}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
 		{876C719B-D7E9-4F99-A7E9-43550E3284D5}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
-		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug|Any CPU
-		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
-		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
-		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
-		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug|Any CPU
-		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
-		{BACB287C-EC10-43C0-94F0-AB4F714C8407}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
 		{2144D87D-1665-44FA-B864-3A0B928AF4CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2144D87D-1665-44FA-B864-3A0B928AF4CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2144D87D-1665-44FA-B864-3A0B928AF4CC}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
@@ -129,6 +122,14 @@ Global
 		{2144D87D-1665-44FA-B864-3A0B928AF4CC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2144D87D-1665-44FA-B864-3A0B928AF4CC}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
 		{2144D87D-1665-44FA-B864-3A0B928AF4CC}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
+		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Debug-PowerShell-6.1|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Debug-PowerShell-6.1|Any CPU.Build.0 = Debug|Any CPU
+		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Release-PowerShell-6.1|Any CPU.ActiveCfg = Release|Any CPU
+		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}.Release-PowerShell-6.1|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,14 +138,14 @@ Global
 		{07F8120D-4B0C-4904-A892-8A72AD944EC3} = {A93C7AE2-9D6C-437A-9472-1061DB423A9D}
 		{0A016E7A-BDC4-4C0A-9752-86405AAA1F6E} = {A93C7AE2-9D6C-437A-9472-1061DB423A9D}
 		{BC26DC83-5485-4620-98B9-63ACD6B34985} = {A93C7AE2-9D6C-437A-9472-1061DB423A9D}
+		{BE3DD96D-05B4-4CC3-894C-461B6257A5D6} = {A93C7AE2-9D6C-437A-9472-1061DB423A9D}
+		{BACB287C-EC10-43C0-94F0-AB4F714C8407} = {BE3DD96D-05B4-4CC3-894C-461B6257A5D6}
 		{98CC0F49-3C0E-4A48-9181-9B32DE7206D7} = {414762AB-DADC-4FB5-9462-EC48B47A97C5}
 		{A06C373D-6FF1-43DA-8613-7D6A6039A139} = {414762AB-DADC-4FB5-9462-EC48B47A97C5}
 		{876C719B-D7E9-4F99-A7E9-43550E3284D5} = {414762AB-DADC-4FB5-9462-EC48B47A97C5}
-		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C} = {845A4DD5-8F32-4930-B490-772E4E98DC4E}
-		{BACB287C-EC10-43C0-94F0-AB4F714C8407} = {BE3DD96D-05B4-4CC3-894C-461B6257A5D6}
-		{2144D87D-1665-44FA-B864-3A0B928AF4CC} = {21B91080-279A-44F2-BC91-CEFF5AD6964C}
-		{BE3DD96D-05B4-4CC3-894C-461B6257A5D6} = {A93C7AE2-9D6C-437A-9472-1061DB423A9D}
 		{21B91080-279A-44F2-BC91-CEFF5AD6964C} = {414762AB-DADC-4FB5-9462-EC48B47A97C5}
+		{2144D87D-1665-44FA-B864-3A0B928AF4CC} = {21B91080-279A-44F2-BC91-CEFF5AD6964C}
+		{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C} = {845A4DD5-8F32-4930-B490-772E4E98DC4E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2174DAFB-7196-4BDE-9778-66E2CFDA2A2F}
