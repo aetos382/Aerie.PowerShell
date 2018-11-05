@@ -7,13 +7,10 @@ namespace Aerie.PowerShell
     public interface IAsyncCmdlet :
         IDisposable
     {
-        Task BeginProcessingAsync(
-            CancellationToken cancellationToken);
+        Task BeginProcessingAsync();
 
-        Task ProcessRecordAsync(
-            CancellationToken cancellationToken);
+        Task ProcessRecordAsync();
 
-        Task EndProcessingAsync(
-            CancellationToken cancellationToken);
+        Task EndProcessingAsync();
     }
 }

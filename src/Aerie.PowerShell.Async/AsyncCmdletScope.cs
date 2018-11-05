@@ -15,12 +15,9 @@ namespace Aerie.PowerShell
         private readonly AsyncCmdletContext _context;
 
         [NotNull]
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly BlockingCollection<Task> _queue = new BlockingCollection<Task>();
 
         private readonly CancellationToken _cancellationToken;
-
-        [NotNull]
-        private readonly BlockingCollection<Task> _queue = new BlockingCollection<Task>();
 
         [CanBeNull]
         private readonly SynchronizationContext _oldSynchronizationContext;
@@ -31,8 +28,7 @@ namespace Aerie.PowerShell
             [NotNull] AsyncCmdletContext context)
         {
             this._context = context;
-
-            this._cancellationToken = this._cancellationTokenSource.Token;
+            this._cancellationToken = context.CancellationToken;
 
             this._oldSynchronizationContext = SynchronizationContext.Current;
             var syncCtx = new QueueingSynchronizationContext(this._queue, this._cancellationToken);
@@ -70,26 +66,18 @@ namespace Aerie.PowerShell
 
         public void Dispose()
         {
+            if (this._disposed)
+            {
+                return;
+            }
+
             SynchronizationContext.SetSynchronizationContext(this._oldSynchronizationContext);
 
             this._context.EndScope();
 
-            this._cancellationTokenSource.Dispose();
-
             this._queue.Dispose();
-        }
 
-        public void Cancel()
-        {
-            this._cancellationTokenSource.Cancel();
-        }
-
-        public CancellationToken CancellationToken
-        {
-            get
-            {
-                return this._cancellationToken;
-            }
+            this._disposed = true;
         }
 
         [NotNull]

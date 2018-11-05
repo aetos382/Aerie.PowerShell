@@ -13,22 +13,27 @@ namespace Aerie.PowerShell
         {
         }
 
-        public virtual Task BeginProcessingAsync(
-            CancellationToken cancellationToken)
+        public virtual Task BeginProcessingAsync()
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task ProcessRecordAsync(
-            CancellationToken cancellationToken)
+        public virtual Task ProcessRecordAsync()
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task EndProcessingAsync(
-            CancellationToken cancellationToken)
+        public virtual Task EndProcessingAsync()
         {
             return Task.CompletedTask;
+        }
+
+        public CancellationToken CancellationToken
+        {
+            get
+            {
+                return this.GetCancellationToken();
+            }
         }
 
         protected override void BeginProcessing()

@@ -19,7 +19,10 @@ namespace Aerie.PowerShell
         [NotNull]
         private readonly IAsyncCmdlet _cmdlet;
 
-        private delegate Task AsyncPipelineDelegate(IAsyncCmdlet cmdlet, CancellationToken cancellationToken);
+        [NotNull]
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+        private delegate Task AsyncPipelineDelegate(IAsyncCmdlet cmdlet);
 
         [NotNull]
         private static readonly AsyncPipelineDelegate _beginProcessingAsyncDelegate;
@@ -32,6 +35,8 @@ namespace Aerie.PowerShell
 
         [NotNull]
         private readonly ScopedReaderWriterLock _scopeLock = new ScopedReaderWriterLock();
+
+        private bool _disposed;
 
         static AsyncCmdletContext()
         {
@@ -48,30 +53,54 @@ namespace Aerie.PowerShell
 
         public void DoBeginProcessingAsync()
         {
-            this.ProcessOperationQueue(cancellationToken => _beginProcessingAsyncDelegate(this._cmdlet, cancellationToken));
+            this.CheckDisposed();
+
+            this.ProcessOperationQueue(() => _beginProcessingAsyncDelegate(this._cmdlet));
         }
 
         public void DoProcessRecordAsync()
         {
-            this.ProcessOperationQueue(cancellationToken => _processRecordAsyncDelegate(this._cmdlet, cancellationToken));
+            this.CheckDisposed();
+
+            this.ProcessOperationQueue(() => _processRecordAsyncDelegate(this._cmdlet));
         }
 
         public void DoEndProcessingAsync()
         {
-            this.ProcessOperationQueue(cancellationToken => _endProcessingAsyncDelegate(this._cmdlet, cancellationToken));
+            this.CheckDisposed();
+
+            this.ProcessOperationQueue(() => _endProcessingAsyncDelegate(this._cmdlet));
         }
 
         public void Dispose()
         {
+            if (this._disposed)
+            {
+                return;
+            }
+
             this._scopeLock.Dispose();
+            this._cancellationTokenSource.Dispose();
+
             _contexts.Remove(this._cmdlet);
+
+            this._disposed = true;
         }
 
         public void Cancel()
         {
-            using (this._scopeLock.BeginReadLockScope())
+            this.CheckDisposed();
+
+            this._cancellationTokenSource.Cancel();
+        }
+
+        public CancellationToken CancellationToken
+        {
+            get
             {
-                this._scope.Cancel();
+                this.CheckDisposed();
+
+                return this._cancellationTokenSource.Token;
             }
         }
 
@@ -83,17 +112,12 @@ namespace Aerie.PowerShell
             return _contexts.GetValue(cmdlet, c => new AsyncCmdletContext(c));
         }
 
-        public void ProcessOperationQueue(
-            [NotNull] Func<CancellationToken, Task> func)
+        private void ProcessOperationQueue(
+            [NotNull] Func<Task> func)
         {
-            if (func == null)
-            {
-                throw new ArgumentNullException(nameof(func));
-            }
-
             using (var scope = this.BeginAsyncScope())
             {
-                var task = func(scope.CancellationToken);
+                var task = func();
 
                 task = task.ContinueWith(t => {
                         scope.CloseQueue();
@@ -142,6 +166,8 @@ namespace Aerie.PowerShell
             Action action,
             CancellationToken cancellationToken)
         {
+            this.CheckDisposed();
+
             using (this._scopeLock.BeginReadLockScope())
             {
                 var scope = this._scope;
@@ -160,6 +186,8 @@ namespace Aerie.PowerShell
 
         public void EndScope()
         {
+            this.CheckDisposed();
+
             using (this._scopeLock.BeginWriteLockScope())
             {
                 this._scope = null;
@@ -167,7 +195,7 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public AsyncCmdletScope BeginAsyncScope()
+        private AsyncCmdletScope BeginAsyncScope()
         {
             using (this._scopeLock.BeginWriteLockScope())
             {
@@ -188,18 +216,23 @@ namespace Aerie.PowerShell
             var method = typeof(IAsyncCmdlet).GetMethod(methodName);
 
             var cmdletParameter = Expression.Parameter(typeof(IAsyncCmdlet));
-            var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken));
 
             var lambdaExpression = Expression.Lambda<AsyncPipelineDelegate>(
                 Expression.Call(
                     cmdletParameter,
-                    method,
-                    cancellationTokenParameter),
-                cmdletParameter,
-                cancellationTokenParameter);
+                    method),
+                cmdletParameter);
 
             var @delegate = lambdaExpression.Compile();
             return @delegate;
+        }
+
+        private void CheckDisposed()
+        {
+            if (this._disposed)
+            {
+                throw new ObjectDisposedException(nameof(AsyncCmdletContext));
+            }
         }
     }
 }

@@ -369,6 +369,14 @@ namespace Aerie.PowerShell
             var context = AsyncCmdletContext.GetContext(cmdlet);
             context.Dispose();
         }
+
+        public static CancellationToken GetCancellationToken<TCmdlet>(
+            [NotNull] this TCmdlet cmdlet)
+            where TCmdlet : Cmdlet, IAsyncCmdlet
+        {
+            var context = AsyncCmdletContext.GetContext(cmdlet);
+            return context.CancellationToken;
+        }
         
         [NotNull]
         private static Task PostAsyncOperation<TCmdlet>(

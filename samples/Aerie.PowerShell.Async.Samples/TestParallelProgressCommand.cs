@@ -22,19 +22,17 @@ namespace Aerie.PowerShell.Samples
         [ValidateRange(0, 10)]
         public double Wait { get; set; } = 1;
 
-        public override Task ProcessRecordAsync(
-            CancellationToken cancellationToken)
+        public override Task ProcessRecordAsync()
         {
             var tasks = Enumerable.Range(1, this.Threads)
-                                  .Select(i => Task.Run(async () => await this.CountAsync(i, cancellationToken)));
+                                  .Select(i => Task.Run(async () => await this.CountAsync(i)));
 
             var allTasks = Task.WhenAll(tasks.ToArray());
             return allTasks;
         }
 
         private async Task CountAsync(
-            int activityId,
-            CancellationToken cancellationToken)
+            int activityId)
         {
             var progressRecord = new ProgressRecord(activityId, $"Thread {activityId}", "Counting");
 
@@ -43,7 +41,7 @@ namespace Aerie.PowerShell.Samples
 
             for (int i = 0; i < steps; ++i)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                this.CancellationToken.ThrowIfCancellationRequested();
 
                 await Task.Delay(TimeSpan.FromSeconds(wait));
 
