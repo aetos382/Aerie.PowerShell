@@ -15,43 +15,64 @@ namespace Aerie.PowerShell.Async.Analyzer
     public class DisposeDiagnosticAnalyzer :
         DiagnosticAnalyzer
     {
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(
-            ShouldCallDoDisposeDescriptor.Rule); } }
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
+        {
+            get
+            {
+                return ImmutableArray.Create(
+                    ShouldCallDoDisposeDescriptor.Rule);
+            }
+        }
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(AnalyzeSyntax, SyntaxKind.MethodDeclaration);
+            context.RegisterCompilationStartAction(CompilationStart);
         }
 
-        private static void AnalyzeSyntax(SyntaxNodeAnalysisContext context)
+        private static void CompilationStart(
+            CompilationStartAnalysisContext context)
         {
-            if (!IsAsyncCmdlet(context))
+            var cmdletSymbol = context.Compilation.GetTypeByMetadataName(typeof(Cmdlet).FullName);
+            var disposableSymbol = context.Compilation.GetTypeByMetadataName(typeof(IDisposable).FullName);
+            var asyncCmdletSymbol = context.Compilation.GetTypeByMetadataName(typeof(IAsyncCmdlet).FullName);
+
+            context.RegisterSyntaxNodeAction(
+                syntaxContext => AnalyzeMethod(syntaxContext, cmdletSymbol, disposableSymbol, asyncCmdletSymbol),
+                SyntaxKind.MethodDeclaration);
+        }
+
+        private static void AnalyzeMethod(
+            SyntaxNodeAnalysisContext context,
+            INamedTypeSymbol cmdletType,
+            INamedTypeSymbol disposableType,
+            INamedTypeSymbol asyncCmdletType)
+        {
+            if (!(context.ContainingSymbol is IMethodSymbol methodSymbol))
+            {
+                return;
+            }
+
+            if (!IsAsyncCmdlet(methodSymbol.ContainingType, cmdletType, asyncCmdletType))
             {
                 return;
             }
         }
 
         private static bool IsAsyncCmdlet(
-            SyntaxNodeAnalysisContext context)
+            INamedTypeSymbol concreteType,
+            INamedTypeSymbol cmdletType,
+            INamedTypeSymbol asyncCmdletType)
         {
-            if (!(context.ContainingSymbol is IMethodSymbol methodSymbol))
+            if (!concreteType.AllInterfaces.Contains(asyncCmdletType))
             {
                 return false;
             }
 
-            var asyncCmdletSymbol = context.Compilation.GetTypeByMetadataName(typeof(IAsyncCmdlet).FullName);
-            var cmdletSymbol = context.Compilation.GetTypeByMetadataName(typeof(Cmdlet).FullName);
+            var baseType = concreteType.BaseType;
 
-            if (!methodSymbol.ContainingType.AllInterfaces.Contains(asyncCmdletSymbol))
-            {
-                return false;
-            }
+            for (; baseType != cmdletType; baseType = baseType.BaseType) ;
 
-            var cmdletType = methodSymbol.ContainingType.BaseType;
-
-            for (; cmdletType != cmdletSymbol; cmdletType = cmdletType.BaseType) ;
-
-            if (cmdletType != cmdletSymbol)
+            if (baseType != cmdletType)
             {
                 return false;
             }
