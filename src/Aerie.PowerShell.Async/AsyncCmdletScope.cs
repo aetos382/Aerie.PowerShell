@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
@@ -22,6 +22,8 @@ namespace Aerie.PowerShell
         [CanBeNull]
         private readonly SynchronizationContext _oldSynchronizationContext;
 
+        private static readonly int _mainThreadId = Thread.CurrentThread.ManagedThreadId;
+
         private bool _disposed = false;
 
         public AsyncCmdletScope(
@@ -36,11 +38,29 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public Task QueueAsyncOperation(
+        public Task RequestAsyncOperation(
             [NotNull] Action action,
+            AsyncOperationOption option,
             CancellationToken cancellationToken)
         {
             this.CheckDisposed();
+
+            bool executeSynchronously = false;
+
+            if (option == AsyncOperationOption.ForceExecuteSynchronously)
+            {
+                executeSynchronously = true;
+            }
+            else if (option == AsyncOperationOption.ExecuteSynchronouslyIfPossible)
+            {
+                executeSynchronously = IsMainThread;
+            }
+
+            if (executeSynchronously)
+            {
+                action();
+                return Task.CompletedTask;
+            }
 
             var task = CreateTask(action, cancellationToken);
             this._queue.Add(task);
@@ -105,6 +125,14 @@ namespace Aerie.PowerShell
                 TaskScheduler.Current);
 
             return task;
+        }
+
+        private static bool IsMainThread
+        {
+            get
+            {
+                return Thread.CurrentThread.ManagedThreadId == _mainThreadId;
+            }
         }
 
         private void CheckDisposed()
