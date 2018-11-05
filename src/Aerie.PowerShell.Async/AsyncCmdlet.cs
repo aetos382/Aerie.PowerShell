@@ -59,6 +59,7 @@ namespace Aerie.PowerShell
         public virtual void Dispose()
         {
             this.DoDispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
