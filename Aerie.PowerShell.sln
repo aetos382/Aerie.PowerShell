@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{845A
 		samples\directory.build.props = samples\directory.build.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.Async.Samples", "samples\Aerie.PowerSHell.Async.Samples\Aerie.PowerShell.Async.Samples.csproj", "{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.Async.Samples", "samples\Aerie.PowerShell.Async.Samples\Aerie.PowerShell.Async.Samples.csproj", "{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
