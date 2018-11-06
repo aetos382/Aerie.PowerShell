@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/Aerie.PowerShell/Aerie.PowerShell.csproj" />
+    <ProjectReference Include="..\..\src\Aerie.PowerShell\Aerie.PowerShell.csproj" />
   </ItemGroup>
 
 </Project>

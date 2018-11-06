@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../src/analyzers/Aerie.PowerShell.Async.Analyzer/Aerie.PowerShell.Async.Analyzer.csproj" />
-    <ProjectReference Include="../../../src/Aerie.PowerShell.Async/Aerie.PowerShell.Async.csproj" />
+    <ProjectReference Include="..\..\..\src\analyzers\Aerie.PowerShell.Async.Analyzer\Aerie.PowerShell.Async.Analyzer.csproj" />
+    <ProjectReference Include="..\..\..\src\Aerie.PowerShell.Async\Aerie.PowerShell.Async.csproj" />
   </ItemGroup>
 
 </Project>

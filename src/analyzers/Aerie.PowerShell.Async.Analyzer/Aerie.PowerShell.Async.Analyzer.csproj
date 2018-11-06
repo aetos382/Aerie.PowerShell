@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Aerie.PowerShell.Async/Aerie.PowerShell.Async.csproj" />
+    <ProjectReference Include="..\..\Aerie.PowerShell.Async\Aerie.PowerShell.Async.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="tools/*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
+    <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/Aerie.PowerShell.DynamicParameter/Aerie.PowerShell.DynamicParameter.csproj" />
+    <ProjectReference Include="..\..\src\Aerie.PowerShell.DynamicParameter\Aerie.PowerShell.DynamicParameter.csproj" />
   </ItemGroup>
 
 </Project>
