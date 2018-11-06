@@ -117,16 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AnalyzerDescription" xml:space="preserve">
-    <value>Type names should be all uppercase.</value>
+  <data name="ShouldCallDoDisposeDescription" xml:space="preserve">
+    <value>Should call AsyncCmdletExtensions.DoDispose().</value>
     <comment>An optional longer localizable description of the diagnostic.</comment>
   </data>
-  <data name="AnalyzerMessageFormat" xml:space="preserve">
-    <value>Type name '{0}' contains lowercase letters</value>
-    <comment>The format-able message the diagnostic displays.</comment>
+  <data name="ShouldCallDoDisposeMessageFormat" xml:space="preserve">
+    <value>Should call AsyncCmdletExtensions.DoDispose() from {0}.Dispose() or {0}.Dispose(bool).</value>
   </data>
-  <data name="AnalyzerTitle" xml:space="preserve">
-    <value>Type name contains lowercase letters</value>
+  <data name="ShouldCallDoDisposeTitle" xml:space="preserve">
+    <value>Should call AsyncCmdletExtensions.DoDispose()</value>
     <comment>The title of the diagnostic.</comment>
   </data>
 </root>

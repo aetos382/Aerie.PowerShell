@@ -10,7 +10,6 @@
 
 namespace Aerie.PowerShell.Async.Analyzer {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -40,7 +39,7 @@ namespace Aerie.PowerShell.Async.Analyzer {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Aerie.PowerShell.Async.Analyzer.Resources", typeof(Resources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Aerie.PowerShell.Async.Analyzer.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,29 +61,29 @@ namespace Aerie.PowerShell.Async.Analyzer {
         }
         
         /// <summary>
-        ///   Type names should be all uppercase. に類似しているローカライズされた文字列を検索します。
+        ///   Should call AsyncCmdletExtensions.DoDispose(). に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string AnalyzerDescription {
+        internal static string ShouldCallDoDisposeDescription {
             get {
-                return ResourceManager.GetString("AnalyzerDescription", resourceCulture);
+                return ResourceManager.GetString("ShouldCallDoDisposeDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Type name &apos;{0}&apos; contains lowercase letters に類似しているローカライズされた文字列を検索します。
+        ///   Should call AsyncCmdletExtensions.DoDispose() from {0}.Dispose() or {0}.Dispose(bool). に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string AnalyzerMessageFormat {
+        internal static string ShouldCallDoDisposeMessageFormat {
             get {
-                return ResourceManager.GetString("AnalyzerMessageFormat", resourceCulture);
+                return ResourceManager.GetString("ShouldCallDoDisposeMessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Type name contains lowercase letters に類似しているローカライズされた文字列を検索します。
+        ///   Should call AsyncCmdletExtensions.DoDispose() に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string AnalyzerTitle {
+        internal static string ShouldCallDoDisposeTitle {
             get {
-                return ResourceManager.GetString("AnalyzerTitle", resourceCulture);
+                return ResourceManager.GetString("ShouldCallDoDisposeTitle", resourceCulture);
             }
         }
     }

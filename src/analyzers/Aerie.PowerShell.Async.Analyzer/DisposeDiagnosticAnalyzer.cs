@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Management.Automation;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -17,7 +18,7 @@ namespace Aerie.PowerShell.Async.Analyzer
             get
             {
                 return ImmutableArray.Create(
-                    ShouldCallDoDisposeDescriptor.Rule);
+                    ShouldCallDoDisposeRule.Descriptor);
             }
         }
 
@@ -70,8 +71,9 @@ namespace Aerie.PowerShell.Async.Analyzer
             if (!foundDoDispose)
             {
                 var diagnostic = Diagnostic.Create(
-                    ShouldCallDoDisposeDescriptor.Rule,
-                    disposeMethodImplementation.Locations[0]);
+                    ShouldCallDoDisposeRule.Descriptor,
+                    namedTypeSymbol.Locations[0],
+                    namedTypeSymbol.Name);
 
                 context.ReportDiagnostic(diagnostic);
             }
