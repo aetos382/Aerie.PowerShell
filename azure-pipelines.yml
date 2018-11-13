@@ -6,6 +6,8 @@ queue:
 variables:
   buildPlatform: 'Any CPU'
 
+trigger: ['master']
+
 steps:
 - task: DotNetCoreInstaller@0
   displayName: 'Install .NET Core SDK 2.1.403'
