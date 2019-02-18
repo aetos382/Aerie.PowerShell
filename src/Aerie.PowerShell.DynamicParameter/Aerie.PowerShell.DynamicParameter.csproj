@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' and $(Configuration.Contains('PowerShell-6.1'))">
-    <PackageReference Include="System.Management.Automation" Version="6.1.1">
+    <PackageReference Include="System.Management.Automation" Version="6.1.2">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
