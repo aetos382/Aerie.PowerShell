@@ -34,17 +34,17 @@ namespace Aerie.PowerShell
             [NotNull] IReadOnlyList<CustomAttributeTypedArgument> constructorArguments,
             [NotNull] IReadOnlyCollection<CustomAttributeNamedArgument> namedArguments)
         {
-            if (constructor == null)
+            if (constructor is null)
             {
                 throw new ArgumentNullException(nameof(constructor));
             }
 
-            if (constructorArguments == null)
+            if (constructorArguments is null)
             {
                 throw new ArgumentNullException(nameof(constructorArguments));
             }
 
-            if (namedArguments == null)
+            if (namedArguments is null)
             {
                 throw new ArgumentNullException(nameof(namedArguments));
             }

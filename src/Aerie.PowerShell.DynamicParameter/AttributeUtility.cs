@@ -16,7 +16,7 @@ namespace Aerie.PowerShell
         public static CustomAttributeData ExpressionToCustomAttributeData<T>(
             [NotNull] Expression<Func<T>> expression)
         {
-            if (expression == null)
+            if (expression is null)
             {
                 throw new ArgumentNullException(nameof(expression));
             }
@@ -29,7 +29,7 @@ namespace Aerie.PowerShell
         public static CustomAttributeData ExpressionToCustomAttributeData(
             [NotNull] Expression expression)
         {
-            if (expression == null)
+            if (expression is null)
             {
                 throw new ArgumentNullException(nameof(expression));
             }

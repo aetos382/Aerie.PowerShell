@@ -20,17 +20,17 @@ namespace Aerie.PowerShell
             [NotNull] MemberInfo compoundParameterMember,
             [NotNull] ICompoundParameter compoundParameterValue)
         {
-            if (parentContext == null)
+            if (parentContext is null)
             {
                 throw new ArgumentNullException(nameof(parentContext));
             }
 
-            if (compoundParameterMember == null)
+            if (compoundParameterMember is null)
             {
                 throw new ArgumentNullException(nameof(compoundParameterMember));
             }
 
-            if (compoundParameterValue == null)
+            if (compoundParameterValue is null)
             {
                 throw new ArgumentNullException(nameof(compoundParameterValue));
             }
@@ -46,7 +46,7 @@ namespace Aerie.PowerShell
         public static CompoundParameterContext GetContext(
             [NotNull] ICompoundParameter compoundParameter)
         {
-            if (compoundParameter == null)
+            if (compoundParameter is null)
             {
                 throw new ArgumentNullException(nameof(compoundParameter));
             }
@@ -76,7 +76,7 @@ namespace Aerie.PowerShell
         public DynamicParameterInstance EnableParameter(
             [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members)
         {
-            if (members == null)
+            if (members is null)
             {
                 throw new ArgumentNullException(nameof(members));
             }

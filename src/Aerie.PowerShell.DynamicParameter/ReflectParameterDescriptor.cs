@@ -66,7 +66,7 @@ namespace Aerie.PowerShell
         protected internal override object GetParameterValue(
             IDynamicParameterContext context)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
@@ -79,7 +79,7 @@ namespace Aerie.PowerShell
             IDynamicParameterContext context,
             object value)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
@@ -98,7 +98,7 @@ namespace Aerie.PowerShell
             [NotNull] out Func<Cmdlet, object> getAccessor,
             [NotNull] out Action<Cmdlet, object> setAccessor)
         {
-            if (members == null)
+            if (members is null)
             {
                 throw new ArgumentNullException(nameof(members));
             }

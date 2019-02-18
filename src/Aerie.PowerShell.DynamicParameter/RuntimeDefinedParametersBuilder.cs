@@ -15,7 +15,7 @@ namespace Aerie.PowerShell
         public object GetDynamicParameterObject(
             IDynamicParameterContext context)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new ArgumentNullException(nameof(context));
             }

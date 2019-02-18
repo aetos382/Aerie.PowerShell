@@ -13,12 +13,12 @@ namespace Aerie.PowerShell
             [NotNull] this PSCmdlet cmdlet,
             [NotNull] string name)
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (name == null)
+            if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
@@ -32,12 +32,12 @@ namespace Aerie.PowerShell
             [NotNull] Expression<Func<TCmdlet, TProperty>> expression)
             where TCmdlet : PSCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (expression == null)
+            if (expression is null)
             {
                 throw new ArgumentNullException(nameof(expression));
             }
@@ -51,12 +51,7 @@ namespace Aerie.PowerShell
             [NotNull] TObject obj,
             [NotNull] Expression<Func<TObject, TProperty>> expression)
         {
-            if (obj == null)
-            {
-                throw new ArgumentNullException(nameof(obj));
-            }
-
-            if (expression == null)
+            if (expression is null)
             {
                 throw new ArgumentNullException(nameof(expression));
             }

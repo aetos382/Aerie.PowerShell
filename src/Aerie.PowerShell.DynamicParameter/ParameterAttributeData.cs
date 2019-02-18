@@ -33,22 +33,11 @@ namespace Aerie.PowerShell
         [NotNull]
         private static readonly ConstructorInfo _defaultConstructor;
 
-        [CanBeNull]
-        private static readonly ConstructorInfo _experimentalConstructor = null;
-
         static ParameterAttributeData()
         {
             var type = typeof(ParameterAttribute);
 
             _defaultConstructor = type.GetConstructor(Type.EmptyTypes);
-
-#if POWERSHELL_6_1
-            _experimentalConstructor = type.GetConstructor(new[]
-            {
-                typeof(string),
-                typeof(ExperimentAction)
-            });
-#endif
         }
 
         public override ConstructorInfo Constructor
@@ -56,11 +45,6 @@ namespace Aerie.PowerShell
             [Pure]
             get
             {
-                if (this.IsExperimentalConstructor)
-                {
-                    return _experimentalConstructor;
-                }
-
                 return _defaultConstructor;
             }
         }
@@ -68,18 +52,5 @@ namespace Aerie.PowerShell
         public override IList<CustomAttributeNamedArgument> NamedArguments { [Pure] get; }
 
         public override IList<CustomAttributeTypedArgument> ConstructorArguments { [Pure] get; }
-
-        private bool IsExperimentalConstructor
-        {
-            get
-            {
-                if (this.ConstructorArguments.Count > 0)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
     }
 }

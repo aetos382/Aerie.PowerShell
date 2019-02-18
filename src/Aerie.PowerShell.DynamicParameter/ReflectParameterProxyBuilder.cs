@@ -24,17 +24,12 @@ namespace Aerie.PowerShell
 
         static ReflectParameterProxyBuilder()
         {
-#if NET461
-            const AssemblyBuilderAccess assemblyBuilderAccess = AssemblyBuilderAccess.RunAndSave;
-#else
-            const AssemblyBuilderAccess assemblyBuilderAccess = AssemblyBuilderAccess.Run;
-#endif
-
             _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(
                 new AssemblyName(AssemblyInfo.ProxyAssemblyName),
-                assemblyBuilderAccess);
+                AssemblyBuilderAccess.RunAndCollect);
 
-            _moduleBuilder = _assemblyBuilder.DefineDynamicModule(AssemblyInfo.ProxyAssemblyName + ".dll");
+            _moduleBuilder = _assemblyBuilder.DefineDynamicModule(
+                AssemblyInfo.ProxyAssemblyName + ".dll");
         }
 
         private ReflectParameterProxyBuilder()
@@ -47,7 +42,7 @@ namespace Aerie.PowerShell
         public object GetDynamicParameterObject(
             IDynamicParameterContext context)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
@@ -200,13 +195,6 @@ namespace Aerie.PowerShell
             var constructorDelegate = lambdaExpression.Compile();
             return constructorDelegate;
         }
-
-#if NET461
-        public static void SaveAssembly()
-        {
-            _assemblyBuilder.Save(AssemblyInfo.ProxyAssemblyName + ".dll");
-        }
-#endif
 
         private static void EmitLoadMember(
             [NotNull] ILGenerator generator,

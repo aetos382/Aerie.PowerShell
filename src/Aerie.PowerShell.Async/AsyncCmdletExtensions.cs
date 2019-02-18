@@ -15,7 +15,7 @@ namespace Aerie.PowerShell
             [CanBeNull] object value)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -30,7 +30,7 @@ namespace Aerie.PowerShell
             bool enumerateCollection)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -47,7 +47,7 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -65,12 +65,12 @@ namespace Aerie.PowerShell
             [NotNull] ErrorRecord errorRecord)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (errorRecord == null)
+            if (errorRecord is null)
             {
                 throw new ArgumentNullException(nameof(errorRecord));
             }
@@ -86,12 +86,12 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (errorRecord == null)
+            if (errorRecord is null)
             {
                 throw new ArgumentNullException(nameof(errorRecord));
             }
@@ -109,7 +109,7 @@ namespace Aerie.PowerShell
             string message)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -125,7 +125,7 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -143,7 +143,7 @@ namespace Aerie.PowerShell
             string message)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -159,7 +159,7 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -177,7 +177,7 @@ namespace Aerie.PowerShell
             string message)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -193,7 +193,7 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -211,12 +211,12 @@ namespace Aerie.PowerShell
             [NotNull] ProgressRecord progressRecord)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (progressRecord == null)
+            if (progressRecord is null)
             {
                 throw new ArgumentNullException(nameof(progressRecord));
             }
@@ -232,12 +232,12 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (progressRecord == null)
+            if (progressRecord is null)
             {
                 throw new ArgumentNullException(nameof(progressRecord));
             }
@@ -255,12 +255,12 @@ namespace Aerie.PowerShell
             [NotNull] InformationRecord informationRecord)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (informationRecord == null)
+            if (informationRecord is null)
             {
                 throw new ArgumentNullException(nameof(informationRecord));
             }
@@ -276,12 +276,12 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (informationRecord == null)
+            if (informationRecord is null)
             {
                 throw new ArgumentNullException(nameof(informationRecord));
             }
@@ -300,7 +300,7 @@ namespace Aerie.PowerShell
             [CanBeNull] string[] tags)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -317,7 +317,7 @@ namespace Aerie.PowerShell
             CancellationToken cancellationToken)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -333,7 +333,7 @@ namespace Aerie.PowerShell
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -346,7 +346,7 @@ namespace Aerie.PowerShell
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -359,7 +359,7 @@ namespace Aerie.PowerShell
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -372,7 +372,7 @@ namespace Aerie.PowerShell
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet, IAsyncCmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }

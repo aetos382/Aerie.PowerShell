@@ -11,7 +11,7 @@ namespace Aerie.PowerShell
         public static T Last<T>(
             [NotNull] this IReadOnlyList<T> source)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -28,7 +28,7 @@ namespace Aerie.PowerShell
             [NotNull] this IReadOnlyList<T> source,
             [CanBeNull] out T element)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }

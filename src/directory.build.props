@@ -1,23 +1,12 @@
 <Project>
 
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('directory.build.props', '$(MSBuildThisFileDirectory)../'))" />
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <CodeAnalysisRuleSet>$([MSBuild]::GetPathOfFileAbove('FxCop.ruleset', $(MSBuildThisFileDirectory)))</CodeAnalysisRuleSet>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedFiles Include="@(Compile)" />

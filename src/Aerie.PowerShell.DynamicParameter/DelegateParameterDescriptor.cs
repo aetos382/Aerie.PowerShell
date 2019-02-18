@@ -31,7 +31,7 @@ namespace Aerie.PowerShell
 
             set
             {
-                if (value == null)
+                if (value is null)
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
@@ -51,7 +51,7 @@ namespace Aerie.PowerShell
 
             set
             {
-                if (value == null)
+                if (value is null)
                 {
                     throw new ArgumentNullException(nameof(value));
                 }

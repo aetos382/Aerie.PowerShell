@@ -49,7 +49,7 @@ namespace Aerie.PowerShell
             [CanBeNull] object state,
             bool executeSynchnously)
         {
-            if (callback == null)
+            if (callback is null)
             {
                 throw new ArgumentNullException(nameof(callback));
             }

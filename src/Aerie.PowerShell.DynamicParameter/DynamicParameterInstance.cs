@@ -10,12 +10,12 @@ namespace Aerie.PowerShell
             [NotNull] DynamicParameterContext context,
             [NotNull] DynamicParameterDescriptor descriptor)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
 
-            if (descriptor == null)
+            if (descriptor is null)
             {
                 throw new ArgumentNullException(nameof(descriptor));
             }

@@ -13,12 +13,12 @@ namespace Aerie.PowerShell
             [NotNull] string parameterExpression)
             where T : ICompoundParameter
         {
-            if (parameter == null)
+            if ((ICompoundParameter)parameter is null)
             {
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            if (parameterExpression == null)
+            if (parameterExpression is null)
             {
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
@@ -36,12 +36,12 @@ namespace Aerie.PowerShell
             [NotNull] Expression<Func<T, TParameter>> parameterExpression)
             where T : ICompoundParameter
         {
-            if (parameter == null)
+            if ((ICompoundParameter)parameter is null)
             {
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            if (parameterExpression == null)
+            if (parameterExpression is null)
             {
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
@@ -59,12 +59,12 @@ namespace Aerie.PowerShell
             [NotNull] string parameterExpression)
             where T : ICompoundParameter
         {
-            if (parameter == null)
+            if (parameter is null)
             {
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            if (parameterExpression == null)
+            if (parameterExpression is null)
             {
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
@@ -77,12 +77,12 @@ namespace Aerie.PowerShell
             [NotNull] Expression<Func<T, TParameter>> paramaeterExpression)
             where T : ICompoundParameter
         {
-            if (parameter == null)
+            if (parameter is null)
             {
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            if (paramaeterExpression == null)
+            if (paramaeterExpression is null)
             {
                 throw new ArgumentNullException(nameof(paramaeterExpression));
             }

@@ -16,12 +16,12 @@ namespace Aerie.PowerShell
             [NotNull] Type parentType,
             [NotNull] string expressionString)
         {
-            if (parentType == null)
+            if (parentType is null)
             {
                 throw new ArgumentNullException(nameof(parentType));
             }
 
-            if (expressionString == null)
+            if (expressionString is null)
             {
                 throw new ArgumentNullException(nameof(expressionString));
             }
@@ -48,7 +48,7 @@ namespace Aerie.PowerShell
         public static MemberInfo[] ParseExpression(
             [NotNull] MemberExpression expression)
         {
-            if (expression == null)
+            if (expression is null)
             {
                 throw new ArgumentNullException(nameof(expression));
             }
@@ -71,12 +71,12 @@ namespace Aerie.PowerShell
             [NotNull] Type type,
             [NotNull] string name)
         {
-            if (type == null)
+            if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (name == null)
+            if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
@@ -109,7 +109,7 @@ namespace Aerie.PowerShell
         public static MemberInfo[] GetParameterMembers(
             [NotNull] Type type)
         {
-            if (type == null)
+            if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
@@ -127,7 +127,7 @@ namespace Aerie.PowerShell
         public static Type GetMemberType(
             [NotNull] MemberInfo member)
         {
-            if (member == null)
+            if (member is null)
             {
                 throw new ArgumentNullException(nameof(member));
             }
@@ -150,12 +150,12 @@ namespace Aerie.PowerShell
             [NotNull] object target,
             [NotNull] MemberInfo member)
         {
-            if (target == null)
+            if (target is null)
             {
                 throw new ArgumentNullException(nameof(target));
             }
 
-            if (member == null)
+            if (member is null)
             {
                 throw new ArgumentNullException(nameof(member));
             }

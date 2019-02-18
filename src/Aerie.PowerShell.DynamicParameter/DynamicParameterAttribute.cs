@@ -16,20 +16,6 @@ namespace Aerie.PowerShell
         {
         }
 
-#if POWERSHELL_6_1
-        public DynamicParameterAttribute(
-            string experimentName,
-            ExperimentAction experimentAction)
-        {
-            this.ExperimentName = experimentName;
-            this.ExperimentAction = experimentAction;
-        }
-
-        public string ExperimentName { get; }
-
-        public ExperimentAction ExperimentAction { get; }
-#endif
-
         public string ParameterSetName { [Pure] get; set; } = ParameterAttribute.AllParameterSets;
 
         public bool Mandatory { [Pure] get; set; }

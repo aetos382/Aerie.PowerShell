@@ -18,7 +18,7 @@ namespace Aerie.PowerShell
         public static object GetInstance(
             [NotNull] this CustomAttributeData data)
         {
-            if (data == null)
+            if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
             }

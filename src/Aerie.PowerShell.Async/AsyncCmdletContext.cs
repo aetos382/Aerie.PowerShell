@@ -186,7 +186,7 @@ namespace Aerie.PowerShell
             {
                 var scope = this._scope;
 
-                if (scope == null)
+                if (scope is null)
                 {
                     throw new InvalidOperationException();
                 }

@@ -13,12 +13,12 @@ namespace Aerie.PowerShell
             [NotNull] string parameterName,
             [NotNull] Type parameterType)
         {
-            if (parameterName == null)
+            if (parameterName is null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
 
-            if (parameterType == null)
+            if (parameterType is null)
             {
                 throw new ArgumentNullException(nameof(parameterType));
             }

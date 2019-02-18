@@ -13,7 +13,7 @@ namespace Aerie.PowerShell
         public DynamicParameterNameAttribute(
             [NotNull] string parameterName)
         {
-            if (parameterName == null)
+            if (parameterName is null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }

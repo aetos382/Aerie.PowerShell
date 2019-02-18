@@ -22,12 +22,12 @@ namespace Aerie.PowerShell
             [NotNull] Type validatorType,
             [NotNull] string methodName)
         {
-            if (validatorType == null)
+            if (validatorType is null)
             {
                 throw new ArgumentNullException(nameof(validatorType));
             }
 
-            if (methodName == null)
+            if (methodName is null)
             {
                 throw new ArgumentNullException(nameof(methodName));
             }

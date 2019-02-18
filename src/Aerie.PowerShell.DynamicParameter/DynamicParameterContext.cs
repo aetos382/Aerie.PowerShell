@@ -37,12 +37,12 @@ namespace Aerie.PowerShell
             [NotNull] Type cmdletType,
             [NotNull] Cmdlet cmdlet)
         {
-            if (cmdletType == null)
+            if (cmdletType is null)
             {
                 throw new ArgumentNullException(nameof(cmdletType));
             }
 
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -61,7 +61,7 @@ namespace Aerie.PowerShell
             [NotNull] TCmdlet cmdlet)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -74,7 +74,7 @@ namespace Aerie.PowerShell
         public DynamicParameterInstance EnableParameter(
             [NotNull] DynamicParameterDescriptor descriptor)
         {
-            if (descriptor == null)
+            if (descriptor is null)
             {
                 throw new ArgumentNullException(nameof(descriptor));
             }
@@ -89,7 +89,7 @@ namespace Aerie.PowerShell
         public void DisableParameter(
             [NotNull] DynamicParameterDescriptor descriptor)
         {
-            if (descriptor == null)
+            if (descriptor is null)
             {
                 throw new ArgumentNullException(nameof(descriptor));
             }
@@ -112,7 +112,7 @@ namespace Aerie.PowerShell
         public object GetDynamicParameterObject(
             [NotNull] IDynamicParameterObjectBuilder factory)
         {
-            if (factory == null)
+            if (factory is null)
             {
                 throw new ArgumentNullException(nameof(factory));
             }
@@ -137,7 +137,7 @@ namespace Aerie.PowerShell
             [NotNull] string parameterName,
             out DynamicParameterInstance parameter)
         {
-            if (parameterName == null)
+            if (parameterName is null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
@@ -150,7 +150,7 @@ namespace Aerie.PowerShell
         public object GetParameterValue(
             [NotNull] string parameterName)
         {
-            if (parameterName == null)
+            if (parameterName is null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
@@ -172,7 +172,7 @@ namespace Aerie.PowerShell
             [NotNull] string parameterName,
             [CanBeNull] object value)
         {
-            if (parameterName == null)
+            if (parameterName is null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
@@ -224,7 +224,7 @@ namespace Aerie.PowerShell
                 {
                     var compoundParameter = (ICompoundParameter)Utilities.GetMemberValue(this.Cmdlet, compoundMember);
 
-                    if (compoundParameter == null)
+                    if (compoundParameter is null)
                     {
                         continue;
                     }

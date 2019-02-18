@@ -14,12 +14,12 @@ namespace Aerie.PowerShell
             [NotNull] string parameterExpression)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (parameterExpression == null)
+            if (parameterExpression is null)
             {
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
@@ -38,12 +38,12 @@ namespace Aerie.PowerShell
             [NotNull] Expression<Func<TCmdlet, TParameter>> parameterExpression)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (parameterExpression == null)
+            if (parameterExpression is null)
             {
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
@@ -62,12 +62,12 @@ namespace Aerie.PowerShell
             [NotNull] DynamicParameterDescriptor parameterDescriptor)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (parameterDescriptor == null)
+            if (parameterDescriptor is null)
             {
                 throw new ArgumentNullException(nameof(parameterDescriptor));
             }
@@ -84,12 +84,12 @@ namespace Aerie.PowerShell
             [NotNull] string parameterName)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (parameterName == null)
+            if (parameterName is null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
@@ -103,12 +103,12 @@ namespace Aerie.PowerShell
             [NotNull] DynamicParameterDescriptor descriptor)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (descriptor == null)
+            if (descriptor is null)
             {
                 throw new ArgumentNullException(nameof(descriptor));
             }
@@ -122,12 +122,12 @@ namespace Aerie.PowerShell
             [NotNull] string parameterExpression)
             where  TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (parameterExpression == null)
+            if (parameterExpression is null)
             {
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
@@ -143,12 +143,12 @@ namespace Aerie.PowerShell
             [NotNull] Expression<Func<TCmdlet, TParameter>> parameterExpression)
             where  TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (parameterExpression == null)
+            if (parameterExpression is null)
             {
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
@@ -165,7 +165,7 @@ namespace Aerie.PowerShell
             [NotNull] this TCmdlet cmdlet)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
@@ -180,12 +180,12 @@ namespace Aerie.PowerShell
             [NotNull] IDynamicParameterObjectBuilder factory)
             where  TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (factory == null)
+            if (factory is null)
             {
                 throw new ArgumentNullException(nameof(factory));
             }
@@ -203,12 +203,12 @@ namespace Aerie.PowerShell
             [NotNull] out DynamicParameterInstance parameter)
             where  TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (parameterName == null)
+            if (parameterName is null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
@@ -225,12 +225,12 @@ namespace Aerie.PowerShell
             [CanBeNull] out object parameterValue)
             where  TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (parameterName == null)
+            if (parameterName is null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
@@ -253,12 +253,12 @@ namespace Aerie.PowerShell
             [NotNull] string parameterName)
             where  TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (parameterName == null)
+            if (parameterName is null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
@@ -277,12 +277,12 @@ namespace Aerie.PowerShell
             [NotNull] IParameterInterceptor interceptor)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (interceptor == null)
+            if (interceptor is null)
             {
                 throw new ArgumentNullException(nameof(interceptor));
             }
@@ -296,12 +296,12 @@ namespace Aerie.PowerShell
             [NotNull] RuntimeDefinedParameterDictionary runtimeDefinedParameters)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet == null)
+            if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            if (runtimeDefinedParameters == null)
+            if (runtimeDefinedParameters is null)
             {
                 throw new ArgumentNullException(nameof(runtimeDefinedParameters));
             }
