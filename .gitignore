@@ -1,13 +1,7 @@
-# User-specific files
-*.suo
-*.user
-
-# Build results
+/.vs/
 bin/
 obj/
 
-# Visual Studio cache/options directory
-.vs/
-
-# .NET Core
-**/Properties/launchSettings.json
+*.suo
+*.user
+launchSettings.json
