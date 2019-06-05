@@ -7,7 +7,6 @@
     <PackageTags>PowerShell</PackageTags>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
-    <CodeAnalysisRuleSet>$([MSBuild]::GetPathOfFileAbove('FxCop.ruleset', $(MSBuildThisFileDirectory)))</CodeAnalysisRuleSet>
   </PropertyGroup>
 
 </Project>
