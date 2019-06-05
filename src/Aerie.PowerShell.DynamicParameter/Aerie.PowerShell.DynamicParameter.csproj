@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>Aerie.PowerShell</RootNamespace>
-    <VersionPrefix>0.1.0</VersionPrefix>
-    <PackageTags>PowerShell</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

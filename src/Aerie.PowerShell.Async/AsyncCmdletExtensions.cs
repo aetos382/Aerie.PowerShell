@@ -292,7 +292,7 @@ namespace Aerie.PowerShell
                 executeSynchronously,
                 cancellationToken);
         }
-                           
+        
         [NotNull]
         public static Task WriteInformationAsync<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,

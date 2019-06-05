@@ -1,12 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <IsPackable>false</IsPackable>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Aerie.PowerShell.DynamicParameter\Aerie.PowerShell.DynamicParameter.csproj" />
+    <PackageReference Include="Microsoft.PowerShell.SDK"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Aerie.PowerShell.DynamicParameter/Aerie.PowerShell.DynamicParameter.csproj" />
   </ItemGroup>
 
 </Project>
