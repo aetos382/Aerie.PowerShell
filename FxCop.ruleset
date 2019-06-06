@@ -75,9 +75,9 @@
     <Rule Id="CA1304" Action="Error" />
     <Rule Id="CA1305" Action="Warning" />
     <Rule Id="CA1306" Action="Error" />
-    <Rule Id="CA1307" Action="Error" />
+    <Rule Id="CA1307" Action="Warning" />
     <Rule Id="CA1308" Action="Error" />
-    <Rule Id="CA1309" Action="Error" />
+    <Rule Id="CA1309" Action="Warning" />
     <Rule Id="CA1400" Action="Error" />
     <Rule Id="CA1401" Action="Error" />
     <Rule Id="CA1402" Action="Error" />
@@ -110,8 +110,8 @@
     <Rule Id="CA1707" Action="Error" />
     <Rule Id="CA1708" Action="Error" />
     <Rule Id="CA1709" Action="Error" />
-    <Rule Id="CA1710" Action="Error" />
-    <Rule Id="CA1711" Action="Error" />
+    <Rule Id="CA1710" Action="Info" />
+    <Rule Id="CA1711" Action="Warning" />
     <Rule Id="CA1712" Action="Error" />
     <Rule Id="CA1713" Action="Error" />
     <Rule Id="CA1714" Action="Error" />
@@ -120,10 +120,10 @@
     <Rule Id="CA1717" Action="Warning" />
     <Rule Id="CA1719" Action="Error" />
     <Rule Id="CA1720" Action="Error" />
-    <Rule Id="CA1721" Action="Error" />
+    <Rule Id="CA1721" Action="Warning" />
     <Rule Id="CA1722" Action="Error" />
     <Rule Id="CA1724" Action="Error" />
-    <Rule Id="CA1725" Action="Error" />
+    <Rule Id="CA1725" Action="Warning" />
     <Rule Id="CA1726" Action="Warning" />
     <Rule Id="CA1800" Action="Error" />
     <Rule Id="CA1801" Action="Warning" />
@@ -253,7 +253,7 @@
     <Rule Id="CS0183" Action="Error" />
     <Rule Id="CS0184" Action="Error" />
     <Rule Id="CS0197" Action="Error" />
-    <Rule Id="CS0219" Action="Error" />
+    <Rule Id="CS0219" Action="Warning" />
     <Rule Id="CS0251" Action="Error" />
     <Rule Id="CS0252" Action="Error" />
     <Rule Id="CS0253" Action="Error" />
@@ -281,7 +281,7 @@
     <Rule Id="CS0652" Action="Error" />
     <Rule Id="CS0657" Action="Error" />
     <Rule Id="CS0658" Action="Error" />
-    <Rule Id="CS0659" Action="Error" />
+    <Rule Id="CS0659" Action="Warning" />
     <Rule Id="CS0660" Action="Error" />
     <Rule Id="CS0661" Action="Error" />
     <Rule Id="CS0665" Action="Error" />

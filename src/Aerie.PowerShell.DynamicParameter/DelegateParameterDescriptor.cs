@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -31,10 +32,7 @@ namespace Aerie.PowerShell
 
             set
             {
-                if (value is null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                Ensure.ArgumentNotNull(value, nameof(value));
 
                 this._getValueAccessor = value;
             }
@@ -51,10 +49,7 @@ namespace Aerie.PowerShell
 
             set
             {
-                if (value is null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                Ensure.ArgumentNotNull(value, nameof(value));
 
                 this._setValueAccessor = value;
             }
@@ -72,6 +67,37 @@ namespace Aerie.PowerShell
             object value)
         {
             this.SetValueAccessor(context, value);
+        }
+
+        protected override void GetHashCode(HashCode hashCode)
+        {
+            hashCode.Add(this.GetValueAccessor);
+            hashCode.Add(this.SetValueAccessor);
+        }
+
+        public override bool Equals(
+            DynamicParameterDescriptor other)
+        {
+            if (!(base.Equals(other)))
+            {
+                return false;
+            }
+
+            Debug.Assert(!(other is null));
+
+            var descriptor = (DelegateParameterDescriptor)other;
+
+            if (!object.Equals(descriptor.GetValueAccessor, this.GetValueAccessor))
+            {
+                return false;
+            }
+
+            if (!object.Equals(descriptor.SetValueAccessor, this.SetValueAccessor))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

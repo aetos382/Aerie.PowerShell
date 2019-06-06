@@ -163,8 +163,6 @@ namespace Aerie.PowerShell
 
             var value = i.Value;
 
-            this._interceptor.GetValue(this, i.ParameterDescriptor, ref value);
-
             return value;
         }
 
@@ -183,18 +181,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentException();
             }
 
-            this._interceptor.SetValue(this, i.ParameterDescriptor, ref value);
-
             i.Value = value;
-        }
-
-        [NotNull]
-        private IParameterInterceptor _interceptor = DefaultInterceptor.Instance;
-
-        public void SetParameterInterceptor(
-            [NotNull] IParameterInterceptor interceptor)
-        {
-            this._interceptor = interceptor;
         }
 
         private void ProcessCompoundParameters()

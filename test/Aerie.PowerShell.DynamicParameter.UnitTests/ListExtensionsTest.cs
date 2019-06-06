@@ -1,13 +1,12 @@
 ﻿using System;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Aerie.PowerShell.DynamicParameter.UnitTests
 {
-    [TestClass]
     public class ListExtensionsTest
     {
-        [TestMethod]
+        [Test]
         public void LastTest()
         {
             var source = new[] { 1, 3, 5, 7, 9 };
@@ -17,11 +16,11 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
             Assert.AreEqual(9, last);
         }
 
-        [TestMethod]
+        [Test]
         public void LastItemNotFoundTest()
         {
-            Assert.ThrowsException<InvalidOperationException>(() =>
-                ListExtensions.Last(Array.Empty<GenericParameterHelper>()));
+            Assert.Throws<InvalidOperationException>(() =>
+                ListExtensions.Last(Array.Empty<object>()));
         }
     }
 }

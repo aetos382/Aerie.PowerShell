@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Aerie.PowerShell.DynamicParameter.UnitTests
 {
-    [TestClass]
     public class CollectionEqualityComparerTest
     {
-        [TestMethod]
+        [Test]
         public void GetHashCodeTest()
         {
             var items = new[] { 1, 2, 3 };
@@ -26,14 +25,14 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
             Assert.AreEqual(hashCode1, hashCode2);
         }
 
-        [TestMethod]
+        [Test]
         public void GetHashCodeAllowsNullTest()
         {
-            int hashCode = CollectionEqualityComparer<GenericParameterHelper>.Default.GetHashCode(null);
+            int hashCode = CollectionEqualityComparer<object>.Default.GetHashCode(null);
             Assert.AreEqual(0, hashCode);
         }
 
-        [TestMethod]
+        [Test]
         public void EqualsTest()
         {
             var items = new[] { 1, 2, 3 };
@@ -50,7 +49,7 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
             Assert.IsTrue(equals);
         }
 
-        [TestMethod]
+        [Test]
         public void NotEqualsTest()
         {
             var collection1 = new[] { 1, 2, 3 };
@@ -63,7 +62,7 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
             Assert.IsFalse(equals);
         }
 
-        [TestMethod]
+        [Test]
         public void EqualsAllowsNullTest()
         {
             var comparer = CollectionEqualityComparer<int>.Default;

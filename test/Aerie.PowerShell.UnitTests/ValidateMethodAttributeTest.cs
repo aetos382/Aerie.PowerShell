@@ -1,61 +1,60 @@
 ﻿using System;
 using System.Management.Automation;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Aerie.PowerShell.UnitTests
 {
-    [TestClass]
     public class ValidateMethodAttributeTest
     {
-        [TestMethod]
+        [Test]
         public void ThrowsArgumentNullException()
         {
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 new ValidateMethodAttribute(
                     null, "FooBar");
             });
 
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 new ValidateMethodAttribute(
                     typeof(ValidateMethodAttributeTest), null);
             });
         }
 
-        [TestMethod]
+        [Test]
         public void MethodNotFoundTest()
         {
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 // not found
                 new ValidateMethodAttribute(
                     typeof(ValidateMethodAttributeTest), "NoSuchMethod");
             });
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 // non-static
                 new ValidateMethodAttribute(
                     typeof(ValidateMethodAttributeTest), nameof(this.InvalidMethod1));
             });
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 // return type is not void
                 new ValidateMethodAttribute(
                     typeof(ValidateMethodAttributeTest), nameof(this.InvalidMethod2));
             });
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 // not single parameter
                 new ValidateMethodAttribute(
                     typeof(ValidateMethodAttributeTest), nameof(this.InvalidMethod3));
             });
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 // ambiguous
                 new ValidateMethodAttribute(
@@ -63,20 +62,20 @@ namespace Aerie.PowerShell.UnitTests
             });
         }
 
-        [TestMethod]
+        [Test]
         public void InvalidArgumentType()
         {
             var validator = new ValidateMethodAttribute(
                 typeof(ValidateMethodAttributeTest), nameof(this.Validate));
 
-            Assert.ThrowsException<InvalidCastException>(() =>
+            Assert.Throws<InvalidCastException>(() =>
             {
                 // 1 can't cast to TestClass
                 validator.InternalValidateElement(1);
             });
         }
 
-        [TestMethod]
+        [Test]
         public void OK()
         {
             var validator = new ValidateMethodAttribute(
@@ -89,7 +88,7 @@ namespace Aerie.PowerShell.UnitTests
             Assert.IsTrue(value.Called);
         }
  
-        [TestMethod]
+        [Test]
         public void OK2()
         {
             var validator = new ValidateMethodAttribute(
@@ -102,7 +101,7 @@ namespace Aerie.PowerShell.UnitTests
             Assert.IsTrue(value.Called);
         }
    
-        [TestMethod]
+        [Test]
         public void OK3()
         {
             var validator = new ValidateMethodAttribute(
@@ -111,7 +110,7 @@ namespace Aerie.PowerShell.UnitTests
             validator.InternalValidateElement(null);
         }
         
-        [TestMethod]
+        [Test]
         public void OK4()
         {
             var validator = new ValidateMethodAttribute(
@@ -124,7 +123,7 @@ namespace Aerie.PowerShell.UnitTests
             Assert.IsTrue(value.Called);
         }
 
-        [TestMethod]
+        [Test]
         public void NG()
         {
             var validator = new ValidateMethodAttribute(
@@ -132,7 +131,7 @@ namespace Aerie.PowerShell.UnitTests
 
             var value = new TestClass { Value = -1 };
 
-            Assert.ThrowsException<ValidationMetadataException>(() =>
+            Assert.Throws<ValidationMetadataException>(() =>
             {
                 validator.InternalValidateElement(value);
             });

@@ -1,32 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Management.Automation;
-using System.Text;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Aerie.PowerShell.DynamicParameter.UnitTests
 {
-    [TestClass]
     public class DynamicParameterContextTest
     {
-        [TestMethod]
+        [Test]
         public void Construct()
         {
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => new DynamicParameterContext(null, new TestCmdlet()));
 
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => new DynamicParameterContext(typeof(TestCmdlet), null));
 
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => new DynamicParameterContext(typeof(TestCmdlet), new TestCmdlet2()));
 
             var context = new DynamicParameterContext(typeof(TestCmdlet), new TestCmdlet());
             Assert.IsNotNull(context);
         }
 
-        [TestMethod]
+        [Test]
         public void GetContext()
         {
             var cmdletInstance = new TestCmdlet();

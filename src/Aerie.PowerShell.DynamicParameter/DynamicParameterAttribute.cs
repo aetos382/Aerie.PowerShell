@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Management.Automation;
+using System.Reflection;
 
 using JetBrains.Annotations;
 
@@ -10,7 +12,8 @@ namespace Aerie.PowerShell
         AllowMultiple = true)]
     [DynamicParameterInternal]
     public sealed class DynamicParameterAttribute :
-        Attribute
+        Attribute,
+        IDynamicParameterDescriptorProvider
     {
         public DynamicParameterAttribute()
         {
@@ -35,5 +38,13 @@ namespace Aerie.PowerShell
         public string HelpMessageBaseName { [Pure] get; set; }
 
         public string HelpMessageResourceId { [Pure] get; set; }
+
+        public DynamicParameterDescriptor GetDynamicParameterDescriptor(
+            IReadOnlyList<MemberInfo> members)
+        {
+            Ensure.ArgumentNotNull(members, nameof(members), true);
+
+            throw new NotImplementedException();
+        }
     }
 }

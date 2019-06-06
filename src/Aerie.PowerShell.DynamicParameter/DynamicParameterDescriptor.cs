@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -7,7 +8,8 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell
 {
-    public abstract class DynamicParameterDescriptor
+    public abstract class DynamicParameterDescriptor :
+        IEquatable<DynamicParameterDescriptor>
     {
         protected DynamicParameterDescriptor(
             [NotNull] string parameterName,
@@ -56,6 +58,87 @@ namespace Aerie.PowerShell
         private static int GetId()
         {
             return Interlocked.Increment(ref _currentId);
+        }
+
+        public virtual bool Equals(
+            DynamicParameterDescriptor other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (object.ReferenceEquals(other, this))
+            {
+                return true;
+            }
+
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            // TODO: ParameterName は大文字と小文字を区別する？
+            if (!string.Equals(other.ParameterName, this.ParameterName))
+            {
+                return false;
+            }
+
+            if (other.ParameterType != this.ParameterType)
+            {
+                return false;
+            }
+
+            if (!other.Attributes.SequenceEqual(this.Attributes))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override bool Equals(
+            object obj)
+        {
+            if (!(obj is DynamicParameterDescriptor descriptor))
+            {
+                return false;
+            }
+
+            return this.Equals(descriptor);
+        }
+
+        protected abstract void GetHashCode(
+            HashCode hashCode);
+
+        public override int GetHashCode()
+        {
+            var hashCode = new HashCode();
+
+            // TODO: 大文字と小文字
+            hashCode.Add(this.ParameterName);
+            hashCode.Add(this.ParameterType);
+
+            foreach (var attribute in this.Attributes)
+            {
+                hashCode.Add(attribute);
+            }
+
+            this.GetHashCode(hashCode);
+
+            return hashCode.ToHashCode();
+        }
+
+        [NotNull]
+        public static DynamicParameterDescriptor GetDynamicParameterDescriptor(
+            [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members,
+            [NotNull] IDynamicParameterDescriptorProvider provider)
+        {
+            Ensure.ArgumentNotNull(members, nameof(members), true);
+            Ensure.ArgumentNotNull(provider, nameof(provider));
+
+            var descriptor = provider.GetDynamicParameterDescriptor(members);
+            return descriptor;
         }
     }
 }

@@ -17,6 +17,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A93C7AE2-9D6C-437A-9472-1061DB423A9D}"
 	ProjectSection(SolutionItems) = preProject
 		src\Directory.Build.props = src\Directory.Build.props
+		src\Directory.Build.targets = src\Directory.Build.targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell", "src\Aerie.PowerShell\Aerie.PowerShell.csproj", "{07F8120D-4B0C-4904-A892-8A72AD944EC3}"
@@ -28,6 +29,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{414762AB-DADC-4FB5-9462-EC48B47A97C5}"
 	ProjectSection(SolutionItems) = preProject
 		test\Directory.Build.props = test\Directory.Build.props
+		test\Directory.Build.targets = test\Directory.Build.targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.UnitTests", "test\Aerie.PowerShell.UnitTests\Aerie.PowerShell.UnitTests.csproj", "{98CC0F49-3C0E-4A48-9181-9B32DE7206D7}"
@@ -43,7 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{845A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.Async.Samples", "samples\Aerie.PowerShell.Async.Samples\Aerie.PowerShell.Async.Samples.csproj", "{6AC68F7F-F08B-4B69-8D70-531AD6C8F53C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aerie.PowerShell.DynamicParameter.Samples", "samples\Aerie.PowerShell.DynamicParameter.Samples\Aerie.PowerShell.DynamicParameter.Samples.csproj", "{D72E4052-C11D-4A4B-8F8E-C600733396A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aerie.PowerShell.DynamicParameter.Samples", "samples\Aerie.PowerShell.DynamicParameter.Samples\Aerie.PowerShell.DynamicParameter.Samples.csproj", "{D72E4052-C11D-4A4B-8F8E-C600733396A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

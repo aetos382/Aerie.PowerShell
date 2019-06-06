@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Management.Automation;
@@ -86,7 +87,32 @@ namespace Aerie.PowerShell
 
             this._setValueAccessor(context.Cmdlet, value);
         }
-        
+
+        public override bool Equals(DynamicParameterDescriptor other)
+        {
+            if (!base.Equals(other))
+            {
+                return false;
+            }
+
+            Debug.Assert(!(other is null));
+
+            if (!((ReflectParameterDescriptor)other).Members.SequenceEqual(this.Members))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        protected override void GetHashCode(HashCode hashCode)
+        {
+            foreach (var member in this.Members)
+            {
+                hashCode.Add(member);
+            }
+        }
+
         [NotNull]
         private readonly Func<Cmdlet, object> _getValueAccessor;
         

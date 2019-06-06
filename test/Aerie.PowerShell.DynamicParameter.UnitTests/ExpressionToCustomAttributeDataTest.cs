@@ -2,14 +2,13 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Aerie.PowerShell.DynamicParameter.UnitTests
 {
-    [TestClass]
     public class ExpressionToCustomAttributeDataTest
     {
-        [TestMethod]
+        [Test]
         public void NoParameterTest()
         {
             Expression<Func<Foo>> foo = () => new Foo();
@@ -21,7 +20,7 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
             Assert.AreEqual(0, attributeData.NamedArguments.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void HasParametersTest()
         {
             Expression<Func<Foo>> foo = () => new Foo(1, 2)
@@ -66,7 +65,7 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void ManualExpressionTest()
         {
             var type = typeof(Foo);

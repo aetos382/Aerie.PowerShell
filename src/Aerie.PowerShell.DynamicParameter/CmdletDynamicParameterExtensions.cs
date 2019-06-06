@@ -272,25 +272,6 @@ namespace Aerie.PowerShell
             return parameter.IsSet;
         }
 
-        public static void SetParameterInterceptor<TCmdlet>(
-            [NotNull] this TCmdlet cmdlet,
-            [NotNull] IParameterInterceptor interceptor)
-            where TCmdlet : Cmdlet
-        {
-            if (cmdlet is null)
-            {
-                throw new ArgumentNullException(nameof(cmdlet));
-            }
-
-            if (interceptor is null)
-            {
-                throw new ArgumentNullException(nameof(interceptor));
-            }
-
-            var context = DynamicParameterContext.GetContext(cmdlet);
-            context.SetParameterInterceptor(interceptor);
-        }
-
         public static void PopulateRuntimeDefinedParameterValues<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] RuntimeDefinedParameterDictionary runtimeDefinedParameters)
