@@ -22,7 +22,6 @@ namespace Aerie.PowerShell
 
         public PropertyOrFieldChain(
             [NotNull][ItemNotNull] IReadOnlyList<PropertyOrFieldInfo> members)
-            : base(members.Last())
         {
             Ensure.ArgumentNotNull(members, nameof(members));
 
@@ -93,6 +92,41 @@ namespace Aerie.PowerShell
                     valueParameter);
 
             this._setValueAccessor = setValueExpression.Compile();
+
+            base.InitializeMemberInfo(lastMember);
+        }
+        
+        public PropertyOrFieldChain(
+            [NotNull] MemberExpression expression)
+            : this(ExpressionToMemberInfoList(expression))
+        {
+        }
+
+        private static IReadOnlyList<PropertyOrFieldInfo> ExpressionToMemberInfoList(
+            [NotNull] MemberExpression expression)
+        {
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            var members = new List<PropertyOrFieldInfo>();
+
+            while (true)
+            {
+                members.Add(new PropertyOrFieldInfo(expression.Member));
+
+                if (!(expression.Expression is MemberExpression m))
+                {
+                    break;
+                }
+
+                expression = m;
+            }
+
+            members.Reverse();
+
+            return members;
         }
 
         [NotNull]
@@ -135,17 +169,6 @@ namespace Aerie.PowerShell
             }
         }
 
-        public bool Equals(
-            PropertyOrFieldChain other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            return this._members.SequenceEqual(other._members);
-        }
-
         public override Type DeclaringType
         {
             get
@@ -162,6 +185,49 @@ namespace Aerie.PowerShell
             {
                 return this._members[0].ReflectedType;
             }
+        }
+        
+        public bool Equals(
+            PropertyOrFieldChain other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return this._members.SequenceEqual(other._members);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is PropertyOrFieldChain c))
+            {
+                return false;
+            }
+
+            return this.Equals(c);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = new HashCode();
+
+            foreach (var member in this._members)
+            {
+                hashCode.Add(member.BaseMemberInfo);
+            }
+
+            return hashCode.ToHashCode();
+        }
+
+        public override string ToString()
+        {
+            return $"{this.DeclaringType.Name}.{this.Path}";
         }
 
         [NotNull]

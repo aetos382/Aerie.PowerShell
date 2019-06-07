@@ -8,14 +8,139 @@ using JetBrains.Annotations;
 namespace Aerie.PowerShell
 {
     public abstract class PropertyOrFieldInfoBase :
-        MemberInfo
+        MemberInfo,
+        IEquatable<PropertyOrFieldInfoBase>
     {
+        protected PropertyOrFieldInfoBase()
+        {
+            this._getValueAccessor = new Lazy<GetValueAccessor>(this.CreateGetValueAccessor);
+            this._setValueAccessor = new Lazy<SetValueAccessor>(this.CreateSetValueAccessor);
+        }
+
         protected PropertyOrFieldInfoBase(
             [NotNull] MemberInfo member)
         {
-            Ensure.ArgumentNotNull(member, nameof(member));
+            this.InitializeMemberInfo(member);
+        }
 
-            if (member is PropertyOrFieldInfoBase pf)
+        public override object[] GetCustomAttributes(
+            bool inherit)
+        {
+            this.EnsureInitialized();
+
+            return this.BaseMemberInfo.GetCustomAttributes(inherit);
+        }
+
+        public override object[] GetCustomAttributes(
+            Type attributeType,
+            bool inherit)
+        {
+            this.EnsureInitialized();
+
+            return this.BaseMemberInfo.GetCustomAttributes(attributeType, inherit);
+        }
+
+        public override bool IsDefined(
+            Type attributeType,
+            bool inherit)
+        {
+            this.EnsureInitialized();
+
+            return this.BaseMemberInfo.IsDefined(attributeType, inherit);
+        }
+
+        public override Type DeclaringType
+        {
+            get
+            {
+                this.EnsureInitialized();
+
+                return this.BaseMemberInfo.DeclaringType;
+            }
+        }
+
+        public override MemberTypes MemberType
+        {
+            get
+            {
+                this.EnsureInitialized();
+
+                return this.BaseMemberInfo.MemberType;
+            }
+        }
+
+        public override string Name
+        {
+            get
+            {
+                this.EnsureInitialized();
+
+                return this.BaseMemberInfo.Name;
+            }
+        }
+
+        public override Type ReflectedType
+        {
+            get
+            {
+                this.EnsureInitialized();
+
+                return this.BaseMemberInfo.ReflectedType;
+            }
+        }
+
+        public override int MetadataToken
+        {
+            get
+            {
+                this.EnsureInitialized();
+
+                return this.BaseMemberInfo.MetadataToken;
+            }
+        }
+
+        public override IEnumerable<CustomAttributeData> CustomAttributes
+        {
+            get
+            {
+                this.EnsureInitialized();
+
+                return this.BaseMemberInfo.CustomAttributes;
+            }
+        }
+
+        public override IList<CustomAttributeData> GetCustomAttributesData()
+        {
+            this.EnsureInitialized();
+
+            return this.BaseMemberInfo.GetCustomAttributesData();
+        }
+
+        public override bool HasSameMetadataDefinitionAs(MemberInfo other)
+        {
+            this.EnsureInitialized();
+
+            return this.BaseMemberInfo.HasSameMetadataDefinitionAs(other);
+        }
+
+        public override Module Module
+        {
+            get
+            {
+                this.EnsureInitialized();
+
+                return this.BaseMemberInfo.Module;
+            }
+        }
+
+        protected void InitializeMemberInfo(
+            [NotNull] MemberInfo baseMemberInfo)
+        {
+            Ensure.ArgumentNotNull(baseMemberInfo, nameof(baseMemberInfo));
+
+            this.EnsureNotInitialized();
+
+            if (baseMemberInfo is PropertyOrFieldInfoBase pf)
             {
                 this.PropertyOrFieldType = pf.PropertyOrFieldType;
 
@@ -25,7 +150,7 @@ namespace Aerie.PowerShell
 
                 this.BaseMemberInfo = pf.BaseMemberInfo;
             }
-            else if (member is PropertyInfo p)
+            else if (baseMemberInfo is PropertyInfo p)
             {
                 this.PropertyOrFieldType = p.PropertyType;
 
@@ -33,9 +158,9 @@ namespace Aerie.PowerShell
                 this.CanWrite = p.CanWrite;
                 this.IsStatic = p.GetAccessors(false).Any(a => a.IsStatic);
 
-                this.BaseMemberInfo = member;
+                this.BaseMemberInfo = baseMemberInfo;
             }
-            else if(member is FieldInfo f)
+            else if(baseMemberInfo is FieldInfo f)
             {
                 this.PropertyOrFieldType = f.FieldType;
 
@@ -43,113 +168,40 @@ namespace Aerie.PowerShell
                 this.CanWrite = true;
                 this.IsStatic = f.IsStatic;
 
-                this.BaseMemberInfo = member;
+                this.BaseMemberInfo = baseMemberInfo;
             }
             else
             {
                 throw new ArgumentException();
             }
-
-            this._getValueAccessor = new Lazy<GetValueAccessor>(this.CreateGetValueAccessor);
-            this._setValueAccessor = new Lazy<SetValueAccessor>(this.CreateSetValueAccessor);
         }
 
-        public override object[] GetCustomAttributes(
-            bool inherit)
+        private void EnsureInitialized()
         {
-            return this.BaseMemberInfo.GetCustomAttributes(inherit);
-        }
-
-        public override object[] GetCustomAttributes(
-            Type attributeType,
-            bool inherit)
-        {
-            return this.BaseMemberInfo.GetCustomAttributes(attributeType, inherit);
-        }
-
-        public override bool IsDefined(
-            Type attributeType,
-            bool inherit)
-        {
-            return this.BaseMemberInfo.IsDefined(attributeType, inherit);
-        }
-
-        public override Type DeclaringType
-        {
-            get
+            if (this.BaseMemberInfo is null)
             {
-                return this.BaseMemberInfo.DeclaringType;
+                throw new InvalidOperationException($"{nameof(this.BaseMemberInfo)} is not initialized.");
             }
         }
 
-        public override MemberTypes MemberType
+        private void EnsureNotInitialized()
         {
-            get
+            if (!(this.BaseMemberInfo is null))
             {
-                return this.BaseMemberInfo.MemberType;
+                throw new InvalidOperationException($"{nameof(this.BaseMemberInfo)} is already initialized.");
             }
         }
 
-        public override string Name
-        {
-            get
-            {
-                return this.BaseMemberInfo.Name;
-            }
-        }
+        [CanBeNull]
+        public MemberInfo BaseMemberInfo { get; private set; }
 
-        public override Type ReflectedType
-        {
-            get
-            {
-                return this.BaseMemberInfo.ReflectedType;
-            }
-        }
+        public Type PropertyOrFieldType { [Pure] get; private set; }
 
-        public override int MetadataToken
-        {
-            get
-            {
-                return this.BaseMemberInfo.MetadataToken;
-            }
-        }
+        public bool CanRead { get; private set; }
 
-        public override IEnumerable<CustomAttributeData> CustomAttributes
-        {
-            get
-            {
-                return this.BaseMemberInfo.CustomAttributes;
-            }
-        }
+        public bool CanWrite { get; private set; }
 
-        public override IList<CustomAttributeData> GetCustomAttributesData()
-        {
-            return this.BaseMemberInfo.GetCustomAttributesData();
-        }
-
-        public override bool HasSameMetadataDefinitionAs(MemberInfo other)
-        {
-            return this.BaseMemberInfo.HasSameMetadataDefinitionAs(other);
-        }
-
-        public override Module Module
-        {
-            get
-            {
-                return this.BaseMemberInfo.Module;
-            }
-        }
-
-        [NotNull]
-        public MemberInfo BaseMemberInfo { [Pure] get; }
-
-        public Type PropertyOrFieldType { [Pure] get; }
-
-        public bool CanRead { get; }
-
-        public bool CanWrite { get; }
-
-        public bool IsStatic { get; }
+        public bool IsStatic { get; private set; }
 
         protected delegate object GetValueAccessor(object target);
 
@@ -178,6 +230,49 @@ namespace Aerie.PowerShell
             object value)
         {
             this._setValueAccessor.Value(target, value);
+        }
+
+        public override string ToString()
+        {
+            var baseMember = this.BaseMemberInfo;
+
+            return $"{baseMember.DeclaringType.Name}.{baseMember.Name}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is PropertyOrFieldInfoBase p))
+            {
+                return false;
+            }
+
+            return this.Equals(p);
+        }
+
+        public override int GetHashCode()
+        {
+            if (this.BaseMemberInfo is null)
+            {
+                return 0;
+            }
+
+            return this.BaseMemberInfo.GetHashCode();
+        }
+
+        public bool Equals(
+            PropertyOrFieldInfoBase other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+            
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return object.Equals(this.BaseMemberInfo, other.BaseMemberInfo);
         }
     }
 }

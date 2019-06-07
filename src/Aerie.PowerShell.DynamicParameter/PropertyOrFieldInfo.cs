@@ -7,50 +7,12 @@ using JetBrains.Annotations;
 namespace Aerie.PowerShell
 {
     public class PropertyOrFieldInfo :
-        PropertyOrFieldInfoBase,
-        IEquatable<MemberInfo>
+        PropertyOrFieldInfoBase
     {
         public PropertyOrFieldInfo(
             [NotNull] MemberInfo member)
             : base(member)
         {
-        }
-
-        public bool Equals(
-            MemberInfo other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (object.ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other is PropertyOrFieldInfo pfi)
-            {
-                return this.BaseMemberInfo.Equals(pfi.BaseMemberInfo);
-            }
-
-            return this.BaseMemberInfo.Equals(other);
-        }
-
-        public override bool Equals(
-            object obj)
-        {
-            if (!(obj is MemberInfo member))
-            {
-                return false;
-            }
-
-            return this.Equals(member);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.BaseMemberInfo.GetHashCode();
         }
 
         public static implicit operator PropertyOrFieldInfo(

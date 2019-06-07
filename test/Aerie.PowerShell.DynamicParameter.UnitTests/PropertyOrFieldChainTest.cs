@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq.Expressions;
 
 using NUnit.Framework;
 
@@ -21,6 +20,20 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
             Assert.True(info.CanRead);
             Assert.True(info.CanWrite);
             Assert.False(info.IsStatic);
+        }
+
+        [Test]
+        public void Expressionからインスタンス作成()
+        {
+            Expression<Func<Foo, string>> lambda = foo => foo.BarProperty.Field1;
+
+            var chain = new PropertyOrFieldChain((MemberExpression)lambda.Body);
+
+            var barProperty = typeof(Foo).GetProperty(nameof(Foo.BarProperty));
+            var field1 = typeof(Bar).GetField(nameof(Bar.Field1));
+
+            Assert.AreEqual(chain[0].BaseMemberInfo, barProperty);
+            Assert.AreEqual(chain[1].BaseMemberInfo, field1);
         }
 
         [Test]
