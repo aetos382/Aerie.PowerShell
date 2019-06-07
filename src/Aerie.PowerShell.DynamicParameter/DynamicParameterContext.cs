@@ -234,7 +234,7 @@ namespace Aerie.PowerShell
         [NotNull]
         [ItemNotNull]
         private IEnumerable<ReflectParameterDescriptor> ProcessNonDynamicCompoundParameter(
-            [NotNull] MemberInfo compoundMember,
+            [NotNull] PropertyOrFieldInfo compoundMember,
             [NotNull] Type compoundParameterType)
         {
             var parameterMembers = Utilities.GetParameterMembers(compoundParameterType);
@@ -246,8 +246,8 @@ namespace Aerie.PowerShell
                     continue;
                 }
 
-                var descriptor = ReflectParameterDescriptor.GetParameterDescriptor(
-                    new[] { compoundMember, parameterMember });
+                var descriptor = ReflectParameterDescriptor.GetDescriptor(
+                    new PropertyOrFieldChain(compoundMember, parameterMember));
 
                 yield return descriptor;
             }

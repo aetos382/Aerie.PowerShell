@@ -102,6 +102,13 @@ namespace Aerie.PowerShell
         {
         }
 
+        public PropertyOrFieldChain(
+            [NotNull] Type declaringType,
+            [NotNull] string expression)
+            : this(ExpressionToMemberInfoList(declaringType, expression))
+        {
+        }
+
         private static IReadOnlyList<PropertyOrFieldInfo> ExpressionToMemberInfoList(
             [NotNull] MemberExpression expression)
         {
@@ -125,6 +132,33 @@ namespace Aerie.PowerShell
             }
 
             members.Reverse();
+
+            return members;
+        }
+
+        private static IReadOnlyList<PropertyOrFieldInfo> ExpressionToMemberInfoList(
+            [NotNull] Type declaringType,
+            [NotNull] string expression)
+        {
+            if (declaringType is null)
+            {
+                throw new ArgumentNullException(nameof(declaringType));
+            }
+
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            var memberNames = expression.Split('.');
+            var members = new List<PropertyOrFieldInfo>();
+
+            foreach (var name in memberNames)
+            {
+                var member = declaringType.GetMember(name);
+
+                members.Add(new PropertyOrFieldInfo(member[0]));
+            }
 
             return members;
         }

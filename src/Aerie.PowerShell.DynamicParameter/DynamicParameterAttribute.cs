@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Management.Automation;
-using System.Reflection;
 
 using JetBrains.Annotations;
 
@@ -40,11 +38,12 @@ namespace Aerie.PowerShell
         public string HelpMessageResourceId { [Pure] get; set; }
 
         public DynamicParameterDescriptor GetDynamicParameterDescriptor(
-            IReadOnlyList<MemberInfo> members)
+            PropertyOrFieldChain chain)
         {
-            Ensure.ArgumentNotNull(members, nameof(members), true);
+            Ensure.ArgumentNotNull(chain, nameof(chain));
 
-            throw new NotImplementedException();
+            var descriptor = ReflectParameterDescriptor.GetDescriptor(chain);
+            return descriptor;
         }
     }
 }

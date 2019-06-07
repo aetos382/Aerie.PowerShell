@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 
 using JetBrains.Annotations;
 
@@ -10,6 +8,6 @@ namespace Aerie.PowerShell
     {
         [NotNull]
         DynamicParameterDescriptor GetDynamicParameterDescriptor(
-            [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members);
+            [NotNull][ItemNotNull] PropertyOrFieldChain chain);
     }
 }

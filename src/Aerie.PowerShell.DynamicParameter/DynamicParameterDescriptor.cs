@@ -131,13 +131,13 @@ namespace Aerie.PowerShell
 
         [NotNull]
         public static DynamicParameterDescriptor GetDynamicParameterDescriptor(
-            [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members,
+            [NotNull][ItemNotNull] PropertyOrFieldChain chain,
             [NotNull] IDynamicParameterDescriptorProvider provider)
         {
-            Ensure.ArgumentNotNull(members, nameof(members), true);
+            Ensure.ArgumentNotNull(chain, nameof(chain));
             Ensure.ArgumentNotNull(provider, nameof(provider));
 
-            var descriptor = provider.GetDynamicParameterDescriptor(members);
+            var descriptor = provider.GetDynamicParameterDescriptor(chain);
             return descriptor;
         }
     }

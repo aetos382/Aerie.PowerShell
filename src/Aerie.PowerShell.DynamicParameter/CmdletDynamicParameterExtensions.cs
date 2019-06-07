@@ -24,8 +24,8 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
 
-            var members = Utilities.ParseExpression(typeof(TCmdlet), parameterExpression);
-            var descriptor = ReflectParameterDescriptor.GetParameterDescriptor(members);
+            var members = new PropertyOrFieldChain(typeof(TCmdlet), parameterExpression);
+            var descriptor = ReflectParameterDescriptor.GetDescriptor(members);
 
             var instance = EnableDynamicParameter(cmdlet, descriptor);
 
@@ -48,8 +48,8 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
 
-            var members = Utilities.ParseExpression((MemberExpression)parameterExpression.Body);
-            var descriptor = ReflectParameterDescriptor.GetParameterDescriptor(members);
+            var members = new PropertyOrFieldChain((MemberExpression)parameterExpression.Body);
+            var descriptor = ReflectParameterDescriptor.GetDescriptor(members);
 
             var instance = EnableDynamicParameter(cmdlet, descriptor);
 

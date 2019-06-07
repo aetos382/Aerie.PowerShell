@@ -14,13 +14,18 @@ namespace Aerie.PowerShell
         DynamicParameterDescriptor
     {
         [NotNull]
-        private static readonly Dictionary<IReadOnlyList<MemberInfo>, ReflectParameterDescriptor> _descriptorCache =
-            new Dictionary<IReadOnlyList<MemberInfo>, ReflectParameterDescriptor>(CollectionEqualityComparer<MemberInfo>.Default);
+        private static readonly Dictionary<PropertyOrFieldChain, ReflectParameterDescriptor> _descriptorCache =
+            new Dictionary<PropertyOrFieldChain, ReflectParameterDescriptor>();
 
         [NotNull]
-        internal static ReflectParameterDescriptor GetParameterDescriptor(
-            [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members)
+        internal static ReflectParameterDescriptor GetDescriptor(
+            [NotNull][ItemNotNull] PropertyOrFieldChain members)
         {
+            if (members is null)
+            {
+                throw new ArgumentNullException(nameof(members));
+            }
+
             if (!_descriptorCache.TryGetValue(members, out var descriptor))
             {
                 var initializationInfo = new ReflectParameterDescriptorInitializationInfo(members);

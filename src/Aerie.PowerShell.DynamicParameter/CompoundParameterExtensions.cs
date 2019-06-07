@@ -24,7 +24,7 @@ namespace Aerie.PowerShell
             }
 
             var context = CompoundParameterContext.GetContext(parameter);
-            var members = Utilities.ParseExpression(typeof(T), parameterExpression);
+            var members = new PropertyOrFieldChain(typeof(T), parameterExpression);
 
             var instance = context.EnableParameter(members);
             return instance;
@@ -47,7 +47,7 @@ namespace Aerie.PowerShell
             }
 
             var context = CompoundParameterContext.GetContext(parameter);
-            var members = Utilities.ParseExpression((MemberExpression)parameterExpression.Body);
+            var members = new PropertyOrFieldChain((MemberExpression)parameterExpression.Body);
 
             var instance = context.EnableParameter(members);
             return instance;

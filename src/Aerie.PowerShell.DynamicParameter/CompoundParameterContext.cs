@@ -74,21 +74,21 @@ namespace Aerie.PowerShell
 
         [NotNull]
         public DynamicParameterInstance EnableParameter(
-            [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members)
+            [NotNull][ItemNotNull] PropertyOrFieldChain members)
         {
             if (members is null)
             {
                 throw new ArgumentNullException(nameof(members));
             }
 
-            var allMembers = new List<MemberInfo>
+            var allMembers = new List<PropertyOrFieldInfo>
             {
-                this.CurrentParameter
+                new PropertyOrFieldInfo(this.CurrentParameter)
             };
 
             allMembers.AddRange(members);
 
-            var descriptor = ReflectParameterDescriptor.GetParameterDescriptor(allMembers);
+            var descriptor = ReflectParameterDescriptor.GetDescriptor(new PropertyOrFieldChain(allMembers));
 
             var instance = this._parentContext.EnableParameter(descriptor);
             return instance;
