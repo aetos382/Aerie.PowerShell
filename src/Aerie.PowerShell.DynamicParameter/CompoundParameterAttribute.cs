@@ -13,10 +13,7 @@ namespace Aerie.PowerShell
         public IEnumerable<DynamicParameterDescriptor> GetParameterDescriptors(
             ParameterMemberInfo member)
         {
-            if (member is null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
+            Ensure.ArgumentNotNull(member, nameof(member));
 
             throw new NotImplementedException();
         }
