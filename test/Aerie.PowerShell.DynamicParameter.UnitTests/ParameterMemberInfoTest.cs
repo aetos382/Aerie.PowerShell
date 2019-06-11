@@ -24,13 +24,13 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
         {
             Expression<Func<Foo, string>> lambda = foo => foo.BarProperty.Field1;
 
-            var chain = new ParameterMemberInfo((MemberExpression)lambda.Body);
+            var info = new ParameterMemberInfo((MemberExpression)lambda.Body);
 
             var barProperty = typeof(Foo).GetProperty(nameof(Foo.BarProperty));
             var field1 = typeof(Bar).GetField(nameof(Bar.Field1));
 
-            Assert.AreEqual(chain[0], barProperty);
-            Assert.AreEqual(chain[1], field1);
+            Assert.AreEqual(info[0], barProperty);
+            Assert.AreEqual(info[1], field1);
         }
 
         [Test]
@@ -89,11 +89,37 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
             Assert.AreEqual("How are you?", obj.BarField.Field1);
         }
 
+        [Test]
+        public void 型が繋がらない場合はエラー()
+        {
+            var stringField = typeof(Foo).GetField(nameof(Foo.StringField));
+            var field1 = typeof(Bar).GetField(nameof(Bar.Field1));
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                new ParameterMemberInfo(stringField, field1);
+            });
+        }
+
+        [Test]
+        public void 型が繋がらない場合はエラー2()
+        {
+            var barProperty = typeof(PseudoFoo).GetProperty(nameof(PseudoFoo.BarProperty));
+            var field1 = typeof(Bar).GetProperty(nameof(Bar.Property1));
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                new ParameterMemberInfo(barProperty, field1);
+            });
+        }
+
         public class Foo
         {
             public Bar BarProperty { get; set; }
 
             public Bar BarField;
+
+            public string StringField;
         }
 
         public class Bar
@@ -101,6 +127,16 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
             public int Property1 { get; set; }
 
             public string Field1;
+        }
+
+        public class PseudoFoo
+        {
+            public PseudoBar BarProperty { get; set; }
+        }
+
+        public class PseudoBar
+        {
+            public int Property1 { get; set; }
         }
     }
 }
