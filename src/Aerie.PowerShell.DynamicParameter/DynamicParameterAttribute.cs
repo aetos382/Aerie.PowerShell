@@ -8,7 +8,7 @@ namespace Aerie.PowerShell
     [AttributeUsage(
         AttributeTargets.Property | AttributeTargets.Field,
         AllowMultiple = true)]
-    [DynamicParameterInternal]
+    [NonParameter]
     public sealed class DynamicParameterAttribute :
         Attribute
     {

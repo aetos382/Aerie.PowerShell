@@ -3,7 +3,7 @@
 namespace Aerie.PowerShell
 {
     [AttributeUsage(AttributeTargets.Class)]
-    internal sealed class DynamicParameterInternalAttribute :
+    public sealed class NonParameterAttribute :
         Attribute
     {
     }
