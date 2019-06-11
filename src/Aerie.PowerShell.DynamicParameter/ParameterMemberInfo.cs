@@ -4,49 +4,50 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using JetBrains.Annotations;
 
 namespace Aerie.PowerShell
 {
-    public class PropertyOrFieldChain :
-        PropertyOrFieldInfoBase,
-        IReadOnlyList<PropertyOrFieldInfo>,
-        IEquatable<PropertyOrFieldChain>
+    public class ParameterMemberInfo :
+        MemberInfo,
+        IReadOnlyList<MemberInfo>,
+        IEquatable<ParameterMemberInfo>
     {
-        public PropertyOrFieldChain(
-            params PropertyOrFieldInfo[] members)
-            : this((IReadOnlyList<PropertyOrFieldInfo>)members)
+        public ParameterMemberInfo(
+            params MemberInfo[] members)
+            : this(MemberInfoToMemberInfoWrapper(members))
         {
         }
 
-        public PropertyOrFieldChain(
-            [NotNull][ItemNotNull] IReadOnlyList<PropertyOrFieldInfo> members)
+        public ParameterMemberInfo(
+            [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members)
+            : this(MemberInfoToMemberInfoWrapper(members))
+        {
+        }
+
+        private ParameterMemberInfo(
+            [NotNull][ItemNotNull] MemberInfoWrapper[] members)
         {
             Ensure.ArgumentNotNull(members, nameof(members));
 
-            if (members.Count == 0)
+            if (members.Length == 0)
             {
                 throw new ArgumentException("The collection is empty", nameof(members));
             }
 
-            var firstMember = members[0];
-            if (firstMember is null)
-            {
-                throw new ArgumentNullException($"{nameof(members)}[0]");
-            }
-
-            var names = new List<string>(members.Count);
+            var names = new List<string>(members.Length);
 
             var targetParameter = Expression.Parameter(typeof(object));
 
-            Expression pathExpression = Expression.Convert(targetParameter, firstMember.DeclaringType);
+            Expression pathExpression = Expression.Convert(targetParameter, members[0].DeclaringType);
 
-            PropertyOrFieldInfo lastMember = null;
+            MemberInfoWrapper lastMember = null;
 
-            for (int i = 0; i < members.Count; ++i)
+            for (int i = 0; i < members.Length; ++i)
             {
-                var member = members[i];
+                var member = MemberInfoWrapper.Create(members[i]);
 
                 if (i > 0)
                 {
@@ -77,7 +78,7 @@ namespace Aerie.PowerShell
                         typeof(object)),
                     targetParameter);
 
-            this._getValueAccessor = getValueExpression.Compile();
+            this._getValue = getValueExpression.Compile();
 
             var valueParameter = Expression.Parameter(typeof(object));
 
@@ -87,29 +88,35 @@ namespace Aerie.PowerShell
                         pathExpression,
                         Expression.Convert(
                             valueParameter,
-                            lastMember.PropertyOrFieldType)),
+                            lastMember.Type)),
                     targetParameter,
                     valueParameter);
 
-            this._setValueAccessor = setValueExpression.Compile();
-
-            base.InitializeMemberInfo(lastMember);
+            this._setValue = setValueExpression.Compile();
         }
-        
-        public PropertyOrFieldChain(
+
+        public ParameterMemberInfo(
             [NotNull] MemberExpression expression)
             : this(ExpressionToMemberInfoList(expression))
         {
         }
 
-        public PropertyOrFieldChain(
+        public ParameterMemberInfo(
             [NotNull] Type declaringType,
             [NotNull] string expression)
             : this(ExpressionToMemberInfoList(declaringType, expression))
         {
         }
 
-        private static IReadOnlyList<PropertyOrFieldInfo> ExpressionToMemberInfoList(
+        [NotNull]
+        [ItemNotNull]
+        private static MemberInfoWrapper[] MemberInfoToMemberInfoWrapper(
+            [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members)
+        {
+            return members.Select(MemberInfoWrapper.Create).ToArray();
+        }
+
+        private static MemberInfoWrapper[] ExpressionToMemberInfoList(
             [NotNull] MemberExpression expression)
         {
             if (expression is null)
@@ -117,11 +124,12 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(expression));
             }
 
-            var members = new List<PropertyOrFieldInfo>();
+            var members = new List<MemberInfoWrapper>();
 
             while (true)
             {
-                members.Add(new PropertyOrFieldInfo(expression.Member));
+                var member = MemberInfoWrapper.Create(expression.Member);
+                members.Add(member);
 
                 if (!(expression.Expression is MemberExpression m))
                 {
@@ -133,10 +141,10 @@ namespace Aerie.PowerShell
 
             members.Reverse();
 
-            return members;
+            return members.ToArray();
         }
 
-        private static IReadOnlyList<PropertyOrFieldInfo> ExpressionToMemberInfoList(
+        private static MemberInfoWrapper[] ExpressionToMemberInfoList(
             [NotNull] Type declaringType,
             [NotNull] string expression)
         {
@@ -151,30 +159,48 @@ namespace Aerie.PowerShell
             }
 
             var memberNames = expression.Split('.');
-            var members = new List<PropertyOrFieldInfo>();
+            var members = new List<MemberInfoWrapper>();
 
             foreach (var name in memberNames)
             {
-                var member = declaringType.GetMember(name);
-
-                members.Add(new PropertyOrFieldInfo(member[0]));
+                var member = MemberInfoWrapper.Create(declaringType.GetMember(name).Single());
+                members.Add(member);
             }
 
-            return members;
+            return members.ToArray();
+        }
+
+        [NotNull]
+        private readonly GetValueAccessor _getValue;
+
+        public object GetValue(
+            object target)
+        {
+            return this._getValue(target);
+        }
+
+        [NotNull]
+        private readonly SetValueAccessor _setValue;
+
+        public void SetValue(
+            object target,
+            object value)
+        {
+            this._setValue(target, value);
         }
 
         [NotNull]
         [ItemNotNull]
-        private readonly List<PropertyOrFieldInfo> _members = new List<PropertyOrFieldInfo>();
+        private readonly List<MemberInfoWrapper> _members = new List<MemberInfoWrapper>();
 
-        IEnumerator<PropertyOrFieldInfo> IEnumerable<PropertyOrFieldInfo>.GetEnumerator()
+        IEnumerator<MemberInfo> IEnumerable<MemberInfo>.GetEnumerator()
         {
             return this._members.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<PropertyOrFieldInfo>)this).GetEnumerator();
+            return ((IEnumerable<MemberInfo>)this).GetEnumerator();
         }
 
         public int Count
@@ -185,7 +211,7 @@ namespace Aerie.PowerShell
             }
         }
 
-        public PropertyOrFieldInfo this[int index]
+        public MemberInfo this[int index]
         {
             get
             {
@@ -194,10 +220,10 @@ namespace Aerie.PowerShell
         }
         
         private static void EnsureChained(
-            [NotNull] PropertyOrFieldInfo first,
-            [NotNull] PropertyOrFieldInfo second)
+            [NotNull] MemberInfoWrapper first,
+            [NotNull] MemberInfoWrapper second)
         {
-            if (!second.DeclaringType.IsAssignableFrom(first.PropertyOrFieldType))
+            if (!second.DeclaringType.IsAssignableFrom(first.Type))
             {
                 throw new ArgumentException();
             }
@@ -222,7 +248,7 @@ namespace Aerie.PowerShell
         }
         
         public bool Equals(
-            PropertyOrFieldChain other)
+            ParameterMemberInfo other)
         {
             if (other is null)
             {
@@ -239,7 +265,7 @@ namespace Aerie.PowerShell
 
         public override bool Equals(object obj)
         {
-            if (!(obj is PropertyOrFieldChain c))
+            if (!(obj is ParameterMemberInfo c))
             {
                 return false;
             }
@@ -264,20 +290,8 @@ namespace Aerie.PowerShell
             return $"{this.DeclaringType.Name}.{this.Path}";
         }
 
-        [NotNull]
-        private readonly GetValueAccessor _getValueAccessor;
+        private delegate object GetValueAccessor(object target);
 
-        [NotNull]
-        private readonly SetValueAccessor _setValueAccessor;
-
-        protected override GetValueAccessor CreateGetValueAccessor()
-        {
-            return this._getValueAccessor;
-        }
-
-        protected override SetValueAccessor CreateSetValueAccessor()
-        {
-            return this._setValueAccessor;
-        }
+        private delegate void SetValueAccessor(object target, object value);
     }
 }
