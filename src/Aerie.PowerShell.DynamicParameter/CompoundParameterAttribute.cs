@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Aerie.PowerShell
 {
     [AttributeUsage(
-        AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Class | AttributeTargets.Struct)]
+        AttributeTargets.Property | AttributeTargets.Field)]
     [NotParameter]
     public sealed class CompoundParameterAttribute :
         Attribute,
