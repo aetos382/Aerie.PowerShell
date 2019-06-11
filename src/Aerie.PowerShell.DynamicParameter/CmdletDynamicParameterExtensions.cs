@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Management.Automation;
@@ -208,7 +208,7 @@ namespace Aerie.PowerShell
 
                 if (providerAttribute is null)
                 {
-                    provider = ReflectParameterProxyProvider.Instance;
+                    provider = DynamicProxyProvider.Instance;
                 }
                 else
                 {

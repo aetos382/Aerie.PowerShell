@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell
 {
-    public class ReflectParameterProxyProvider :
+    public class DynamicProxyProvider :
         IDynamicParameterObjectProvider
     {
         [NotNull]
@@ -22,7 +22,7 @@ namespace Aerie.PowerShell
         [NotNull]
         private static readonly ModuleBuilder _moduleBuilder;
 
-        static ReflectParameterProxyProvider()
+        static DynamicProxyProvider()
         {
             _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(
                 new AssemblyName(AssemblyInfo.ProxyAssemblyName),
@@ -32,12 +32,12 @@ namespace Aerie.PowerShell
                 AssemblyInfo.ProxyAssemblyName + ".dll");
         }
 
-        private ReflectParameterProxyProvider()
+        private DynamicProxyProvider()
         {
         }
 
         [NotNull]
-        public static readonly ReflectParameterProxyProvider Instance = new ReflectParameterProxyProvider();
+        public static readonly DynamicProxyProvider Instance = new DynamicProxyProvider();
 
         public object GetDynamicParameterObject(
             IDynamicParameterContext context)
