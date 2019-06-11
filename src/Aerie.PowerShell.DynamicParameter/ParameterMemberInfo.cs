@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -58,11 +58,6 @@ namespace Aerie.PowerShell
 
                     default:
                         throw new ArgumentException();
-                }
-
-                if (!member.DeclaringType.IsAssignableFrom(tailMemberType))
-                {
-                    throw new ArgumentException();
                 }
 
                 this._members.Add(member);
