@@ -106,7 +106,61 @@ namespace Aerie.PowerShell
 
             foreach (var na in attributeData.NamedArguments)
             {
-                var member = type.GetProperty(na.MemberName);
+                MemberInfo member;
+
+                switch (na.MemberName)
+                {
+                    case nameof(ParameterAttribute.DontShow):
+                        member = _dontShow;
+                        break;
+
+                    case nameof(ParameterAttribute.HelpMessage):
+                        member = _helpMessage;
+                        break;
+
+                    case nameof(ParameterAttribute.HelpMessageBaseName):
+                        member = _helpMessageBaseName;
+                        break;
+
+                    case nameof(ParameterAttribute.HelpMessageResourceId):
+                        member = _helpMessageResourceId;
+                        break;
+
+                    case nameof(ParameterAttribute.Mandatory):
+                        member = _mandatory;
+                        break;
+
+                    case nameof(ParameterAttribute.ParameterSetName):
+                        member = _parameterSetName;
+                        break;
+
+                    case nameof(ParameterAttribute.Position):
+                        member = _position;
+                        break;
+
+                    case nameof(ParameterAttribute.ValueFromPipeline):
+                        member = _valueFromPipeline;
+                        break;
+
+                    case nameof(ParameterAttribute.ValueFromPipelineByPropertyName):
+                        member = _valueFromPipelineByPropertyName;
+                        break;
+
+                    case nameof(ParameterAttribute.ValueFromRemainingArguments):
+                        member = _valueFromRemainingArguments;
+                        break;
+
+                    default:
+                        member = type.GetProperty(na.MemberName);
+
+                        if (member is null)
+                        {
+                            continue;
+                        }
+
+                        break;
+                }
+
                 var namedArgument = new CustomAttributeNamedArgument(member, na.TypedValue);
 
                 this.NamedArguments.Add(namedArgument);
