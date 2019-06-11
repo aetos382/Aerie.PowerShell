@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 
 using JetBrains.Annotations;
@@ -15,10 +14,6 @@ namespace Aerie.PowerShell
         [NotNull]
         private static readonly ConditionalWeakTable<Cmdlet, DynamicParameterContext> _contexts =
             new ConditionalWeakTable<Cmdlet, DynamicParameterContext>();
-
-        [NotNull]
-        private static readonly Dictionary<Type, ReflectParameterDescriptor[]> _staticCompoundParameterCache =
-            new Dictionary<Type, ReflectParameterDescriptor[]>();
 
         [NotNull]
         private readonly Dictionary<string, DynamicParameterInstance> _enabledParameters =
@@ -66,7 +61,10 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            var context = _contexts.GetValue(cmdlet, x => new DynamicParameterContext(typeof(TCmdlet), cmdlet));
+            var context = _contexts.GetValue(
+                cmdlet,
+                x => new DynamicParameterContext(typeof(TCmdlet), cmdlet));
+
             return context;
         }
 
@@ -106,8 +104,6 @@ namespace Aerie.PowerShell
             return parameters;
         }
 
-        private bool _compoundParametersProcessed = false;
-
         [NotNull]
         public object GetDynamicParameterObject(
             [NotNull] IDynamicParameterObjectProvider factory)
@@ -115,13 +111,6 @@ namespace Aerie.PowerShell
             if (factory is null)
             {
                 throw new ArgumentNullException(nameof(factory));
-            }
-
-            if (!this._compoundParametersProcessed)
-            {
-                this.ProcessCompoundParameters();
-
-                this._compoundParametersProcessed = true;
             }
 
             if (!this._dynamicParameterObjects.TryGetValue(factory, out var obj))
@@ -182,91 +171,6 @@ namespace Aerie.PowerShell
             }
 
             i.Value = value;
-        }
-
-        private void ProcessCompoundParameters()
-        {
-            /*
-            var staticDescriptors = new List<ReflectParameterDescriptor>();
-
-            bool staticParameterCached = _staticCompoundParameterCache.TryGetValue(this.CmdletType, out var cachedDescriptors);
-            if (staticParameterCached)
-            {
-                staticDescriptors.AddRange(cachedDescriptors);
-            }
-            
-            var compoundMembers = Utilities.GetParameterMembers(this.CmdletType);
-
-            foreach (var compoundMember in compoundMembers)
-            {
-                var memberType = Utilities.GetMemberType(compoundMember);
-
-                if (!staticParameterCached && (
-                    Attribute.IsDefined(compoundMember, typeof(CompoundParameterAttribute), true) ||
-                    Attribute.IsDefined(memberType, typeof(CompoundParameterAttribute), true)))
-                {
-                    var newDescriptors = this.ProcessNonDynamicCompoundParameter(compoundMember, memberType);
-                    staticDescriptors.AddRange(newDescriptors);
-                }
-                else if (typeof(ICompoundParameter).IsAssignableFrom(memberType))
-                {
-                    var compoundParameter = (ICompoundParameter)Utilities.GetMemberValue(this.Cmdlet, compoundMember);
-
-                    if (compoundParameter is null)
-                    {
-                        continue;
-                    }
-
-                    this.ProcessDynamicCompoundParameter(compoundMember, compoundParameter);
-                }
-            }
-
-            foreach (var descriptor in staticDescriptors)
-            {
-                this.EnableParameter(descriptor);
-            }
-
-            if (!staticParameterCached)
-            {
-                _staticCompoundParameterCache[this.CmdletType] = staticDescriptors.ToArray();
-            }
-            */
-
-            throw new NotImplementedException();
-        }
-
-        [NotNull]
-        [ItemNotNull]
-        private IEnumerable<ReflectParameterDescriptor> ProcessNonDynamicCompoundParameter(
-            [NotNull] ParameterMemberInfo member,
-            [NotNull] Type compoundParameterType)
-        {
-            /*
-            var parameterMembers = Utilities.GetParameterMembers(compoundParameterType);
-
-            foreach (var parameterMember in parameterMembers)
-            {
-                if (!Attribute.IsDefined(parameterMember, typeof(ParameterAttribute), true))
-                {
-                    continue;
-                }
-
-                var descriptor = ReflectParameterDescriptor.GetDescriptor(
-                    new PropertyOrFieldChain(compoundMember, parameterMember));
-
-                yield return descriptor;
-            }*/
-
-            throw new NotImplementedException();
-        }
-
-        private void ProcessDynamicCompoundParameter(
-            [NotNull] MemberInfo compoundMember,
-            [NotNull] ICompoundParameter compoundParameter)
-        {
-            var context = CompoundParameterContext.Register(this, compoundMember, compoundParameter);
-
-            compoundParameter.ConfigureDynamicParameters(context);
         }
     }
 }
