@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Management.Automation;
@@ -221,8 +221,8 @@ namespace Aerie.PowerShell
             }
 
             var context = DynamicParameterContext.GetContext(cmdlet);
-
-            var dynamicParameterObject = context.GetDynamicParameterObject(provider);
+            
+            var dynamicParameterObject = provider.GetDynamicParameterObject(context);
 
             return dynamicParameterObject;
         }
