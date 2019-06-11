@@ -75,7 +75,7 @@ namespace Aerie.PowerShell
                 constructorArguments.Add(constructorArgument);
             }
 
-            var data = new ModifiableCustomAttributeData(
+            var data = new MutableCustomAttributeData(
                 newExpression.Constructor,
                 constructorArguments,
                 namedArguments);

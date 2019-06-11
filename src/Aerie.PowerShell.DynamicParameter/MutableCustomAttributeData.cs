@@ -7,10 +7,10 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell
 {
-    public class ModifiableCustomAttributeData :
+    public class MutableCustomAttributeData :
         CustomAttributeData
     {
-        public ModifiableCustomAttributeData(
+        public MutableCustomAttributeData(
             [NotNull] ConstructorInfo constructor)
             : this(
                 constructor,
@@ -19,7 +19,7 @@ namespace Aerie.PowerShell
         {
         }
 
-        public ModifiableCustomAttributeData(
+        public MutableCustomAttributeData(
             [NotNull] ConstructorInfo constructor,
             [NotNull] IReadOnlyList<CustomAttributeTypedArgument> constructorArguments)
             : this(
@@ -29,7 +29,7 @@ namespace Aerie.PowerShell
         {
         }
 
-        public ModifiableCustomAttributeData(
+        public MutableCustomAttributeData(
             [NotNull] ConstructorInfo constructor,
             [NotNull] IReadOnlyList<CustomAttributeTypedArgument> constructorArguments,
             [NotNull] IReadOnlyCollection<CustomAttributeNamedArgument> namedArguments)
