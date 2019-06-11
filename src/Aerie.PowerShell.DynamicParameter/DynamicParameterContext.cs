@@ -16,8 +16,8 @@ namespace Aerie.PowerShell
             new ConditionalWeakTable<Cmdlet, DynamicParameterContext>();
 
         [NotNull]
-        private readonly Dictionary<string, DynamicParameterInstance> _enabledParameters =
-            new Dictionary<string, DynamicParameterInstance>();
+        private readonly Dictionary<string, DynamicParameter> _enabledParameters =
+            new Dictionary<string, DynamicParameter>();
 
         [NotNull]
         private readonly Dictionary<IDynamicParameterObjectProvider, object> _dynamicParameterObjects =
@@ -69,7 +69,7 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public DynamicParameterInstance EnableParameter(
+        public DynamicParameter EnableParameter(
             [NotNull] DynamicParameterDescriptor descriptor)
         {
             if (descriptor is null)
@@ -77,7 +77,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(descriptor));
             }
 
-            var instance = new DynamicParameterInstance(this, descriptor);
+            var instance = new DynamicParameter(this, descriptor);
             this._enabledParameters.Add(descriptor.ParameterName, instance);
 
             return instance;
@@ -98,7 +98,7 @@ namespace Aerie.PowerShell
 */
 
         [Pure]
-        public IReadOnlyCollection<DynamicParameterInstance> GetParameters()
+        public IReadOnlyCollection<DynamicParameter> GetParameters()
         {
             var parameters = this._enabledParameters.Values.ToArray();
             return parameters;
@@ -124,7 +124,7 @@ namespace Aerie.PowerShell
         [Pure]
         public bool TryGetParameter(
             [NotNull] string parameterName,
-            out DynamicParameterInstance parameter)
+            out DynamicParameter parameter)
         {
             if (parameterName is null)
             {

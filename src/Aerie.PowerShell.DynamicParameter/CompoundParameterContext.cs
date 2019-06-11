@@ -73,7 +73,7 @@ namespace Aerie.PowerShell
         private readonly DynamicParameterContext _parentContext;
 
         [NotNull]
-        public DynamicParameterInstance EnableParameter(
+        public DynamicParameter EnableParameter(
             [NotNull][ItemNotNull] ParameterMemberInfo member)
         {
             /*

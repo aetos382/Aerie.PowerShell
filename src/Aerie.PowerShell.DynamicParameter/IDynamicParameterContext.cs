@@ -14,6 +14,6 @@ namespace Aerie.PowerShell
         [NotNull]
         [ItemNotNull]
         [Pure]
-        IReadOnlyCollection<DynamicParameterInstance> GetParameters();
+        IReadOnlyCollection<DynamicParameter> GetParameters();
     }
 }

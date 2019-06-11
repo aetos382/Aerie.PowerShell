@@ -8,7 +8,7 @@ namespace Aerie.PowerShell
     public static class CompoundParameterExtensions
     {
         [NotNull]
-        public static DynamicParameterInstance EnableDynamicParameter<T>(
+        public static DynamicParameter EnableDynamicParameter<T>(
             [NotNull] this T parameter,
             [NotNull] string parameterExpression)
             where T : ICompoundParameter
@@ -31,7 +31,7 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public static DynamicParameterInstance EnableDynamicParameter<T, TParameter>(
+        public static DynamicParameter EnableDynamicParameter<T, TParameter>(
             [NotNull] this T parameter,
             [NotNull] Expression<Func<T, TParameter>> parameterExpression)
             where T : ICompoundParameter

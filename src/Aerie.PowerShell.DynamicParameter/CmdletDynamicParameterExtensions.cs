@@ -11,7 +11,7 @@ namespace Aerie.PowerShell
     public static class CmdletDynamicParameterExtensions
     {
         [NotNull]
-        public static DynamicParameterInstance EnableDynamicParameter<TCmdlet>(
+        public static DynamicParameter EnableDynamicParameter<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] string parameterExpression)
             where TCmdlet : Cmdlet
@@ -20,7 +20,7 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public static DynamicParameterInstance EnableDynamicParameter<TCmdlet>(
+        public static DynamicParameter EnableDynamicParameter<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] string parameterExpression,
             [CanBeNull] IDynamicParameterAttributeProvider attributeProvider)
@@ -45,7 +45,7 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public static DynamicParameterInstance EnableDynamicParameter<TCmdlet, TParameter>(
+        public static DynamicParameter EnableDynamicParameter<TCmdlet, TParameter>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] Expression<Func<TCmdlet, TParameter>> parameterExpression)
             where TCmdlet : Cmdlet
@@ -54,7 +54,7 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public static DynamicParameterInstance EnableDynamicParameter<TCmdlet, TParameter>(
+        public static DynamicParameter EnableDynamicParameter<TCmdlet, TParameter>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] Expression<Func<TCmdlet, TParameter>> parameterExpression,
             [CanBeNull] IDynamicParameterAttributeProvider attributeProvider)
@@ -79,7 +79,7 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public static DynamicParameterInstance EnableDynamicParameter<TCmdlet>(
+        public static DynamicParameter EnableDynamicParameter<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] DynamicParameterDescriptor parameterDescriptor)
             where TCmdlet : Cmdlet
@@ -230,7 +230,7 @@ namespace Aerie.PowerShell
         public static bool TryGetParameter<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] string parameterName,
-            [NotNull] out DynamicParameterInstance parameter)
+            [NotNull] out DynamicParameter parameter)
             where  TCmdlet : Cmdlet
         {
             if (cmdlet is null)

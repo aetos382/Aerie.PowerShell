@@ -4,9 +4,9 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell
 {
-    public class DynamicParameterInstance
+    public class DynamicParameter
     {
-        internal DynamicParameterInstance(
+        internal DynamicParameter(
             [NotNull] DynamicParameterContext context,
             [NotNull] DynamicParameterDescriptor descriptor)
         {
