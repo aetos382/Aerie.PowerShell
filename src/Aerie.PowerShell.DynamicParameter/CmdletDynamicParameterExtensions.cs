@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Management.Automation;
+using System.Reflection;
 
 using JetBrains.Annotations;
 
@@ -181,8 +183,17 @@ namespace Aerie.PowerShell
 */
 
         [NotNull]
-        public static object GetParameterProxy<TCmdlet>(
+        public static object GetDynamicParameterObject<TCmdlet>(
             [NotNull] this TCmdlet cmdlet)
+            where TCmdlet : Cmdlet
+        {
+            return GetDynamicParameterObject(cmdlet, null);
+        }
+
+        [NotNull]
+        public static object GetDynamicParameterObject<TCmdlet>(
+            [NotNull] this TCmdlet cmdlet,
+            [CanBeNull] IDynamicParameterObjectProvider provider)
             where TCmdlet : Cmdlet
         {
             if (cmdlet is null)
@@ -190,29 +201,21 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(cmdlet));
             }
 
-            var proxy = GetDynamicParameterObject(cmdlet, ReflectParameterProxyBuilder.Instance);
-            return proxy;
-        }
-
-        [NotNull]
-        public static object GetDynamicParameterObject<TCmdlet>(
-            [NotNull] this TCmdlet cmdlet,
-            [NotNull] IDynamicParameterObjectProvider factory)
-            where  TCmdlet : Cmdlet
-        {
-            if (cmdlet is null)
+            if (provider is null)
             {
-                throw new ArgumentNullException(nameof(cmdlet));
-            }
+                var providerAttribute = typeof(TCmdlet)
+                    .GetCustomAttribute<DynamicParameterObjectProviderAttribute>(true);
 
-            if (factory is null)
-            {
-                throw new ArgumentNullException(nameof(factory));
+                var providerType = providerAttribute?.ProviderType ?? typeof(ReflectParameterProxyProvider);
+
+                provider = (IDynamicParameterObjectProvider)Activator.CreateInstance(providerType);
+
+                Debug.Assert(!(provider is null));
             }
 
             var context = DynamicParameterContext.GetContext(cmdlet);
 
-            var dynamicParameterObject = context.GetDynamicParameterObject(factory);
+            var dynamicParameterObject = context.GetDynamicParameterObject(provider);
 
             return dynamicParameterObject;
         }
