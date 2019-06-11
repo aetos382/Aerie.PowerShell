@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Aerie.PowerShell
 {
@@ -9,5 +10,15 @@ namespace Aerie.PowerShell
         Attribute,
         IDynamicParameterDescriptionProvider
     {
+        public IEnumerable<DynamicParameterDescriptor> GetParameterDescriptors(
+            ParameterMemberInfo member)
+        {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            throw new NotImplementedException();
+        }
     }
 }
