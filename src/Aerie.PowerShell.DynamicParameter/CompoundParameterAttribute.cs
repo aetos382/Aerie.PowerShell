@@ -4,7 +4,7 @@ namespace Aerie.PowerShell
 {
     [AttributeUsage(
         AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Class | AttributeTargets.Struct)]
-    [NonParameter]
+    [NotParameter]
     public sealed class CompoundParameterAttribute :
         Attribute,
         IDynamicParameterDescriptionProvider

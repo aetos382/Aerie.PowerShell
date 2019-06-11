@@ -3,7 +3,7 @@
 namespace Aerie.PowerShell
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class NonParameterAttribute :
+    public sealed class NotParameterAttribute :
         Attribute
     {
     }

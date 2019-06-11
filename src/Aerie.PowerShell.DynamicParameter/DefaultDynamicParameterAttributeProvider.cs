@@ -33,7 +33,7 @@ namespace Aerie.PowerShell
                     {
                         attributes.Add(new ParameterAttributeData(attribute));
                     }
-                    else if (!Attribute.IsDefined(attributeType, typeof(NonParameterAttribute)))
+                    else if (!Attribute.IsDefined(attributeType, typeof(NotParameterAttribute)))
                     {
                         attributes.Add(attribute);
                     }
