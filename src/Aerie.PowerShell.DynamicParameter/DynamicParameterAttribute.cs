@@ -11,7 +11,7 @@ namespace Aerie.PowerShell
     [DynamicParameterInternal]
     public sealed class DynamicParameterAttribute :
         Attribute,
-        IDynamicParameterDescriptorProvider
+        IDynamicParameterDescriptionProvider
     {
         public DynamicParameterAttribute()
         {
@@ -38,11 +38,11 @@ namespace Aerie.PowerShell
         public string HelpMessageResourceId { [Pure] get; set; }
 
         public DynamicParameterDescriptor GetDynamicParameterDescriptor(
-            PropertyOrFieldChain chain)
+            ParameterMemberInfo member)
         {
-            Ensure.ArgumentNotNull(chain, nameof(chain));
+            Ensure.ArgumentNotNull(member, nameof(member));
 
-            var descriptor = ReflectParameterDescriptor.GetDescriptor(chain);
+            var descriptor = ReflectParameterDescriptor.GetDescriptor(member);
             return descriptor;
         }
     }

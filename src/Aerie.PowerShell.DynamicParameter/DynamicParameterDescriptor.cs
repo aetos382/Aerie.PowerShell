@@ -108,8 +108,9 @@ namespace Aerie.PowerShell
             return this.Equals(descriptor);
         }
 
-        protected abstract void GetHashCode(
-            HashCode hashCode);
+        protected virtual void GetHashCode(HashCode hashCode)
+        {
+        }
 
         public override int GetHashCode()
         {
@@ -131,14 +132,13 @@ namespace Aerie.PowerShell
 
         [NotNull]
         public static DynamicParameterDescriptor GetDynamicParameterDescriptor(
-            [NotNull][ItemNotNull] PropertyOrFieldChain chain,
-            [NotNull] IDynamicParameterDescriptorProvider provider)
+            [NotNull][ItemNotNull] ParameterMemberInfo member,
+            [NotNull] IDynamicParameterDescriptionProvider provider)
         {
-            Ensure.ArgumentNotNull(chain, nameof(chain));
+            Ensure.ArgumentNotNull(member, nameof(member));
             Ensure.ArgumentNotNull(provider, nameof(provider));
 
-            var descriptor = provider.GetDynamicParameterDescriptor(chain);
-            return descriptor;
+            throw new NotImplementedException();
         }
     }
 }

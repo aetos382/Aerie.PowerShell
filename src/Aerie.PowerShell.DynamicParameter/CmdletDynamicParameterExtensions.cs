@@ -24,7 +24,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
 
-            var members = new PropertyOrFieldChain(typeof(TCmdlet), parameterExpression);
+            var members = new ParameterMemberInfo(typeof(TCmdlet), parameterExpression);
             var descriptor = ReflectParameterDescriptor.GetDescriptor(members);
 
             var instance = EnableDynamicParameter(cmdlet, descriptor);
@@ -48,7 +48,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(parameterExpression));
             }
 
-            var members = new PropertyOrFieldChain((MemberExpression)parameterExpression.Body);
+            var members = new ParameterMemberInfo((MemberExpression)parameterExpression.Body);
             var descriptor = ReflectParameterDescriptor.GetDescriptor(members);
 
             var instance = EnableDynamicParameter(cmdlet, descriptor);

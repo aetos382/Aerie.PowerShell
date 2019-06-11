@@ -186,6 +186,7 @@ namespace Aerie.PowerShell
 
         private void ProcessCompoundParameters()
         {
+            /*
             var staticDescriptors = new List<ReflectParameterDescriptor>();
 
             bool staticParameterCached = _staticCompoundParameterCache.TryGetValue(this.CmdletType, out var cachedDescriptors);
@@ -229,14 +230,18 @@ namespace Aerie.PowerShell
             {
                 _staticCompoundParameterCache[this.CmdletType] = staticDescriptors.ToArray();
             }
+            */
+
+            throw new NotImplementedException();
         }
 
         [NotNull]
         [ItemNotNull]
         private IEnumerable<ReflectParameterDescriptor> ProcessNonDynamicCompoundParameter(
-            [NotNull] PropertyOrFieldInfo compoundMember,
+            [NotNull] ParameterMemberInfo member,
             [NotNull] Type compoundParameterType)
         {
+            /*
             var parameterMembers = Utilities.GetParameterMembers(compoundParameterType);
 
             foreach (var parameterMember in parameterMembers)
@@ -250,7 +255,9 @@ namespace Aerie.PowerShell
                     new PropertyOrFieldChain(compoundMember, parameterMember));
 
                 yield return descriptor;
-            }
+            }*/
+
+            throw new NotImplementedException();
         }
 
         private void ProcessDynamicCompoundParameter(

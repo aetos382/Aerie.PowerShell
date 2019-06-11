@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Management.Automation;
 using System.Reflection;
 
 using JetBrains.Annotations;
@@ -14,12 +12,12 @@ namespace Aerie.PowerShell
         DynamicParameterDescriptor
     {
         [NotNull]
-        private static readonly Dictionary<PropertyOrFieldChain, ReflectParameterDescriptor> _descriptorCache =
-            new Dictionary<PropertyOrFieldChain, ReflectParameterDescriptor>();
+        private static readonly Dictionary<ParameterMemberInfo, ReflectParameterDescriptor> _descriptorCache =
+            new Dictionary<ParameterMemberInfo, ReflectParameterDescriptor>();
 
         [NotNull]
         internal static ReflectParameterDescriptor GetDescriptor(
-            [NotNull][ItemNotNull] PropertyOrFieldChain members)
+            [NotNull][ItemNotNull] ParameterMemberInfo members)
         {
             if (members is null)
             {
@@ -41,9 +39,7 @@ namespace Aerie.PowerShell
                 initializationInfo.ParameterName,
                 initializationInfo.ParameterType)
         {
-            var members = initializationInfo.Members.ToArray();
-
-            var attributesData = members.Last().GetCustomAttributesData();
+            var attributesData = initializationInfo.Member.GetCustomAttributesData();
 
             foreach (var a in attributesData)
             {
@@ -57,17 +53,12 @@ namespace Aerie.PowerShell
                 }
             }
 
-            this.Members = members;
-
-            CreateAccessors(members, out var getAccessor, out var setAccessor);
-
-            this._getValueAccessor = getAccessor;
-            this._setValueAccessor = setAccessor;
+            this.Member = initializationInfo.Member;
         }
 
         [NotNull]
         [ItemNotNull]
-        internal IReadOnlyList<MemberInfo> Members { [Pure] get; }
+        internal ParameterMemberInfo Member { [Pure] get; }
         
         protected internal override object GetParameterValue(
             IDynamicParameterContext context)
@@ -77,7 +68,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(context));
             }
 
-            var value = this._getValueAccessor(context.Cmdlet);
+            var value = this.Member.GetValue(context.Cmdlet);
             return value;
         }
 
@@ -90,9 +81,10 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(context));
             }
 
-            this._setValueAccessor(context.Cmdlet, value);
+            this.Member.SetValue(context.Cmdlet, value);
         }
 
+        /*
         public override bool Equals(DynamicParameterDescriptor other)
         {
             if (!base.Equals(other))
@@ -117,71 +109,18 @@ namespace Aerie.PowerShell
                 hashCode.Add(member);
             }
         }
-
-        [NotNull]
-        private readonly Func<Cmdlet, object> _getValueAccessor;
-        
-        [CanBeNull]
-        private readonly Action<Cmdlet, object> _setValueAccessor;
-
-        private static void CreateAccessors(
-            [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members,
-            [NotNull] out Func<Cmdlet, object> getAccessor,
-            [NotNull] out Action<Cmdlet, object> setAccessor)
-        {
-            if (members is null)
-            {
-                throw new ArgumentNullException(nameof(members));
-            }
-
-            var cmdletParameter = Expression.Parameter(typeof(Cmdlet));
-            var cmdletType = members[0].DeclaringType;
-
-            Expression expression = Expression.Convert(cmdletParameter, cmdletType);
-
-            foreach (var member in members)
-            {
-                expression = Expression.PropertyOrField(expression, member.Name);
-            }
-
-            var getterLambda = Expression.Lambda<Func<Cmdlet, object>>(
-                Expression.Convert(
-                    expression,
-                    typeof(object)),
-                cmdletParameter);
-
-            getAccessor = getterLambda.Compile();
-
-            var lastMember = members.Last();
-
-            var valueType = Utilities.GetMemberType(lastMember);
-
-            var valueParameter = Expression.Parameter(typeof(object));
-
-            var setterLambda = Expression.Lambda<Action<Cmdlet, object>>(
-                Expression.Assign(
-                    expression,
-                    Expression.Convert(
-                        valueParameter,
-                        valueType)),
-                cmdletParameter, valueParameter);
-
-            setAccessor = setterLambda.Compile();
-        }
+        */
 
         private class ReflectParameterDescriptorInitializationInfo
         {
             public ReflectParameterDescriptorInitializationInfo(
-                [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members)
+                [NotNull][ItemNotNull] ParameterMemberInfo member)
             {
-                var leafMember = members.Last();
-                var memberType = Utilities.GetMemberType(leafMember);
+                var nameAttribute = member.GetCustomAttribute<DynamicParameterNameAttribute>();
+                this.ParameterName = nameAttribute?.ParameterName ?? member.Name;
 
-                var nameAttribute = leafMember.GetCustomAttribute<DynamicParameterNameAttribute>();
-                this.ParameterName = nameAttribute?.ParameterName ?? leafMember.Name;
-
-                this.Members = members.ToArray();
-                this.ParameterType = memberType;
+                this.Member = member;
+                this.ParameterType = member.Type;
             }
 
             [NotNull]
@@ -192,7 +131,7 @@ namespace Aerie.PowerShell
 
             [NotNull]
             [ItemNotNull]
-            public IReadOnlyList<MemberInfo> Members { [Pure] get; }
+            public ParameterMemberInfo Member { [Pure] get; }
         }
     }
 }

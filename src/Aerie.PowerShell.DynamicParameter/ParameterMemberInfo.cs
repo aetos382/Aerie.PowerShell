@@ -16,60 +16,60 @@ namespace Aerie.PowerShell
         IEquatable<ParameterMemberInfo>
     {
         public ParameterMemberInfo(
-            params MemberInfo[] members)
-            : this(MemberInfoToMemberInfoWrapper(members))
+            [NotNull] params MemberInfo[] members)
+            : this((IReadOnlyList<MemberInfo>)members)
         {
         }
 
         public ParameterMemberInfo(
             [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members)
-            : this(MemberInfoToMemberInfoWrapper(members))
-        {
-        }
-
-        private ParameterMemberInfo(
-            [NotNull][ItemNotNull] MemberInfoWrapper[] members)
         {
             Ensure.ArgumentNotNull(members, nameof(members));
 
-            if (members.Length == 0)
+            if (members.Count == 0)
             {
                 throw new ArgumentException("The collection is empty", nameof(members));
             }
 
-            var names = new List<string>(members.Length);
-
             var targetParameter = Expression.Parameter(typeof(object));
 
-            Expression pathExpression = Expression.Convert(targetParameter, members[0].DeclaringType);
+            Expression pathExpression =
+                Expression.Convert(targetParameter, members[0].DeclaringType);
+            
+            var names = new List<string>(members.Count);
 
-            MemberInfoWrapper lastMember = null;
+            Type tailMemberType = null;
 
-            for (int i = 0; i < members.Length; ++i)
+            for (int i = 0; i < members.Count; ++i)
             {
-                var member = MemberInfoWrapper.Create(members[i]);
+                var member = members[i];
 
-                if (i > 0)
+                switch (member)
                 {
-                    if (member is null)
-                    {
-                        throw new ArgumentNullException($"{nameof(members)}[{i}]");
-                    }
+                    case PropertyInfo p:
+                        pathExpression = Expression.Property(pathExpression, p);
+                        tailMemberType = p.PropertyType;
+                        break;
 
-                    Debug.Assert(!(lastMember is null));
+                    case FieldInfo f:
+                        pathExpression = Expression.Field(pathExpression, f);
+                        tailMemberType = f.FieldType;
+                        break;
 
-                    EnsureChained(lastMember, member);
+                    default:
+                        throw new ArgumentException();
+                }
+
+                if (!member.DeclaringType.IsAssignableFrom(tailMemberType))
+                {
+                    throw new ArgumentException();
                 }
 
                 this._members.Add(member);
                 names.Add(member.Name);
-
-                pathExpression = Expression.PropertyOrField(pathExpression, member.Name);
-
-                lastMember = member;
             }
 
-            this.Path = string.Join(".", names);
+            Debug.Assert(!(tailMemberType is null));
 
             var getValueExpression =
                 Expression.Lambda<GetValueAccessor>(
@@ -88,11 +88,17 @@ namespace Aerie.PowerShell
                         pathExpression,
                         Expression.Convert(
                             valueParameter,
-                            lastMember.Type)),
+                            tailMemberType)),
                     targetParameter,
                     valueParameter);
 
             this._setValue = setValueExpression.Compile();
+
+            this._head = members[0];
+            this._tail = members.Last();
+ 
+            this.Path = string.Join(".", names);
+            this.Type = tailMemberType;
         }
 
         public ParameterMemberInfo(
@@ -110,13 +116,7 @@ namespace Aerie.PowerShell
 
         [NotNull]
         [ItemNotNull]
-        private static MemberInfoWrapper[] MemberInfoToMemberInfoWrapper(
-            [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members)
-        {
-            return members.Select(MemberInfoWrapper.Create).ToArray();
-        }
-
-        private static MemberInfoWrapper[] ExpressionToMemberInfoList(
+        private static MemberInfo[] ExpressionToMemberInfoList(
             [NotNull] MemberExpression expression)
         {
             if (expression is null)
@@ -124,12 +124,11 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(expression));
             }
 
-            var members = new List<MemberInfoWrapper>();
+            var members = new List<MemberInfo>();
 
             while (true)
             {
-                var member = MemberInfoWrapper.Create(expression.Member);
-                members.Add(member);
+                members.Add(expression.Member);
 
                 if (!(expression.Expression is MemberExpression m))
                 {
@@ -144,7 +143,9 @@ namespace Aerie.PowerShell
             return members.ToArray();
         }
 
-        private static MemberInfoWrapper[] ExpressionToMemberInfoList(
+        [NotNull]
+        [ItemNotNull]
+        private static MemberInfo[] ExpressionToMemberInfoList(
             [NotNull] Type declaringType,
             [NotNull] string expression)
         {
@@ -159,16 +160,22 @@ namespace Aerie.PowerShell
             }
 
             var memberNames = expression.Split('.');
-            var members = new List<MemberInfoWrapper>();
+            var members = new List<MemberInfo>();
 
             foreach (var name in memberNames)
             {
-                var member = MemberInfoWrapper.Create(declaringType.GetMember(name).Single());
-                members.Add(member);
+                var member = declaringType.GetMember(
+                    name,
+                    MemberTypes.Property | MemberTypes.Field,
+                    BindingFlags.Public | BindingFlags.Instance);
+
+                members.Add(member[0]);
             }
 
             return members.ToArray();
         }
+
+        private delegate object GetValueAccessor(object target);
 
         [NotNull]
         private readonly GetValueAccessor _getValue;
@@ -178,6 +185,8 @@ namespace Aerie.PowerShell
         {
             return this._getValue(target);
         }
+
+        private delegate void SetValueAccessor(object target, object value);
 
         [NotNull]
         private readonly SetValueAccessor _setValue;
@@ -191,7 +200,13 @@ namespace Aerie.PowerShell
 
         [NotNull]
         [ItemNotNull]
-        private readonly List<MemberInfoWrapper> _members = new List<MemberInfoWrapper>();
+        private readonly List<MemberInfo> _members = new List<MemberInfo>();
+
+        [NotNull]
+        private readonly MemberInfo _head;
+
+        [NotNull]
+        private readonly MemberInfo _tail;
 
         IEnumerator<MemberInfo> IEnumerable<MemberInfo>.GetEnumerator()
         {
@@ -218,35 +233,13 @@ namespace Aerie.PowerShell
                 return this._members[index];
             }
         }
-        
-        private static void EnsureChained(
-            [NotNull] MemberInfoWrapper first,
-            [NotNull] MemberInfoWrapper second)
-        {
-            if (!second.DeclaringType.IsAssignableFrom(first.Type))
-            {
-                throw new ArgumentException();
-            }
-        }
 
-        public override Type DeclaringType
-        {
-            get
-            {
-                return this._members[0].DeclaringType;
-            }
-        }
-
+        [NotNull]
         public string Path { get; }
 
-        public override Type ReflectedType
-        {
-            get
-            {
-                return this._members[0].ReflectedType;
-            }
-        }
-        
+        [NotNull]
+        public Type Type { get; }
+
         public bool Equals(
             ParameterMemberInfo other)
         {
@@ -279,7 +272,7 @@ namespace Aerie.PowerShell
 
             foreach (var member in this._members)
             {
-                hashCode.Add(member.BaseMemberInfo);
+                hashCode.Add(member);
             }
 
             return hashCode.ToHashCode();
@@ -290,8 +283,91 @@ namespace Aerie.PowerShell
             return $"{this.DeclaringType.Name}.{this.Path}";
         }
 
-        private delegate object GetValueAccessor(object target);
+        public override IEnumerable<CustomAttributeData> CustomAttributes
+        {
+            get
+            {
+                return this._tail.CustomAttributes;
+            }
+        }
+        
+        public override Type DeclaringType
+        {
+            get
+            {
+                return this._head.DeclaringType;
+            }
+        }
 
-        private delegate void SetValueAccessor(object target, object value);
+        public override object[] GetCustomAttributes(
+            Type attributeType,
+            bool inherit)
+        {
+            return this._tail.GetCustomAttributes(attributeType, inherit);
+        }
+
+        public override object[] GetCustomAttributes(
+            bool inherit)
+        {
+            return this._tail.GetCustomAttributes(inherit);
+        }
+
+        public override IList<CustomAttributeData> GetCustomAttributesData()
+        {
+            return this._tail.GetCustomAttributesData();
+        }
+
+        public override bool HasSameMetadataDefinitionAs(
+            MemberInfo other)
+        {
+            return this._tail.HasSameMetadataDefinitionAs(other);
+        }
+
+        public override bool IsDefined(
+            Type attributeType,
+            bool inherit)
+        {
+            return this._tail.IsDefined(attributeType, inherit);
+        }
+
+        public override MemberTypes MemberType
+        {
+            get
+            {
+                return this._tail.MemberType;
+            }
+        }
+
+        public override int MetadataToken
+        {
+            get
+            {
+                return this._tail.MetadataToken;
+            }
+        }
+        
+        public override Module Module
+        {
+            get
+            {
+                return this._tail.Module;
+            }
+        }
+        
+        public override string Name
+        {
+            get
+            {
+                return this._tail.Name;
+            }
+        }
+
+        public override Type ReflectedType
+        {
+            get
+            {
+                return this._head.ReflectedType;
+            }
+        }
     }
 }
