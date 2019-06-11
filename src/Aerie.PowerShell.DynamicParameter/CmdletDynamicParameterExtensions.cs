@@ -206,11 +206,18 @@ namespace Aerie.PowerShell
                 var providerAttribute = typeof(TCmdlet)
                     .GetCustomAttribute<DynamicParameterObjectProviderAttribute>(true);
 
-                var providerType = providerAttribute?.ProviderType ?? typeof(ReflectParameterProxyProvider);
+                if (providerAttribute is null)
+                {
+                    provider = ReflectParameterProxyProvider.Instance;
+                }
+                else
+                {
+                    var providerType = providerAttribute.ProviderType;
 
-                provider = (IDynamicParameterObjectProvider)Activator.CreateInstance(providerType);
+                    provider = (IDynamicParameterObjectProvider)Activator.CreateInstance(providerType);
 
-                Debug.Assert(!(provider is null));
+                    Debug.Assert(!(provider is null));
+                }
             }
 
             var context = DynamicParameterContext.GetContext(cmdlet);
