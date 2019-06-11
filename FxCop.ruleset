@@ -405,7 +405,7 @@
     <Rule Id="CS8105" Action="Error" />
     <Rule Id="CS8123" Action="Error" />
     <Rule Id="CS8305" Action="Error" />
-    <Rule Id="CS8321" Action="Error" />
+    <Rule Id="CS8321" Action="Warning" />
     <Rule Id="CS8359" Action="Error" />
     <Rule Id="CS8360" Action="Error" />
     <Rule Id="CS8371" Action="Error" />
