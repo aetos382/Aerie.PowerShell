@@ -10,8 +10,7 @@ namespace Aerie.PowerShell
         AllowMultiple = true)]
     [DynamicParameterInternal]
     public sealed class DynamicParameterAttribute :
-        Attribute,
-        IDynamicParameterDescriptionProvider
+        Attribute
     {
         public DynamicParameterAttribute()
         {
@@ -36,14 +35,5 @@ namespace Aerie.PowerShell
         public string HelpMessageBaseName { [Pure] get; set; }
 
         public string HelpMessageResourceId { [Pure] get; set; }
-
-        public DynamicParameterDescriptor GetDynamicParameterDescriptor(
-            ParameterMemberInfo member)
-        {
-            Ensure.ArgumentNotNull(member, nameof(member));
-
-            var descriptor = ReflectParameterDescriptor.GetDescriptor(member);
-            return descriptor;
-        }
     }
 }

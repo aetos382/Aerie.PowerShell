@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 
 using JetBrains.Annotations;
@@ -17,40 +15,37 @@ namespace Aerie.PowerShell
 
         [NotNull]
         internal static ReflectParameterDescriptor GetDescriptor(
-            [NotNull][ItemNotNull] ParameterMemberInfo members)
+            [NotNull][ItemNotNull] ParameterMemberInfo member,
+            [CanBeNull] IDynamicParameterAttributeProvider attributeProvider)
         {
-            if (members is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(members));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            if (!_descriptorCache.TryGetValue(members, out var descriptor))
+            attributeProvider = attributeProvider ?? DefaultDynamicParameterAttributeProvider.Instance;
+
+            if (!_descriptorCache.TryGetValue(member, out var descriptor))
             {
-                var initializationInfo = new ReflectParameterDescriptorInitializationInfo(members);
-                _descriptorCache[members] = descriptor = new ReflectParameterDescriptor(initializationInfo);
+                var initializationInfo = new ReflectParameterDescriptorInitializationInfo(member);
+                _descriptorCache[member] = descriptor = new ReflectParameterDescriptor(initializationInfo, attributeProvider);
             }
 
             return descriptor;
         }
 
         private ReflectParameterDescriptor(
-            [NotNull] ReflectParameterDescriptorInitializationInfo initializationInfo)
+            [NotNull] ReflectParameterDescriptorInitializationInfo initializationInfo,
+            IDynamicParameterAttributeProvider attributeProvider)
             : base(
                 initializationInfo.ParameterName,
                 initializationInfo.ParameterType)
         {
-            var attributesData = initializationInfo.Member.GetCustomAttributesData();
+            var attributes = attributeProvider.GetAttributeData(initializationInfo.Member);
 
-            foreach (var a in attributesData)
+            foreach (var a in attributes)
             {
-                if (a.AttributeType == typeof(DynamicParameterAttribute))
-                {
-                    this.Attributes.Add(new ParameterAttributeData(a));
-                }
-                else if (!Attribute.IsDefined(a.AttributeType, typeof(DynamicParameterInternalAttribute)))
-                {
-                    this.Attributes.Add(a);
-                }
+                this.Attributes.Add(a);
             }
 
             this.Member = initializationInfo.Member;

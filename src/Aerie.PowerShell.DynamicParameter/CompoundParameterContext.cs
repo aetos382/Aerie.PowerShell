@@ -76,6 +76,7 @@ namespace Aerie.PowerShell
         public DynamicParameterInstance EnableParameter(
             [NotNull][ItemNotNull] ParameterMemberInfo member)
         {
+            /*
             Ensure.ArgumentNotNull(member, nameof(member));
 
             var allMembers = new List<MemberInfo>
@@ -89,6 +90,8 @@ namespace Aerie.PowerShell
 
             var instance = this._parentContext.EnableParameter(descriptor);
             return instance;
+            */
+            throw new NotImplementedException();
         }
 
         public IDynamicParameterContext ParentContext

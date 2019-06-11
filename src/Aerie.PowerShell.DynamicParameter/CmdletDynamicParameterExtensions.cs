@@ -14,6 +14,16 @@ namespace Aerie.PowerShell
             [NotNull] string parameterExpression)
             where TCmdlet : Cmdlet
         {
+            return EnableDynamicParameter(cmdlet, parameterExpression, null);
+        }
+
+        [NotNull]
+        public static DynamicParameterInstance EnableDynamicParameter<TCmdlet>(
+            [NotNull] this TCmdlet cmdlet,
+            [NotNull] string parameterExpression,
+            [CanBeNull] IDynamicParameterAttributeProvider attributeProvider)
+            where TCmdlet : Cmdlet
+        {
             if (cmdlet is null)
             {
                 throw new ArgumentNullException(nameof(cmdlet));
@@ -25,17 +35,27 @@ namespace Aerie.PowerShell
             }
 
             var members = new ParameterMemberInfo(typeof(TCmdlet), parameterExpression);
-            var descriptor = ReflectParameterDescriptor.GetDescriptor(members);
+            var descriptor = ReflectParameterDescriptor.GetDescriptor(members, attributeProvider);
 
             var instance = EnableDynamicParameter(cmdlet, descriptor);
 
             return instance;
         }
-        
+
         [NotNull]
         public static DynamicParameterInstance EnableDynamicParameter<TCmdlet, TParameter>(
             [NotNull] this TCmdlet cmdlet,
             [NotNull] Expression<Func<TCmdlet, TParameter>> parameterExpression)
+            where TCmdlet : Cmdlet
+        {
+            return EnableDynamicParameter(cmdlet, parameterExpression, null);
+        }
+
+        [NotNull]
+        public static DynamicParameterInstance EnableDynamicParameter<TCmdlet, TParameter>(
+            [NotNull] this TCmdlet cmdlet,
+            [NotNull] Expression<Func<TCmdlet, TParameter>> parameterExpression,
+            [CanBeNull] IDynamicParameterAttributeProvider attributeProvider)
             where TCmdlet : Cmdlet
         {
             if (cmdlet is null)
@@ -49,7 +69,7 @@ namespace Aerie.PowerShell
             }
 
             var members = new ParameterMemberInfo((MemberExpression)parameterExpression.Body);
-            var descriptor = ReflectParameterDescriptor.GetDescriptor(members);
+            var descriptor = ReflectParameterDescriptor.GetDescriptor(members, attributeProvider);
 
             var instance = EnableDynamicParameter(cmdlet, descriptor);
 
