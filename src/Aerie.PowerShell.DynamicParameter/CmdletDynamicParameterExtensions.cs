@@ -197,7 +197,7 @@ namespace Aerie.PowerShell
         [NotNull]
         public static object GetDynamicParameterObject<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
-            [NotNull] IDynamicParameterObjectBuilder factory)
+            [NotNull] IDynamicParameterObjectProvider factory)
             where  TCmdlet : Cmdlet
         {
             if (cmdlet is null)

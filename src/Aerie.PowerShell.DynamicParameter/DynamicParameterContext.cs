@@ -25,8 +25,8 @@ namespace Aerie.PowerShell
             new Dictionary<string, DynamicParameterInstance>();
 
         [NotNull]
-        private readonly Dictionary<IDynamicParameterObjectBuilder, object> _dynamicParameterObjects =
-            new Dictionary<IDynamicParameterObjectBuilder, object>();
+        private readonly Dictionary<IDynamicParameterObjectProvider, object> _dynamicParameterObjects =
+            new Dictionary<IDynamicParameterObjectProvider, object>();
 
         [NotNull]
         public Type CmdletType { [Pure] get; }
@@ -110,7 +110,7 @@ namespace Aerie.PowerShell
 
         [NotNull]
         public object GetDynamicParameterObject(
-            [NotNull] IDynamicParameterObjectBuilder factory)
+            [NotNull] IDynamicParameterObjectProvider factory)
         {
             if (factory is null)
             {

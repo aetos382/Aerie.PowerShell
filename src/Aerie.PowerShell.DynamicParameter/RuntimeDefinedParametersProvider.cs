@@ -6,11 +6,11 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell
 {
-    public class RuntimeDefinedParametersBuilder :
-        IDynamicParameterObjectBuilder
+    public class RuntimeDefinedParametersProvider :
+        IDynamicParameterObjectProvider
     {
         [NotNull]
-        public static readonly RuntimeDefinedParametersBuilder Instance = new RuntimeDefinedParametersBuilder();
+        public static readonly RuntimeDefinedParametersProvider Instance = new RuntimeDefinedParametersProvider();
 
         public object GetDynamicParameterObject(
             IDynamicParameterContext context)

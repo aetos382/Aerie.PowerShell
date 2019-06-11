@@ -9,8 +9,8 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell
 {
-    public class ReflectParameterProxyBuilder :
-        IDynamicParameterObjectBuilder
+    public class ReflectParameterProxyProvider :
+        IDynamicParameterObjectProvider
     {
         [NotNull]
         private static readonly Dictionary<string, Func<IDynamicParameterContext, object>> _constructorCache =
@@ -22,7 +22,7 @@ namespace Aerie.PowerShell
         [NotNull]
         private static readonly ModuleBuilder _moduleBuilder;
 
-        static ReflectParameterProxyBuilder()
+        static ReflectParameterProxyProvider()
         {
             _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(
                 new AssemblyName(AssemblyInfo.ProxyAssemblyName),
@@ -32,12 +32,12 @@ namespace Aerie.PowerShell
                 AssemblyInfo.ProxyAssemblyName + ".dll");
         }
 
-        private ReflectParameterProxyBuilder()
+        private ReflectParameterProxyProvider()
         {
         }
 
         [NotNull]
-        public static readonly ReflectParameterProxyBuilder Instance = new ReflectParameterProxyBuilder();
+        public static readonly ReflectParameterProxyProvider Instance = new ReflectParameterProxyProvider();
 
         public object GetDynamicParameterObject(
             IDynamicParameterContext context)
