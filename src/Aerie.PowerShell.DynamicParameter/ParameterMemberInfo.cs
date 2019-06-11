@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -111,7 +111,7 @@ namespace Aerie.PowerShell
 
         [NotNull]
         [ItemNotNull]
-        private static MemberInfo[] ExpressionToMemberInfoList(
+        private static IReadOnlyList<MemberInfo> ExpressionToMemberInfoList(
             [NotNull] MemberExpression expression)
         {
             if (expression is null)
@@ -140,7 +140,7 @@ namespace Aerie.PowerShell
 
         [NotNull]
         [ItemNotNull]
-        private static MemberInfo[] ExpressionToMemberInfoList(
+        private static IReadOnlyList<MemberInfo> ExpressionToMemberInfoList(
             [NotNull] Type declaringType,
             [NotNull] string expression)
         {
