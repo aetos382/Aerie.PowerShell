@@ -6,7 +6,8 @@ namespace Aerie.PowerShell
         AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Class | AttributeTargets.Struct)]
     [DynamicParameterInternal]
     public sealed class CompoundParameterAttribute :
-        Attribute
+        Attribute,
+        IDynamicParameterDescriptionProvider
     {
     }
 }
