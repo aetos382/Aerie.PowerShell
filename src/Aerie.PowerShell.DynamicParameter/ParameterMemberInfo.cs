@@ -16,8 +16,9 @@ namespace Aerie.PowerShell
         IEquatable<ParameterMemberInfo>
     {
         public ParameterMemberInfo(
-            [NotNull] params MemberInfo[] members)
-            : this((IReadOnlyList<MemberInfo>)members)
+            [NotNull] MemberInfo firstMember,
+            [NotNull][ItemNotNull] params MemberInfo[] restMembers)
+            : this(BeginWith(firstMember, restMembers))
         {
         }
 
@@ -363,6 +364,18 @@ namespace Aerie.PowerShell
             {
                 return this._head.ReflectedType;
             }
+        }
+
+        private static IReadOnlyList<T> BeginWith<T>(
+            [CanBeNull] T first,
+            [NotNull] T[] rest)
+        {
+            var list = new List<T>(rest.Length + 1);
+
+            list.Add(first);
+            list.AddRange(rest);
+
+            return list;
         }
     }
 }
