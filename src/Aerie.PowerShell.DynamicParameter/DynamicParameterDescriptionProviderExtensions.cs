@@ -11,7 +11,7 @@ namespace Aerie.PowerShell.DynamicParameter
         [NotNull]
         [ItemNotNull]
         public static IEnumerable<ParameterDescriptor> GetParameterDescriptors<TCmdlet>(
-            [NotNull] this IDynamicParameterDescriptionProvider provider,
+            [NotNull] this IParameterDescriptionProvider provider,
             [NotNull] TCmdlet cmdlet)
             where TCmdlet : Cmdlet
         {

@@ -7,19 +7,19 @@ using JetBrains.Annotations;
 namespace Aerie.PowerShell.DynamicParameter
 {
     public class DynamicParameterDescriptionProviderCollection :
-        ICollection<IDynamicParameterDescriptionProvider>,
-        IReadOnlyCollection<IDynamicParameterDescriptionProvider>
+        ICollection<IParameterDescriptionProvider>,
+        IReadOnlyCollection<IParameterDescriptionProvider>
     {
         [NotNull]
-        private readonly HashSet<IDynamicParameterDescriptionProvider> _innerSet =
-            new HashSet<IDynamicParameterDescriptionProvider>();
+        private readonly HashSet<IParameterDescriptionProvider> _innerSet =
+            new HashSet<IParameterDescriptionProvider>();
 
         public DynamicParameterDescriptionProviderCollection()
         {
         }
 
         public DynamicParameterDescriptionProviderCollection(
-            [NotNull][ItemNotNull] IReadOnlyCollection<IDynamicParameterDescriptionProvider> items)
+            [NotNull][ItemNotNull] IReadOnlyCollection<IParameterDescriptionProvider> items)
         {
             Ensure.ArgumentNotNull(items, nameof(items));
 
@@ -29,18 +29,18 @@ namespace Aerie.PowerShell.DynamicParameter
             }
         }
 
-        IEnumerator<IDynamicParameterDescriptionProvider> IEnumerable<IDynamicParameterDescriptionProvider>.GetEnumerator()
+        IEnumerator<IParameterDescriptionProvider> IEnumerable<IParameterDescriptionProvider>.GetEnumerator()
         {
             return this._innerSet.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<IDynamicParameterDescriptionProvider>)this).GetEnumerator();
+            return ((IEnumerable<IParameterDescriptionProvider>)this).GetEnumerator();
         }
 
         public void Add(
-            [NotNull] IDynamicParameterDescriptionProvider item)
+            [NotNull] IParameterDescriptionProvider item)
         {
             Ensure.ArgumentNotNull(item, nameof(item));
 
@@ -53,7 +53,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         public bool Contains(
-            [NotNull] IDynamicParameterDescriptionProvider item)
+            [NotNull] IParameterDescriptionProvider item)
         {
             Ensure.ArgumentNotNull(item, nameof(item));
 
@@ -61,7 +61,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         public void CopyTo(
-            [NotNull] IDynamicParameterDescriptionProvider[] array,
+            [NotNull] IParameterDescriptionProvider[] array,
             int arrayIndex)
         {
             Ensure.ArgumentNotNull(array, nameof(array));
@@ -70,7 +70,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         public bool Remove(
-            [NotNull] IDynamicParameterDescriptionProvider item)
+            [NotNull] IParameterDescriptionProvider item)
         {
             throw new NotImplementedException();
         }

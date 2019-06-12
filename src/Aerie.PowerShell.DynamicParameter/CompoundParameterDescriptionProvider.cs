@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Aerie.PowerShell.DynamicParameter
 {
     public class CompoundParameterDescriptionProvider :
-        IDynamicParameterDescriptionProvider
+        IParameterDescriptionProvider
     {
         public IEnumerable<ParameterDescriptor> GetParameterDescriptors(
             IDynamicParameterContext context)

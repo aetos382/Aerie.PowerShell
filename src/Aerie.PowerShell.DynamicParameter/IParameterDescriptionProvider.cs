@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell.DynamicParameter
 {
-    public interface IDynamicParameterDescriptionProvider
+    public interface IParameterDescriptionProvider
     {
         [NotNull]
         [ItemNotNull]
