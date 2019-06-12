@@ -6,7 +6,7 @@ using System.Reflection;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     public class ParameterAttributeData :
         CustomAttributeData

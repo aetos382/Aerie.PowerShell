@@ -4,15 +4,14 @@ using System.Management.Automation;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     [AttributeUsage(
         AttributeTargets.Property | AttributeTargets.Field,
         AllowMultiple = true)]
     [NotParameter]
     public sealed class DynamicParameterAttribute :
-        Attribute,
-        IDynamicParameterDescriptionProvider
+        Attribute
     {
         public DynamicParameterAttribute()
         {
@@ -37,13 +36,5 @@ namespace Aerie.PowerShell
         public string HelpMessageBaseName { [Pure] get; set; }
 
         public string HelpMessageResourceId { [Pure] get; set; }
-
-        public IEnumerable<DynamicParameterDescriptor> GetParameterDescriptors(
-            ParameterMemberInfo member)
-        {
-            Ensure.ArgumentNotNull(member, nameof(member));
-
-            throw new NotImplementedException();
-        }
     }
 }

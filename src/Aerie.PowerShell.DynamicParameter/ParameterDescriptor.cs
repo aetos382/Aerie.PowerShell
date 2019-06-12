@@ -6,12 +6,12 @@ using System.Threading;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
-    public abstract class DynamicParameterDescriptor :
-        IEquatable<DynamicParameterDescriptor>
+    public abstract class ParameterDescriptor :
+        IEquatable<ParameterDescriptor>
     {
-        protected DynamicParameterDescriptor(
+        protected ParameterDescriptor(
             [NotNull] string parameterName,
             [NotNull] Type parameterType)
         {
@@ -61,7 +61,7 @@ namespace Aerie.PowerShell
         }
 
         public virtual bool Equals(
-            DynamicParameterDescriptor other)
+            ParameterDescriptor other)
         {
             if (other is null)
             {
@@ -100,7 +100,7 @@ namespace Aerie.PowerShell
         public override bool Equals(
             object obj)
         {
-            if (!(obj is DynamicParameterDescriptor descriptor))
+            if (!(obj is ParameterDescriptor descriptor))
             {
                 return false;
             }
@@ -128,17 +128,6 @@ namespace Aerie.PowerShell
             this.GetHashCode(hashCode);
 
             return hashCode.ToHashCode();
-        }
-
-        [NotNull]
-        public static DynamicParameterDescriptor GetDynamicParameterDescriptor(
-            [NotNull][ItemNotNull] ParameterMemberInfo member,
-            [NotNull] IDynamicParameterDescriptionProvider provider)
-        {
-            Ensure.ArgumentNotNull(member, nameof(member));
-            Ensure.ArgumentNotNull(provider, nameof(provider));
-
-            throw new NotImplementedException();
         }
     }
 }

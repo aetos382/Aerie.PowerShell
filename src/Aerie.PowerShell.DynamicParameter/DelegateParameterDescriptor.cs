@@ -3,10 +3,10 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     public class DelegateParameterDescriptor :
-        DynamicParameterDescriptor
+        ParameterDescriptor
     {
         public DelegateParameterDescriptor(
             [NotNull] string parameterName,
@@ -76,7 +76,7 @@ namespace Aerie.PowerShell
         }
 
         public override bool Equals(
-            DynamicParameterDescriptor other)
+            ParameterDescriptor other)
         {
             if (!(base.Equals(other)))
             {

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Management.Automation;
 
+using Aerie.PowerShell.DynamicParameter;
+
 namespace Aerie.PowerShell.Samples
 {
     [DynamicParameterObjectProvider(typeof(RuntimeDefinedParametersProvider))]

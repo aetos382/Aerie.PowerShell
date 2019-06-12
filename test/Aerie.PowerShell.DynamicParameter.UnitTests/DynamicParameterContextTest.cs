@@ -11,15 +11,15 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
         public void Construct()
         {
             Assert.Throws<ArgumentNullException>(
-                () => new DynamicParameterContext(null, new TestCmdlet()));
+                () => new CmdletContext(null, new TestCmdlet()));
 
             Assert.Throws<ArgumentNullException>(
-                () => new DynamicParameterContext(typeof(TestCmdlet), null));
+                () => new CmdletContext(typeof(TestCmdlet), null));
 
             Assert.Throws<ArgumentException>(
-                () => new DynamicParameterContext(typeof(TestCmdlet), new TestCmdlet2()));
+                () => new CmdletContext(typeof(TestCmdlet), new TestCmdlet2()));
 
-            var context = new DynamicParameterContext(typeof(TestCmdlet), new TestCmdlet());
+            var context = new CmdletContext(typeof(TestCmdlet), new TestCmdlet());
             Assert.IsNotNull(context);
         }
 
@@ -28,15 +28,15 @@ namespace Aerie.PowerShell.DynamicParameter.UnitTests
         {
             var cmdletInstance = new TestCmdlet();
 
-            var context = DynamicParameterContext.GetContext(cmdletInstance);
+            var context = CmdletContext.GetContext(cmdletInstance);
             Assert.IsNotNull(context);
 
-            var context2 = DynamicParameterContext.GetContext(cmdletInstance);
+            var context2 = CmdletContext.GetContext(cmdletInstance);
             Assert.AreSame(context, context2);
 
             var otherCmdletInstance = new TestCmdlet();
 
-            var context3 = DynamicParameterContext.GetContext(otherCmdletInstance);
+            var context3 = CmdletContext.GetContext(otherCmdletInstance);
             Assert.AreNotSame(context, context3);
         }
 

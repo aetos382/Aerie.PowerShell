@@ -2,13 +2,13 @@
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     public class DynamicParameter
     {
         internal DynamicParameter(
-            [NotNull] DynamicParameterContext context,
-            [NotNull] DynamicParameterDescriptor descriptor)
+            [NotNull] CmdletContext context,
+            [NotNull] ParameterDescriptor descriptor)
         {
             if (context is null)
             {
@@ -28,7 +28,7 @@ namespace Aerie.PowerShell
         public IDynamicParameterContext Context { get; }
 
         [NotNull]
-        public DynamicParameterDescriptor ParameterDescriptor { [Pure] get; }
+        public ParameterDescriptor ParameterDescriptor { [Pure] get; }
 
         public bool IsSet { [Pure] get; private set; }
 

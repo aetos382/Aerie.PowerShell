@@ -3,7 +3,7 @@ using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.Async
 {
     public abstract class AsyncCmdlet :
         Cmdlet,

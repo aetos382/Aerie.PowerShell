@@ -5,7 +5,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     internal class CollectionEqualityComparer<T> :
         IEqualityComparer<IEnumerable<T>>,

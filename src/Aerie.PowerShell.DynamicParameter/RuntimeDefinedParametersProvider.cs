@@ -4,7 +4,7 @@ using System.Management.Automation;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     public class RuntimeDefinedParametersProvider :
         IDynamicParameterObjectProvider

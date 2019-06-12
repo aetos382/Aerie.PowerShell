@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     internal static class CustomAttributeDataExtensions
     {

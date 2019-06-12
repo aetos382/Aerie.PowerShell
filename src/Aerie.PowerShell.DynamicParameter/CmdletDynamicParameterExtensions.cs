@@ -6,7 +6,7 @@ using System.Reflection;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     public static class CmdletDynamicParameterExtensions
     {
@@ -81,7 +81,7 @@ namespace Aerie.PowerShell
         [NotNull]
         public static DynamicParameter EnableDynamicParameter<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
-            [NotNull] DynamicParameterDescriptor parameterDescriptor)
+            [NotNull] ParameterDescriptor parameterDescriptor)
             where TCmdlet : Cmdlet
         {
             if (cmdlet is null)
@@ -94,7 +94,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(parameterDescriptor));
             }
 
-            var context = DynamicParameterContext.GetContext(cmdlet);
+            var context = CmdletContext.GetContext(cmdlet);
             var instance = context.EnableParameter(parameterDescriptor);
 
             return instance;
@@ -220,7 +220,7 @@ namespace Aerie.PowerShell
                 }
             }
 
-            var context = DynamicParameterContext.GetContext(cmdlet);
+            var context = CmdletContext.GetContext(cmdlet);
             
             var dynamicParameterObject = provider.GetDynamicParameterObject(context);
 
@@ -243,7 +243,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(parameterName));
             }
 
-            var context = DynamicParameterContext.GetContext(cmdlet);
+            var context = CmdletContext.GetContext(cmdlet);
 
             bool enabled = context.TryGetParameter(parameterName, out parameter);
             return enabled;
@@ -317,7 +317,7 @@ namespace Aerie.PowerShell
                 throw new ArgumentNullException(nameof(runtimeDefinedParameters));
             }
 
-            var context = DynamicParameterContext.GetContext(cmdlet);
+            var context = CmdletContext.GetContext(cmdlet);
 
             foreach (var parameter in runtimeDefinedParameters.Values)
             {

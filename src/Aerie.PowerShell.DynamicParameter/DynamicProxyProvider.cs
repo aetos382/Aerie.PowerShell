@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     public class DynamicProxyProvider :
         IDynamicParameterObjectProvider
@@ -81,7 +81,7 @@ namespace Aerie.PowerShell
 
             var contextFieldBuilder = typeBuilder.DefineField(
                 "_context",
-                typeof(DynamicParameterContext),
+                typeof(CmdletContext),
                 fieldAttributes);
 
             GenerateConstructor(typeBuilder, contextFieldBuilder);
@@ -131,7 +131,7 @@ namespace Aerie.PowerShell
 
         private static void AddParameter(
             [NotNull] TypeBuilder typeBuilder,
-            [NotNull] DynamicParameterDescriptor descriptor,
+            [NotNull] ParameterDescriptor descriptor,
             [NotNull] FieldInfo contextField)
         {
             string parameterName = descriptor.ParameterName;
@@ -198,11 +198,11 @@ namespace Aerie.PowerShell
 
         private static void EmitLoadMember(
             [NotNull] ILGenerator generator,
-            [NotNull] DynamicParameterDescriptor descriptor,
+            [NotNull] ParameterDescriptor descriptor,
             [NotNull] FieldInfo contextField)
         {
-            var method = typeof(DynamicParameterContext).GetMethod(
-                nameof(DynamicParameterContext.GetParameterValue),
+            var method = typeof(CmdletContext).GetMethod(
+                nameof(CmdletContext.GetParameterValue),
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
 
             generator.Emit(OpCodes.Ldarg_0);
@@ -221,11 +221,11 @@ namespace Aerie.PowerShell
 
         private static void EmitStoreMember(
             [NotNull] ILGenerator generator,
-            [NotNull] DynamicParameterDescriptor descriptor,
+            [NotNull] ParameterDescriptor descriptor,
             [NotNull] FieldInfo contextField)
         {
-            var method = typeof(DynamicParameterContext).GetMethod(
-                nameof(DynamicParameterContext.SetParameterValue),
+            var method = typeof(CmdletContext).GetMethod(
+                nameof(CmdletContext.SetParameterValue),
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
 
             generator.Emit(OpCodes.Ldarg_0);
@@ -246,7 +246,7 @@ namespace Aerie.PowerShell
 
         private static void SetParameterAttributes(
             [NotNull] PropertyBuilder propertyBuilder,
-            [NotNull] DynamicParameterDescriptor parameterDescriptor,
+            [NotNull] ParameterDescriptor parameterDescriptor,
             bool checkAttributeTarget)
         {
             foreach (var attribute in parameterDescriptor.Attributes)

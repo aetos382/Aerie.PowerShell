@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     public static class CompoundParameterExtensions
     {

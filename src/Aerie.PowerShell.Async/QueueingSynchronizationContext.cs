@@ -3,7 +3,7 @@ using System.Threading;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.Async
 {
     internal sealed class QueueingSynchronizationContext :
         SynchronizationContext

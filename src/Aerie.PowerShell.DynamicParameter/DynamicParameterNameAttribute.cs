@@ -2,7 +2,7 @@
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     [AttributeUsage(
         AttributeTargets.Property | AttributeTargets.Field)]

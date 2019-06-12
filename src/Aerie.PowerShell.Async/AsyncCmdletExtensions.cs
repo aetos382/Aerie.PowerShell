@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.Async
 {
     public static class AsyncCmdletExtensions
     {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     public interface IDynamicParameterDescriptionProvider
     {
         [NotNull]
         [ItemNotNull]
-        IEnumerable<DynamicParameterDescriptor> GetParameterDescriptors(
-            [NotNull][ItemNotNull] ParameterMemberInfo member);
+        IEnumerable<ParameterDescriptor> GetParameterDescriptors(
+            [NotNull] IDynamicParameterContext context);
     }
 }

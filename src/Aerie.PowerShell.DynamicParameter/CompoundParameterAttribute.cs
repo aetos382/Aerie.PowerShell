@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     [AttributeUsage(
         AttributeTargets.Property | AttributeTargets.Field)]
     [NotParameter]
     public sealed class CompoundParameterAttribute :
-        Attribute,
-        IDynamicParameterDescriptionProvider
+        Attribute
     {
-        public IEnumerable<DynamicParameterDescriptor> GetParameterDescriptors(
-            ParameterMemberInfo member)
-        {
-            Ensure.ArgumentNotNull(member, nameof(member));
-
-            throw new NotImplementedException();
-        }
     }
 }

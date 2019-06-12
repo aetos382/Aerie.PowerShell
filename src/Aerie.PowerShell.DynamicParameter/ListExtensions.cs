@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     internal static class ListExtensions
     {

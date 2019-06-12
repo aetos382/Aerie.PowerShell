@@ -4,6 +4,8 @@ using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Aerie.PowerShell.Async;
+
 namespace Aerie.PowerShell.Samples
 {
     [Cmdlet("Test", "ParallelProgress")]

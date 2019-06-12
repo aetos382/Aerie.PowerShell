@@ -6,25 +6,24 @@ using System.Runtime.CompilerServices;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
-    internal class DynamicParameterContext :
+    internal class CmdletContext :
         IDynamicParameterContext
     {
         [NotNull]
-        private static readonly ConditionalWeakTable<Cmdlet, DynamicParameterContext> _contexts =
-            new ConditionalWeakTable<Cmdlet, DynamicParameterContext>();
+        private static readonly ConditionalWeakTable<Cmdlet, CmdletContext> _contexts =
+            new ConditionalWeakTable<Cmdlet, CmdletContext>();
 
         [NotNull]
         private readonly Dictionary<string, DynamicParameter> _enabledParameters =
             new Dictionary<string, DynamicParameter>();
 
-        [NotNull]
         public Type CmdletType { [Pure] get; }
 
         public Cmdlet Cmdlet { get; }
 
-        public DynamicParameterContext(
+        public CmdletContext(
             [NotNull] Type cmdletType,
             [NotNull] Cmdlet cmdlet)
         {
@@ -48,7 +47,7 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        public static DynamicParameterContext GetContext<TCmdlet>(
+        public static CmdletContext GetContext<TCmdlet>(
             [NotNull] TCmdlet cmdlet)
             where TCmdlet : Cmdlet
         {
@@ -59,14 +58,14 @@ namespace Aerie.PowerShell
 
             var context = _contexts.GetValue(
                 cmdlet,
-                x => new DynamicParameterContext(typeof(TCmdlet), cmdlet));
+                x => new CmdletContext(typeof(TCmdlet), cmdlet));
 
             return context;
         }
 
         [NotNull]
         public DynamicParameter EnableParameter(
-            [NotNull] DynamicParameterDescriptor descriptor)
+            [NotNull] ParameterDescriptor descriptor)
         {
             if (descriptor is null)
             {

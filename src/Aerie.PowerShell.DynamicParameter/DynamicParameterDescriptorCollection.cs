@@ -5,14 +5,14 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     public class DynamicParameterDescriptorCollection :
-        Collection<DynamicParameterDescriptor>,
+        Collection<ParameterDescriptor>,
         IEquatable<DynamicParameterDescriptorCollection>
     {
         public DynamicParameterDescriptorCollection(
-            [NotNull][ItemNotNull] IEnumerable<DynamicParameterDescriptor> descriptors)
+            [NotNull][ItemNotNull] IEnumerable<ParameterDescriptor> descriptors)
         {
             Ensure.ArgumentNotNull(descriptors, nameof(descriptors));
 

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell
+namespace Aerie.PowerShell.DynamicParameter
 {
     internal class CompoundParameterContext :
         ICompoundParameterContext
@@ -16,7 +16,7 @@ namespace Aerie.PowerShell
 
         [NotNull]
         public static CompoundParameterContext Register(
-            [NotNull] DynamicParameterContext parentContext,
+            [NotNull] CmdletContext parentContext,
             [NotNull] MemberInfo compoundParameterMember,
             [NotNull] ICompoundParameter compoundParameterValue)
         {
@@ -62,7 +62,7 @@ namespace Aerie.PowerShell
         }
 
         private CompoundParameterContext(
-            [NotNull] DynamicParameterContext parentContext,
+            [NotNull] CmdletContext parentContext,
             [NotNull] MemberInfo compoundParameterMember)
         {
             this._parentContext = parentContext;
@@ -70,7 +70,7 @@ namespace Aerie.PowerShell
         }
 
         [NotNull]
-        private readonly DynamicParameterContext _parentContext;
+        private readonly CmdletContext _parentContext;
 
         [NotNull]
         public DynamicParameter EnableParameter(
