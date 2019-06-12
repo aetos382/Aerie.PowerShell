@@ -21,8 +21,8 @@ namespace Aerie.PowerShell.DynamicParameter
 
         [NotNull]
         [ItemNotNull]
-        private static readonly DynamicParameterDescriptionProviderCollection _defaultProviders =
-            new DynamicParameterDescriptionProviderCollection
+        private static readonly ParameterDescriptionProviderCollection _defaultProviders =
+            new ParameterDescriptionProviderCollection
             {
                 new ReflectDynamicParameterDescriptionProvider(),
                 new CompoundParameterDescriptionProvider()
@@ -30,7 +30,7 @@ namespace Aerie.PowerShell.DynamicParameter
 
         [NotNull]
         [ItemNotNull]
-        public static DynamicParameterDescriptionProviderCollection DefaultProviders
+        public static ParameterDescriptionProviderCollection DefaultProviders
         {
             [Pure]
             get
@@ -41,12 +41,12 @@ namespace Aerie.PowerShell.DynamicParameter
 
         [NotNull]
         [ItemNotNull]
-        private readonly DynamicParameterDescriptionProviderCollection _providers =
-            new DynamicParameterDescriptionProviderCollection(_defaultProviders);
+        private readonly ParameterDescriptionProviderCollection _providers =
+            new ParameterDescriptionProviderCollection(_defaultProviders);
 
         [NotNull]
         [ItemNotNull]
-        public DynamicParameterDescriptionProviderCollection DynamicParameterDescriptionProviders
+        public ParameterDescriptionProviderCollection DynamicParameterDescriptionProviders
         {
             [Pure]
             get

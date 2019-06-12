@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell.DynamicParameter
 {
-    public class DynamicParameterDescriptionProviderCollection :
+    public class ParameterDescriptionProviderCollection :
         ICollection<IParameterDescriptionProvider>,
         IReadOnlyCollection<IParameterDescriptionProvider>
     {
@@ -14,11 +14,11 @@ namespace Aerie.PowerShell.DynamicParameter
         private readonly HashSet<IParameterDescriptionProvider> _innerSet =
             new HashSet<IParameterDescriptionProvider>();
 
-        public DynamicParameterDescriptionProviderCollection()
+        public ParameterDescriptionProviderCollection()
         {
         }
 
-        public DynamicParameterDescriptionProviderCollection(
+        public ParameterDescriptionProviderCollection(
             [NotNull][ItemNotNull] IReadOnlyCollection<IParameterDescriptionProvider> items)
         {
             Ensure.ArgumentNotNull(items, nameof(items));
