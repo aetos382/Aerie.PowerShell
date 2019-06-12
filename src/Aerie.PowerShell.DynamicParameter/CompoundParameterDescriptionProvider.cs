@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+using Aerie.Commons.Contracts;
+
 namespace Aerie.PowerShell.DynamicParameter
 {
     public class CompoundParameterDescriptionProvider :
@@ -11,7 +13,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public IEnumerable<ParameterDescriptor> GetParameterDescriptors(
             IDynamicParameterContext context)
         {
-            Ensure.ArgumentNotNull(context, nameof(context));
+            Ensures.ArgumentNotNull(context, nameof(context));
 
             var members = context.CmdletType.GetMember(
                 "*",

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Aerie.Commons.Collections;
+using Aerie.Commons.Contracts;
+
 using JetBrains.Annotations;
 
 namespace Aerie.PowerShell.DynamicParameter
@@ -15,7 +18,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public ParameterDescriptionProviderCollection(
             [NotNull][ItemNotNull] IReadOnlyCollection<IParameterDescriptionProvider> items)
         {
-            Ensure.ArgumentNotNull(items, nameof(items));
+            Ensures.ArgumentNotNull(items, nameof(items));
 
             foreach (var item in items)
             {

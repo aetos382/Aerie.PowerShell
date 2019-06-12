@@ -4,7 +4,9 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell.DynamicParameter
+using Aerie.Commons.Contracts;
+
+namespace Aerie.Commons.Collections
 {
     public abstract class NonNullCollectionBase<T> :
         ICollection<T>,
@@ -24,7 +26,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public void Add(
             [NotNull] T item)
         {
-            Ensure.ArgumentNotNull(item, nameof(item));
+            Ensures.ArgumentNotNull(item, nameof(item));
 
             this.BaseCollection.Add(item);
         }
@@ -37,16 +39,16 @@ namespace Aerie.PowerShell.DynamicParameter
         public bool Contains(
             [NotNull] T item)
         {
-            Ensure.ArgumentNotNull(item, nameof(item));
+            Ensures.ArgumentNotNull(item, nameof(item));
 
             return this.BaseCollection.Contains(item);
         }
 
         public void CopyTo(
-            [NotNull] T[] array,
+            T[] array,
             int arrayIndex)
         {
-            Ensure.ArgumentNotNull(array, nameof(array));
+            Ensures.ArgumentNotNull(array, nameof(array));
 
             this.BaseCollection.CopyTo(array, arrayIndex);
         }
@@ -54,7 +56,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public bool Remove(
             [NotNull] T item)
         {
-            Ensure.ArgumentNotNull(item, nameof(item));
+            Ensures.ArgumentNotNull(item, nameof(item));
 
             return this.BaseCollection.Remove(item);
         }

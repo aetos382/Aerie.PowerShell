@@ -3,6 +3,7 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Aerie.PowerShell.Samples</RootNamespace>
     <IsPackable>false</IsPackable>
     <DeterministicSourcePaths>false</DeterministicSourcePaths>

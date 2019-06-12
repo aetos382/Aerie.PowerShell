@@ -3,7 +3,6 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
-    <RootNamespace>Aerie.PowerShell</RootNamespace>
     <PackageTags>PowerShell</PackageTags>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>

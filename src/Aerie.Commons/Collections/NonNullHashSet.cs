@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Aerie.PowerShell.DynamicParameter
+namespace Aerie.Commons.Collections
 {
     public class NonNullHashSet<T> :
         NonNullCollectionBase<T>
@@ -24,13 +24,7 @@ namespace Aerie.PowerShell.DynamicParameter
         {
             this.BaseCollection = new HashSet<T>(collection, comparer);
         }
-
-        public NonNullHashSet(
-            int capacity)
-        {
-            this.BaseCollection = new HashSet<T>(capacity);
-        }
-
+        
         protected override ICollection<T> BaseCollection { get; }
     }
 }

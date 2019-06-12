@@ -1,19 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
-    <PackageReference Include="Microsoft.PowerShell.SDK" />
     <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Aerie.Commons\Aerie.Commons.csproj" />
   </ItemGroup>
 
 </Project>

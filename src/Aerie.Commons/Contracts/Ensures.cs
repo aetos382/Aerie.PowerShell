@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell.DynamicParameter
+namespace Aerie.Commons.Contracts
 {
-    internal static class Ensure
+    public static class Ensures
     {
         [AssertionMethod]
         public static void ArgumentNotNull<T>(

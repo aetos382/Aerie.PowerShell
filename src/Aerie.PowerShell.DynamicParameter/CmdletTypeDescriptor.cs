@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using Aerie.Commons.Contracts;
+
 using JetBrains.Annotations;
 
 namespace Aerie.PowerShell.DynamicParameter
@@ -11,7 +13,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public CmdletTypeDescriptor(
             [NotNull] Type cmdletType)
         {
-            Ensure.ArgumentNotNull(cmdletType, nameof(cmdletType));
+            Ensures.ArgumentNotNull(cmdletType, nameof(cmdletType));
 
             this.CmdletType = cmdletType;
         }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell.DynamicParameter
+namespace Aerie.Commons.Collections
 {
-    internal static class ListExtensions
+    public static class ListExtensions
     {
         [CanBeNull]
         public static T Last<T>(

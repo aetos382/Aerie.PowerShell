@@ -2,7 +2,9 @@
 
 using NUnit.Framework;
 
-namespace Aerie.PowerShell.DynamicParameter.UnitTests
+using Aerie.Commons.Collections;
+
+namespace Aerie.Commons.Tests
 {
     public class ListExtensionsTest
     {
