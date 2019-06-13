@@ -11,11 +11,11 @@ namespace Aerie.PowerShell.DynamicParameter
         IParameterDescriptionProvider
     {
         public IEnumerable<ParameterDescriptor> GetParameterDescriptors(
-            IDynamicParameterContext context)
+            Type cmdletType)
         {
-            Ensures.ArgumentNotNull(context, nameof(context));
+            Ensures.ArgumentNotNull(cmdletType, nameof(cmdletType));
 
-            var members = context.CmdletType.GetMember(
+            var members = cmdletType.GetMember(
                 "*",
                 MemberTypes.Property | MemberTypes.Field,
                 BindingFlags.Instance | BindingFlags.Public);

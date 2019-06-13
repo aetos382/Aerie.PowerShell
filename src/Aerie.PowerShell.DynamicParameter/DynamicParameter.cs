@@ -25,7 +25,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        public IDynamicParameterContext Context { get; }
+        public CmdletContext Context { get; }
 
         [NotNull]
         public ParameterDescriptor ParameterDescriptor { [Pure] get; }

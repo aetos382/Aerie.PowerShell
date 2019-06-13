@@ -45,10 +45,10 @@ namespace Aerie.PowerShell.DynamicParameter
 
         [CanBeNull]
         protected internal abstract object GetParameterValue(
-            [NotNull] IDynamicParameterContext context);
+            [NotNull] CmdletContext context);
 
         protected internal abstract void SetParameterValue(
-            [NotNull] IDynamicParameterContext context,
+            [NotNull] CmdletContext context,
             [CanBeNull] object value);
 
         internal int Id { [Pure] get; }

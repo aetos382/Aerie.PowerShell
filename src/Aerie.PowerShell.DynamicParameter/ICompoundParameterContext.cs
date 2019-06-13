@@ -8,7 +8,7 @@ namespace Aerie.PowerShell.DynamicParameter
     public interface ICompoundParameterContext
     {
         [NotNull]
-        IDynamicParameterContext ParentContext { [Pure] get; }
+        CmdletContext ParentContext { [Pure] get; }
 
         [NotNull]
         MemberInfo CurrentParameter { [Pure] get; }

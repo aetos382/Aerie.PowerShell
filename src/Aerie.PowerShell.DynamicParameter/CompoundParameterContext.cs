@@ -7,8 +7,7 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell.DynamicParameter
 {
-    internal class CompoundParameterContext :
-        ICompoundParameterContext
+    internal class CompoundParameterContext
     {
         [NotNull]
         private static readonly ConditionalWeakTable<ICompoundParameter, CompoundParameterContext> _contexts =
@@ -94,7 +93,7 @@ namespace Aerie.PowerShell.DynamicParameter
             throw new NotImplementedException();
         }
 
-        public IDynamicParameterContext ParentContext
+        public CmdletContext ParentContext
         {
             get
             {

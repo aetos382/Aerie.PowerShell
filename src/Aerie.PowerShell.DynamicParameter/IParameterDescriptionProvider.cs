@@ -10,6 +10,6 @@ namespace Aerie.PowerShell.DynamicParameter
         [NotNull]
         [ItemNotNull]
         IEnumerable<ParameterDescriptor> GetParameterDescriptors(
-            [NotNull] IDynamicParameterContext context);
+            [NotNull] Type cmdletType);
     }
 }

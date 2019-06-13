@@ -18,13 +18,13 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        private Func<IDynamicParameterContext, object> _getValueAccessor = _ => default;
+        private Func<CmdletContext, object> _getValueAccessor = _ => default;
 
         [NotNull]
-        private Action<IDynamicParameterContext, object> _setValueAccessor = (context, value) => { };
+        private Action<CmdletContext, object> _setValueAccessor = (context, value) => { };
 
         [NotNull]
-        public Func<IDynamicParameterContext, object> GetValueAccessor
+        public Func<CmdletContext, object> GetValueAccessor
         {
             [Pure]
             get
@@ -41,7 +41,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        public Action<IDynamicParameterContext, object> SetValueAccessor
+        public Action<CmdletContext, object> SetValueAccessor
         {
             [Pure]
             get
@@ -58,14 +58,14 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         protected internal override object GetParameterValue(
-            IDynamicParameterContext context)
+            CmdletContext context)
         {
             var value = this.GetValueAccessor(context);
             return value;
         }
 
         protected internal override void SetParameterValue(
-            IDynamicParameterContext context,
+            CmdletContext context,
             object value)
         {
             this.SetValueAccessor(context, value);

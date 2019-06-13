@@ -4,12 +4,13 @@ using System.Linq;
 using System.Management.Automation;
 using System.Runtime.CompilerServices;
 
+using Aerie.Commons.Contracts;
+
 using JetBrains.Annotations;
 
 namespace Aerie.PowerShell.DynamicParameter
 {
-    internal class CmdletContext :
-        IDynamicParameterContext
+    public class CmdletContext
     {
         [NotNull]
         private static readonly ConditionalWeakTable<Cmdlet, CmdletContext> _contexts =
@@ -19,31 +20,24 @@ namespace Aerie.PowerShell.DynamicParameter
         private readonly Dictionary<string, DynamicParameter> _enabledParameters =
             new Dictionary<string, DynamicParameter>();
 
-        public Type CmdletType { [Pure] get; }
-
+        [NotNull]
         public Cmdlet Cmdlet { get; }
 
-        public CmdletContext(
-            [NotNull] Type cmdletType,
-            [NotNull] Cmdlet cmdlet)
+        [NotNull]
+        internal CmdletTypeDescriptor TypeDescriptor { get; }
+
+        protected CmdletContext(
+            [NotNull] Cmdlet cmdlet,
+            [NotNull] Type cmdletType)
         {
-            if (cmdletType is null)
-            {
-                throw new ArgumentNullException(nameof(cmdletType));
-            }
+            Ensures.ArgumentNotNull(cmdlet, nameof(cmdlet));
+            Ensures.ArgumentNotNull(cmdletType, nameof(cmdletType));
 
-            if (cmdlet is null)
-            {
-                throw new ArgumentNullException(nameof(cmdlet));
-            }
+            var typeDescriptor = CmdletTypeDescriptor.GetDescriptor(cmdletType);
+            typeDescriptor.CreateParameterDescriptors();
 
-            if (!cmdletType.IsInstanceOfType(cmdlet))
-            {
-                throw new ArgumentException();
-            }
-
-            this.CmdletType = cmdletType;
             this.Cmdlet = cmdlet;
+            this.TypeDescriptor = typeDescriptor;
         }
 
         [NotNull]
@@ -51,14 +45,42 @@ namespace Aerie.PowerShell.DynamicParameter
             [NotNull] TCmdlet cmdlet)
             where TCmdlet : Cmdlet
         {
-            if (cmdlet is null)
+            Ensures.ArgumentNotNull(cmdlet, nameof(cmdlet));
+
+            return GetContext(cmdlet, typeof(TCmdlet));
+        }
+
+        [NotNull]
+        public static CmdletContext GetContext(
+            [NotNull] Cmdlet cmdlet)
+        {
+            Ensures.ArgumentNotNull(cmdlet, nameof(cmdlet));
+
+            return GetContext(cmdlet, null);
+        }
+        
+        [NotNull]
+        internal static CmdletContext GetContext(
+            [NotNull] Cmdlet cmdlet,
+            [CanBeNull] Type cmdletType)
+        {
+            Ensures.ArgumentNotNull(cmdlet, nameof(cmdlet));
+
+            if (cmdletType is null)
             {
-                throw new ArgumentNullException(nameof(cmdlet));
+                cmdletType = cmdlet.GetType();
+            }
+            else
+            {
+                if (!cmdletType.IsAssignableFrom(cmdlet.GetType()))
+                {
+                    throw new ArgumentException();
+                }
             }
 
             var context = _contexts.GetValue(
                 cmdlet,
-                x => new CmdletContext(typeof(TCmdlet), cmdlet));
+                x => new CmdletContext(cmdlet, cmdletType));
 
             return context;
         }

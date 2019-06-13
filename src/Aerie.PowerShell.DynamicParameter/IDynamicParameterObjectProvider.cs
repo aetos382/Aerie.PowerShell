@@ -8,6 +8,6 @@ namespace Aerie.PowerShell.DynamicParameter
     {
         [NotNull]
         object GetDynamicParameterObject(
-            [NotNull] IDynamicParameterContext context);
+            [NotNull] CmdletContext context);
     }
 }

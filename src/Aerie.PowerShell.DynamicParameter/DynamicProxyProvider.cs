@@ -13,8 +13,8 @@ namespace Aerie.PowerShell.DynamicParameter
         IDynamicParameterObjectProvider
     {
         [NotNull]
-        private static readonly Dictionary<string, Func<IDynamicParameterContext, object>> _constructorCache =
-            new Dictionary<string, Func<IDynamicParameterContext, object>>();
+        private static readonly Dictionary<string, Func<CmdletContext, object>> _constructorCache =
+            new Dictionary<string, Func<CmdletContext, object>>();
 
         [NotNull]
         private static readonly AssemblyBuilder _assemblyBuilder;
@@ -40,7 +40,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public static readonly DynamicProxyProvider Instance = new DynamicProxyProvider();
 
         public object GetDynamicParameterObject(
-            IDynamicParameterContext context)
+            CmdletContext context)
         {
             if (context is null)
             {
@@ -62,9 +62,9 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        private static Func<IDynamicParameterContext, object> CreateProxyType(
+        private static Func<CmdletContext, object> CreateProxyType(
             [NotNull] string proxyTypeName,
-            [NotNull] IDynamicParameterContext context)
+            [NotNull] CmdletContext context)
         {
             const TypeAttributes typeAttributes =
                 TypeAttributes.Class |
@@ -113,7 +113,7 @@ namespace Aerie.PowerShell.DynamicParameter
             var constructorBuilder = typeBuilder.DefineConstructor(
                 constructorAttributes,
                 CallingConventions.Standard,
-                new[] { typeof(IDynamicParameterContext) });
+                new[] { typeof(CmdletContext) });
 
             var baseConstructor = typeof(object).GetConstructor(Type.EmptyTypes);
 
@@ -176,14 +176,14 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        private static Func<IDynamicParameterContext, object> GetConstructorDelegate(
+        private static Func<CmdletContext, object> GetConstructorDelegate(
             [NotNull] TypeInfo generatedType)
         {
-            var constructor = generatedType.GetConstructor(new[] { typeof(IDynamicParameterContext) });
+            var constructor = generatedType.GetConstructor(new[] { typeof(CmdletContext) });
 
-            var contextParameterExpression = Expression.Parameter(typeof(IDynamicParameterContext));
+            var contextParameterExpression = Expression.Parameter(typeof(CmdletContext));
 
-            var lambdaExpression = Expression.Lambda<Func<IDynamicParameterContext, object>>(
+            var lambdaExpression = Expression.Lambda<Func<CmdletContext, object>>(
                 Expression.Convert(
                     Expression.New(
                         constructor,

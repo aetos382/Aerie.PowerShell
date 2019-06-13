@@ -56,7 +56,7 @@ namespace Aerie.PowerShell.DynamicParameter
         internal ParameterMemberInfo Member { [Pure] get; }
         
         protected internal override object GetParameterValue(
-            IDynamicParameterContext context)
+            CmdletContext context)
         {
             if (context is null)
             {
@@ -68,7 +68,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         protected internal override void SetParameterValue(
-            IDynamicParameterContext context,
+            CmdletContext context,
             object value)
         {
             if (context is null)

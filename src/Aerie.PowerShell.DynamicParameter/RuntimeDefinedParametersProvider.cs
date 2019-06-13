@@ -13,7 +13,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public static readonly RuntimeDefinedParametersProvider Instance = new RuntimeDefinedParametersProvider();
 
         public object GetDynamicParameterObject(
-            IDynamicParameterContext context)
+            CmdletContext context)
         {
             if (context is null)
             {
