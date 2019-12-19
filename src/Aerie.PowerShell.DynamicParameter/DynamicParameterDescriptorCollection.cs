@@ -5,6 +5,8 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using Microsoft;
+
 namespace Aerie.PowerShell.DynamicParameter
 {
     public class DynamicParameterDescriptorCollection :
