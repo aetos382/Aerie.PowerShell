@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-using Aerie.Commons.Contracts;
-
 using JetBrains.Annotations;
 
 namespace Aerie.PowerShell.DynamicParameter
@@ -16,7 +14,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public DynamicParameterDescriptorCollection(
             [NotNull][ItemNotNull] IEnumerable<ParameterDescriptor> descriptors)
         {
-            Ensures.ArgumentNotNull(descriptors, nameof(descriptors));
+            Requires.NotNull(descriptors, nameof(descriptors));
 
             foreach (var descriptor in descriptors)
             {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Aerie.Commons.Contracts;
+using Microsoft;
 
 using JetBrains.Annotations;
 
@@ -27,7 +27,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public ParameterMemberInfo(
             [NotNull][ItemNotNull] IReadOnlyList<MemberInfo> members)
         {
-            Ensures.ArgumentNotNull(members, nameof(members));
+            Requires.NotNull(members, nameof(members));
 
             if (members.Count == 0)
             {

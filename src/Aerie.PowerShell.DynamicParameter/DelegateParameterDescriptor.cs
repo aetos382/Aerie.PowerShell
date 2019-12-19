@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-using Aerie.Commons.Contracts;
+using Microsoft;
 
 using JetBrains.Annotations;
 
@@ -34,7 +34,7 @@ namespace Aerie.PowerShell.DynamicParameter
 
             set
             {
-                Ensures.ArgumentNotNull(value, nameof(value));
+                Requires.NotNull(value, nameof(value));
 
                 this._getValueAccessor = value;
             }
@@ -51,7 +51,7 @@ namespace Aerie.PowerShell.DynamicParameter
 
             set
             {
-                Ensures.ArgumentNotNull(value, nameof(value));
+                Requires.NotNull(value, nameof(value));
 
                 this._setValueAccessor = value;
             }

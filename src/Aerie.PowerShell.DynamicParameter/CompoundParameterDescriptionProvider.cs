@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-using Aerie.Commons.Contracts;
-
 namespace Aerie.PowerShell.DynamicParameter
 {
     public class CompoundParameterDescriptionProvider :
@@ -13,7 +11,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public IEnumerable<ParameterDescriptor> GetParameterDescriptors(
             Type cmdletType)
         {
-            Ensures.ArgumentNotNull(cmdletType, nameof(cmdletType));
+            Requires.NotNull(cmdletType, nameof(cmdletType));
 
             var members = cmdletType.GetMember(
                 "*",

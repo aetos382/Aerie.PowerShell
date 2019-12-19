@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Management.Automation;
 
-using Aerie.Commons.Collections;
-using Aerie.Commons.Contracts;
+using Microsoft;
 
 using JetBrains.Annotations;
 
@@ -14,7 +13,7 @@ namespace Aerie.PowerShell.DynamicParameter
         protected CmdletTypeDescriptor(
             [NotNull] Type cmdletType)
         {
-            Ensures.ArgumentNotNull(cmdletType, nameof(cmdletType));
+            Requires.NotNull(cmdletType, nameof(cmdletType));
 
             this.CmdletType = cmdletType;
         }
@@ -61,7 +60,7 @@ namespace Aerie.PowerShell.DynamicParameter
         [NotNull]
         [ItemNotNull]
         public ICollection<ParameterDescriptor> ParameterDescriptors { get; } =
-            new NonNullHashSet<ParameterDescriptor>();
+            new HashSet<ParameterDescriptor>();
 
         private bool _initialized = false;
 
@@ -94,7 +93,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public static CmdletTypeDescriptor GetDescriptor(
             [NotNull] Type cmdletType)
         {
-            Ensures.ArgumentNotNull(cmdletType, nameof(cmdletType));
+            Requires.NotNull(cmdletType, nameof(cmdletType));
 
             if (!cmdletType.IsSubclassOf(typeof(Cmdlet)))
             {

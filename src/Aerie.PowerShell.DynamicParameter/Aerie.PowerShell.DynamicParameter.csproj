@@ -5,15 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reflection.Emit" Version="4.7.0"/>
-    <PackageReference Include="Microsoft.PowerShell.SDK"/>
-    <PackageReference Include="JetBrains.Annotations"/>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers"/>
-    <PackageReference Include="Microsoft.SourceLink.GitHub"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Aerie.Commons\Aerie.Commons.csproj" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" />
+    <PackageReference Include="Microsoft.VisualStudio.Validation" />
+    <PackageReference Include="JetBrains.Annotations" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Runtime.CompilerServices;
 
-using Aerie.Commons.Contracts;
+using Microsoft;
 
 using JetBrains.Annotations;
 
@@ -30,8 +30,8 @@ namespace Aerie.PowerShell.DynamicParameter
             [NotNull] Cmdlet cmdlet,
             [NotNull] Type cmdletType)
         {
-            Ensures.ArgumentNotNull(cmdlet, nameof(cmdlet));
-            Ensures.ArgumentNotNull(cmdletType, nameof(cmdletType));
+            Requires.NotNull(cmdlet, nameof(cmdlet));
+            Requires.NotNull(cmdletType, nameof(cmdletType));
 
             var typeDescriptor = CmdletTypeDescriptor.GetDescriptor(cmdletType);
             typeDescriptor.CreateParameterDescriptors();
@@ -45,7 +45,7 @@ namespace Aerie.PowerShell.DynamicParameter
             [NotNull] TCmdlet cmdlet)
             where TCmdlet : Cmdlet
         {
-            Ensures.ArgumentNotNull(cmdlet, nameof(cmdlet));
+            Requires.NotNull(cmdlet, nameof(cmdlet));
 
             return GetContext(cmdlet, typeof(TCmdlet));
         }
@@ -54,7 +54,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public static CmdletContext GetContext(
             [NotNull] Cmdlet cmdlet)
         {
-            Ensures.ArgumentNotNull(cmdlet, nameof(cmdlet));
+            Requires.NotNull(cmdlet, nameof(cmdlet));
 
             return GetContext(cmdlet, null);
         }
@@ -64,7 +64,7 @@ namespace Aerie.PowerShell.DynamicParameter
             [NotNull] Cmdlet cmdlet,
             [CanBeNull] Type cmdletType)
         {
-            Ensures.ArgumentNotNull(cmdlet, nameof(cmdlet));
+            Requires.NotNull(cmdlet, nameof(cmdlet));
 
             if (cmdletType is null)
             {

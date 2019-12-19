@@ -4,13 +4,11 @@
     <LangVersion>7.3</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Authors>aetos</Authors>
-    <Company>Altair Software Development</Company>
     <Copyright>Copyright (c) 2018 - 2019 aetos.</Copyright>
     <PackageProjectUrl>https://github.com/aetos382/Aerie.PowerShell</PackageProjectUrl>
     <RepositoryUrl>https://github.com/aetos382/Aerie.PowerShell</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/aetos382/Aerie.PowerShell/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <CodeAnalysisRuleSet>$([MSBuild]::GetPathOfFileAbove('FxCop.ruleset', $(MSBuildThisFileDirectory)))</CodeAnalysisRuleSet>
   </PropertyGroup>
 
 </Project>

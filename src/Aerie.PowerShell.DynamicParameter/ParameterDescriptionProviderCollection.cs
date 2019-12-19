@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Aerie.Commons.Collections;
-using Aerie.Commons.Contracts;
+using Microsoft;
 
 using JetBrains.Annotations;
 
 namespace Aerie.PowerShell.DynamicParameter
 {
     public class ParameterDescriptionProviderCollection :
-        NonNullHashSet<IParameterDescriptionProvider>
+        HashSet<IParameterDescriptionProvider>
     {
         public ParameterDescriptionProviderCollection()
         {
@@ -18,7 +17,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public ParameterDescriptionProviderCollection(
             [NotNull][ItemNotNull] IReadOnlyCollection<IParameterDescriptionProvider> items)
         {
-            Ensures.ArgumentNotNull(items, nameof(items));
+            Requires.NotNull(items, nameof(items));
 
             foreach (var item in items)
             {

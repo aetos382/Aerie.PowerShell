@@ -6,7 +6,4 @@
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Aerie.Commons\Aerie.Commons.csproj" />
-  </ItemGroup>
 </Project>

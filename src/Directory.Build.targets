@@ -3,6 +3,7 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
 
   <ItemGroup>
+  	<PackageReference Update="Microsoft.VisualStudio.Validation" Version="15.5.31"/>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
