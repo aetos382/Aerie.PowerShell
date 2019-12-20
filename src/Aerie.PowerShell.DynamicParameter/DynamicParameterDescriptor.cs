@@ -8,10 +8,10 @@ using JetBrains.Annotations;
 
 namespace Aerie.PowerShell.DynamicParameter
 {
-    public abstract class ParameterDescriptor :
-        IEquatable<ParameterDescriptor>
+    public abstract class DynamicParameterDescriptor :
+        IEquatable<DynamicParameterDescriptor>
     {
-        protected ParameterDescriptor(
+        protected DynamicParameterDescriptor(
             [NotNull] string parameterName,
             [NotNull] Type parameterType)
         {
@@ -45,10 +45,10 @@ namespace Aerie.PowerShell.DynamicParameter
 
         [CanBeNull]
         protected internal abstract object GetParameterValue(
-            [NotNull] CmdletContext context);
+            [NotNull] ICmdletContext context);
 
         protected internal abstract void SetParameterValue(
-            [NotNull] CmdletContext context,
+            [NotNull] ICmdletContext context,
             [CanBeNull] object value);
 
         internal int Id { [Pure] get; }
@@ -61,7 +61,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         public virtual bool Equals(
-            ParameterDescriptor other)
+            DynamicParameterDescriptor other)
         {
             if (other is null)
             {
@@ -100,7 +100,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public override bool Equals(
             object obj)
         {
-            if (!(obj is ParameterDescriptor descriptor))
+            if (!(obj is DynamicParameterDescriptor descriptor))
             {
                 return false;
             }

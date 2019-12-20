@@ -5,12 +5,21 @@ using Aerie.PowerShell.DynamicParameter;
 
 namespace Aerie.PowerShell.Samples
 {
-    [DynamicParameterObjectProvider(typeof(RuntimeDefinedParametersProvider))]
+    [DynamicParameterObjectProvider(typeof(RuntimeDefinedParametersBuilder))]
     [Cmdlet(VerbsDiagnostic.Test, "DynamicParameter")]
     public class TestDynamicParameterCommand :
         Cmdlet,
         IDynamicParameters
     {
+        private readonly ICmdletContext _context;
+
+        public TestDynamicParameterCommand()
+        {
+            var builder = CmdletContext.CreateDefaultBuilder(this);
+
+            this._context = builder.Build();
+        }
+
         public object GetDynamicParameters()
         {
             var dynamicParams = this.GetDynamicParameterObject();

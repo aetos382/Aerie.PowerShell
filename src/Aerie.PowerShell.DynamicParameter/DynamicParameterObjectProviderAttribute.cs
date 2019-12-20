@@ -30,7 +30,7 @@ namespace Aerie.PowerShell.DynamicParameter
         private static bool ValidateProviderType(
             [NotNull] Type providerType)
         {
-            if (!typeof(IDynamicParameterObjectProvider).IsAssignableFrom(providerType))
+            if (!typeof(IDynamicParameterObjectBuilder).IsAssignableFrom(providerType))
             {
                 return false;
             }

@@ -15,7 +15,7 @@ namespace Aerie.PowerShell.DynamicParameter
 
         [NotNull]
         public static CompoundParameterContext Register(
-            [NotNull] CmdletContext parentContext,
+            [NotNull] ICmdletContext parentContext,
             [NotNull] MemberInfo compoundParameterMember,
             [NotNull] ICompoundParameter compoundParameterValue)
         {
@@ -61,7 +61,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         private CompoundParameterContext(
-            [NotNull] CmdletContext parentContext,
+            [NotNull] ICmdletContext parentContext,
             [NotNull] MemberInfo compoundParameterMember)
         {
             this._parentContext = parentContext;
@@ -69,7 +69,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        private readonly CmdletContext _parentContext;
+        private readonly ICmdletContext _parentContext;
 
         [NotNull]
         public DynamicParameter EnableParameter(
@@ -93,7 +93,7 @@ namespace Aerie.PowerShell.DynamicParameter
             throw new NotImplementedException();
         }
 
-        public CmdletContext ParentContext
+        public ICmdletContext ParentContext
         {
             get
             {

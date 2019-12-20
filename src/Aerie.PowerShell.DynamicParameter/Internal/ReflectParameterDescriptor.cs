@@ -4,10 +4,10 @@ using System.Reflection;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell.DynamicParameter
+namespace Aerie.PowerShell.DynamicParameter.Internal
 {
-    public class ReflectParameterDescriptor :
-        ParameterDescriptor
+    internal class ReflectParameterDescriptor :
+        DynamicParameterDescriptor
     {
         [NotNull]
         private static readonly Dictionary<ParameterMemberInfo, ReflectParameterDescriptor> _descriptorCache =

@@ -59,8 +59,8 @@ namespace Aerie.PowerShell.DynamicParameter
 
         [NotNull]
         [ItemNotNull]
-        public ICollection<ParameterDescriptor> ParameterDescriptors { get; } =
-            new HashSet<ParameterDescriptor>();
+        public ICollection<DynamicParameterDescriptor> ParameterDescriptors { get; } =
+            new HashSet<DynamicParameterDescriptor>();
 
         private bool _initialized = false;
 

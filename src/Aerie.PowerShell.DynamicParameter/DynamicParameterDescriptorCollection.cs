@@ -10,11 +10,11 @@ using Microsoft;
 namespace Aerie.PowerShell.DynamicParameter
 {
     public class DynamicParameterDescriptorCollection :
-        Collection<ParameterDescriptor>,
+        Collection<DynamicParameterDescriptor>,
         IEquatable<DynamicParameterDescriptorCollection>
     {
         public DynamicParameterDescriptorCollection(
-            [NotNull][ItemNotNull] IEnumerable<ParameterDescriptor> descriptors)
+            [NotNull][ItemNotNull] IEnumerable<DynamicParameterDescriptor> descriptors)
         {
             Requires.NotNull(descriptors, nameof(descriptors));
 

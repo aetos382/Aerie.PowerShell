@@ -5,12 +5,12 @@ using System.Reflection;
 
 using Microsoft;
 
-namespace Aerie.PowerShell.DynamicParameter
+namespace Aerie.PowerShell.DynamicParameter.Internal
 {
-    public class ReflectDynamicParameterDescriptionProvider :
+    internal class ReflectDynamicParameterDescriptionProvider :
         IParameterDescriptionProvider
     {
-        public IEnumerable<ParameterDescriptor> GetParameterDescriptors(
+        public IEnumerable<DynamicParameterDescriptor> GetParameterDescriptors(
             Type cmdletType)
         {
             Requires.NotNull(cmdletType, nameof(cmdletType));

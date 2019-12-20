@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 namespace Aerie.PowerShell.DynamicParameter
 {
     public class DelegateParameterDescriptor :
-        ParameterDescriptor
+        DynamicParameterDescriptor
     {
         public DelegateParameterDescriptor(
             [NotNull] string parameterName,
@@ -18,13 +18,13 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        private Func<CmdletContext, object> _getValueAccessor = _ => default;
+        private Func<ICmdletContext, object> _getValueAccessor = _ => default;
 
         [NotNull]
-        private Action<CmdletContext, object> _setValueAccessor = (context, value) => { };
+        private Action<ICmdletContext, object> _setValueAccessor = (context, value) => { };
 
         [NotNull]
-        public Func<CmdletContext, object> GetValueAccessor
+        public Func<ICmdletContext, object> GetValueAccessor
         {
             [Pure]
             get
@@ -41,7 +41,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        public Action<CmdletContext, object> SetValueAccessor
+        public Action<ICmdletContext, object> SetValueAccessor
         {
             [Pure]
             get
@@ -58,14 +58,14 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         protected internal override object GetParameterValue(
-            CmdletContext context)
+            ICmdletContext context)
         {
             var value = this.GetValueAccessor(context);
             return value;
         }
 
         protected internal override void SetParameterValue(
-            CmdletContext context,
+            ICmdletContext context,
             object value)
         {
             this.SetValueAccessor(context, value);
@@ -78,7 +78,7 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         public override bool Equals(
-            ParameterDescriptor other)
+            DynamicParameterDescriptor other)
         {
             if (!(base.Equals(other)))
             {

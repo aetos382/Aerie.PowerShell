@@ -81,7 +81,7 @@ namespace Aerie.PowerShell.DynamicParameter
         [NotNull]
         public static DynamicParameter EnableDynamicParameter<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
-            [NotNull] ParameterDescriptor parameterDescriptor)
+            [NotNull] DynamicParameterDescriptor parameterDescriptor)
             where TCmdlet : Cmdlet
         {
             if (cmdlet is null)
@@ -193,7 +193,7 @@ namespace Aerie.PowerShell.DynamicParameter
         [NotNull]
         public static object GetDynamicParameterObject<TCmdlet>(
             [NotNull] this TCmdlet cmdlet,
-            [CanBeNull] IDynamicParameterObjectProvider provider)
+            [CanBeNull] IDynamicParameterObjectBuilder provider)
             where TCmdlet : Cmdlet
         {
             if (cmdlet is null)
@@ -214,7 +214,7 @@ namespace Aerie.PowerShell.DynamicParameter
                 {
                     var providerType = providerAttribute.ProviderType;
 
-                    provider = (IDynamicParameterObjectProvider)Activator.CreateInstance(providerType);
+                    provider = (IDynamicParameterObjectBuilder)Activator.CreateInstance(providerType);
 
                     Debug.Assert(!(provider is null));
                 }

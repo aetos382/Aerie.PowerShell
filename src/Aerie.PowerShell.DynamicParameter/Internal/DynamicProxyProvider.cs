@@ -7,14 +7,14 @@ using System.Reflection.Emit;
 
 using JetBrains.Annotations;
 
-namespace Aerie.PowerShell.DynamicParameter
-{
-    public class DynamicProxyProvider :
-        IDynamicParameterObjectProvider
+namespace Aerie.PowerShell.DynamicParameter.Internal
+{   
+    internal class DynamicProxyProvider :
+        IDynamicParameterObjectBuilder
     {
         [NotNull]
-        private static readonly Dictionary<string, Func<CmdletContext, object>> _constructorCache =
-            new Dictionary<string, Func<CmdletContext, object>>();
+        private static readonly Dictionary<string, Func<ICmdletContext, object>> _constructorCache =
+            new Dictionary<string, Func<ICmdletContext, object>>();
 
         [NotNull]
         private static readonly AssemblyBuilder _assemblyBuilder;
@@ -40,7 +40,7 @@ namespace Aerie.PowerShell.DynamicParameter
         public static readonly DynamicProxyProvider Instance = new DynamicProxyProvider();
 
         public object GetDynamicParameterObject(
-            CmdletContext context)
+            ICmdletContext context)
         {
             if (context is null)
             {
@@ -62,9 +62,9 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        private static Func<CmdletContext, object> CreateProxyType(
+        private static Func<ICmdletContext, object> CreateProxyType(
             [NotNull] string proxyTypeName,
-            [NotNull] CmdletContext context)
+            [NotNull] ICmdletContext context)
         {
             const TypeAttributes typeAttributes =
                 TypeAttributes.Class |
@@ -81,7 +81,7 @@ namespace Aerie.PowerShell.DynamicParameter
 
             var contextFieldBuilder = typeBuilder.DefineField(
                 "_context",
-                typeof(CmdletContext),
+                typeof(ICmdletContext),
                 fieldAttributes);
 
             GenerateConstructor(typeBuilder, contextFieldBuilder);
@@ -113,7 +113,7 @@ namespace Aerie.PowerShell.DynamicParameter
             var constructorBuilder = typeBuilder.DefineConstructor(
                 constructorAttributes,
                 CallingConventions.Standard,
-                new[] { typeof(CmdletContext) });
+                new[] { typeof(ICmdletContext) });
 
             var baseConstructor = typeof(object).GetConstructor(Type.EmptyTypes);
 
@@ -131,7 +131,7 @@ namespace Aerie.PowerShell.DynamicParameter
 
         private static void AddParameter(
             [NotNull] TypeBuilder typeBuilder,
-            [NotNull] ParameterDescriptor descriptor,
+            [NotNull] DynamicParameterDescriptor descriptor,
             [NotNull] FieldInfo contextField)
         {
             string parameterName = descriptor.ParameterName;
@@ -176,14 +176,14 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        private static Func<CmdletContext, object> GetConstructorDelegate(
+        private static Func<ICmdletContext, object> GetConstructorDelegate(
             [NotNull] TypeInfo generatedType)
         {
-            var constructor = generatedType.GetConstructor(new[] { typeof(CmdletContext) });
+            var constructor = generatedType.GetConstructor(new[] { typeof(ICmdletContext) });
 
-            var contextParameterExpression = Expression.Parameter(typeof(CmdletContext));
+            var contextParameterExpression = Expression.Parameter(typeof(ICmdletContext));
 
-            var lambdaExpression = Expression.Lambda<Func<CmdletContext, object>>(
+            var lambdaExpression = Expression.Lambda<Func<ICmdletContext, object>>(
                 Expression.Convert(
                     Expression.New(
                         constructor,
@@ -198,11 +198,11 @@ namespace Aerie.PowerShell.DynamicParameter
 
         private static void EmitLoadMember(
             [NotNull] ILGenerator generator,
-            [NotNull] ParameterDescriptor descriptor,
+            [NotNull] DynamicParameterDescriptor descriptor,
             [NotNull] FieldInfo contextField)
         {
-            var method = typeof(CmdletContext).GetMethod(
-                nameof(CmdletContext.GetParameterValue),
+            var method = typeof(ICmdletContext).GetMethod(
+                nameof(ICmdletContext.GetParameterValue),
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
 
             generator.Emit(OpCodes.Ldarg_0);
@@ -221,11 +221,11 @@ namespace Aerie.PowerShell.DynamicParameter
 
         private static void EmitStoreMember(
             [NotNull] ILGenerator generator,
-            [NotNull] ParameterDescriptor descriptor,
+            [NotNull] DynamicParameterDescriptor descriptor,
             [NotNull] FieldInfo contextField)
         {
-            var method = typeof(CmdletContext).GetMethod(
-                nameof(CmdletContext.SetParameterValue),
+            var method = typeof(ICmdletContext).GetMethod(
+                nameof(ICmdletContext.SetParameterValue),
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
 
             generator.Emit(OpCodes.Ldarg_0);
@@ -246,7 +246,7 @@ namespace Aerie.PowerShell.DynamicParameter
 
         private static void SetParameterAttributes(
             [NotNull] PropertyBuilder propertyBuilder,
-            [NotNull] ParameterDescriptor parameterDescriptor,
+            [NotNull] DynamicParameterDescriptor parameterDescriptor,
             bool checkAttributeTarget)
         {
             foreach (var attribute in parameterDescriptor.Attributes)

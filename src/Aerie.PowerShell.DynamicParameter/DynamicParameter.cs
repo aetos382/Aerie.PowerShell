@@ -7,8 +7,8 @@ namespace Aerie.PowerShell.DynamicParameter
     public class DynamicParameter
     {
         internal DynamicParameter(
-            [NotNull] CmdletContext context,
-            [NotNull] ParameterDescriptor descriptor)
+            [NotNull] ICmdletContext context,
+            [NotNull] DynamicParameterDescriptor descriptor)
         {
             if (context is null)
             {
@@ -25,10 +25,10 @@ namespace Aerie.PowerShell.DynamicParameter
         }
 
         [NotNull]
-        public CmdletContext Context { get; }
+        public ICmdletContext Context { get; }
 
         [NotNull]
-        public ParameterDescriptor ParameterDescriptor { [Pure] get; }
+        public DynamicParameterDescriptor ParameterDescriptor { [Pure] get; }
 
         public bool IsSet { [Pure] get; private set; }
 

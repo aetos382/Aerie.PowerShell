@@ -10,7 +10,7 @@ namespace Aerie.PowerShell.DynamicParameter
     public class CompoundParameterDescriptionProvider :
         IParameterDescriptionProvider
     {
-        public IEnumerable<ParameterDescriptor> GetParameterDescriptors(
+        public IEnumerable<DynamicParameterDescriptor> GetParameterDescriptors(
             Type cmdletType)
         {
             Requires.NotNull(cmdletType, nameof(cmdletType));
