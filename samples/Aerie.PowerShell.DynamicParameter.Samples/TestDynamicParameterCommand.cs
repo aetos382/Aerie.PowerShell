@@ -15,7 +15,7 @@ namespace Aerie.PowerShell.Samples
 
         public TestDynamicParameterCommand()
         {
-            var builder = CmdletContext.CreateDefaultBuilder(this);
+            var builder = new CmdletContextBuilder();
 
             this._context = builder.Build();
         }
