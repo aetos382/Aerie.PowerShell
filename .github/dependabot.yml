@@ -1,0 +1,29 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+    timezone: Asia/Tokyo
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: MSTest.TestFramework
+    versions:
+    - 2.1.2
+    - 2.2.1
+  - dependency-name: MSTest.TestAdapter
+    versions:
+    - 2.1.2
+    - 2.2.1
+  - dependency-name: Microsoft.NET.Test.Sdk
+    versions:
+    - 16.8.3
+    - 16.9.1
+  - dependency-name: Microsoft.PowerShell.SDK
+    versions:
+    - 7.1.1
+    - 7.1.2
+  - dependency-name: JetBrains.Annotations
+    versions:
+    - 2020.3.0
